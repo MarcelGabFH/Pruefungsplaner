@@ -124,7 +124,6 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                 //second parameter is necessary ie.,Value to return if this preference does not exist.
                 if (strJson != null) {
                     try {
-
                         response = new JSONArray(strJson);
                         JSONArray list = new JSONArray();
                         int len = response.length();
@@ -147,11 +146,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                         mEditor.clear();
                         mEditor.putString("jsondata",list.toString());
                         mEditor.apply();
-
                     } catch (JSONException e) {
-
-
-
                     }
                 }
 

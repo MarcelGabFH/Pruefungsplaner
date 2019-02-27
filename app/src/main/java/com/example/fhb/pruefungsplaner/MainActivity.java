@@ -125,10 +125,7 @@ public class MainActivity extends AppCompatActivity {
                         RueckgabeStudiengang.add(i);
                     } else {
                         if (Studiengang.get(Studiengang.size() - 1).toString().equals(dateneinlesen.studiengang[i].toString())) {
-
-
                             RueckgabeStudiengang.add(i);
-
                         }
                     }
 //                    Toast.makeText(getApplicationContext(), RueckgabeStudiengang.get(i).toString() +"//"+ String.valueOf(i), Toast.LENGTH_SHORT).show();
@@ -141,9 +138,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-
     }
 
 

@@ -63,9 +63,13 @@ public class sucheFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         final View v = inflater.inflate(R.layout.activity_suche, container, false);
         //setContentView(R.layout.hauptfenster);
+
+
+
+
+
 
 
             Spinners spinner = new Spinners();
