@@ -51,7 +51,7 @@
                 android:padding="5sp"
                 android:src="@android:drawable/btn_star_big_off"
                 tools:layout_editor_absoluteY="50dp"
-                tools:src="@android:drawable/btn_star" />
+                tools:onClick="@android:drawable/btn_star" />
 
             <LinearLayout
                 android:id="@+id/LinearLayout5"

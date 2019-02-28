@@ -14,7 +14,6 @@ import java.util.List;
 
 
 public final class GetterSetter extends Activity {
-
     //Klassenvariablen
     String[] profname = new  String[100];
     String[] profnamezwei = new  String[100];
@@ -25,22 +24,13 @@ public final class GetterSetter extends Activity {
     String[] Fach = new String[100];
     List<String> ab = new ArrayList<String>();
     int laenge;
-
-
-
     //constructor JSONarray aus der wird in die Klassenvariablen abgelegt
     final public String[] GetterSetter(String beispiel)
-
     {
-
         //Try abfrage für fehlerausgabe
         try {
-
-
             //JSONAarray mit den Daten aus der Datenbank
-
             JSONArray json = new JSONArray(beispiel);
-
             //Zuweisung der Elemente des Arrays in die Klassenvariablen
             for (int i=0; i< json.length(); i++) {
                 this.Fach[i] = json.getJSONObject(i).getString("Modul");
@@ -50,69 +40,50 @@ public final class GetterSetter extends Activity {
                 this.studiengang[i] = json.getJSONObject(i).getString("Studiengang");
                 this.ID[i] = json.getJSONObject(i).getString("ID");
                 this.datum[i] = json.getJSONObject(i).getString("Datum");
-
             }
-
             //anfangsinitialisierung von den startwerten
             if (ab.size() < 1) {
                 this.laenge = json.length();
                 for (int a = 0; a < this.laenge; a++) {
                     this.ab.add(String.valueOf(a));
-
                 }
             }
     }
         //fehlerausgabe
         catch(Exception e){
             e.printStackTrace();
-
-
         }
-
         //return beispiel
         return (datum);
     }
-
-
     //getter methoden
     public int getlaenge() {
         return laenge;
     }
-
     public String[] getFach() {
         return Fach;
     }
-
-
     public String[] getID() {
         return ID;
     }
-
     public String[] getStudiengang() {
         return  studiengang;
     }
-
     public String[] getDatum() {
         return datum;
     }
-
     public String[] getProfname() {
         return profname;
     }
-
     public String[] getProfname2() {
         return profnamezwei;
     }
-
     public String[] getSemester() {
         return semester;
     }
-
     public List<String> getab() {
         return ab;
     }
-
-
     final public void ab( List<String> ab) {
         this.ab = ab;
     }

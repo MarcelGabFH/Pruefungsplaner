@@ -101,8 +101,4 @@ public class Tabelle extends AppCompatActivity  {
             return false;
         }
     };
-
-
-
-
 }

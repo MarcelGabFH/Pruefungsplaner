@@ -34,26 +34,17 @@ public class Terminefragment extends Fragment {
     public String year2;
     List<String> WerteZumAnzeigen;
 
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         final View v = inflater.inflate(R.layout.terminefragment, container, false);
         //setContentView(R.layout.hauptfenster);
         WerteZumAnzeigen = dateneinlesen.getab();
         //hinzufügen von recycleview
-
-
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
         recyclerView.setVisibility(View.VISIBLE);
         // use this setting to
@@ -62,7 +53,6 @@ public class Terminefragment extends Fragment {
         // of the RecyclerView
         recyclerView.setHasFixedSize(true);
         mSharedPreferences = v.getContext().getSharedPreferences("json6" , 0);
-
         // use a linear layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -70,7 +60,6 @@ public class Terminefragment extends Fragment {
         List<String> input2 = new ArrayList<>();
         List<String> input3 = new ArrayList<>();
         List<String> input4 = new ArrayList<>();
-
         //gr
         for (int i = 0; i < WerteZumAnzeigen.size(); i++) {
             input.add(dateneinlesen.getFach()[Integer.valueOf(WerteZumAnzeigen.get(i))] + " " + dateneinlesen.getStudiengang()[Integer.valueOf(WerteZumAnzeigen.get(i))]);
@@ -83,30 +72,23 @@ public class Terminefragment extends Fragment {
         mAdapter = new MyAdapter(input, input2,input3,input4);
 
         recyclerView.setAdapter(mAdapter);
-
-
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
         recyclerView.setVisibility(View.VISIBLE);
         calendar = (CalendarView) v.findViewById(R.id.caCalender);
         btnsuche = (Button) v.findViewById(R.id.btnDatum);
 
         calendar.setVisibility(View.GONE);
-
-
         btnsuche.setOnClickListener(new View.OnClickListener() {
             boolean speicher = true;
             @Override
             public void onClick(View v) {
-
                 if(!speicher){
                     calendar.setVisibility(View.GONE);
                     //calendar.getLayoutParams().height = 0;
-
                     List<String> input = new ArrayList<>();
                     List<String> input2 = new ArrayList<>();
                     List<String> input3 = new ArrayList<>();
                     List<String> input4 = new ArrayList<>();
-
                     //gr
                     for (int i = 0; i < WerteZumAnzeigen.size(); i++) {
                         input.add(dateneinlesen.getFach()[Integer.valueOf(WerteZumAnzeigen.get(i))] + " " + dateneinlesen.getStudiengang()[Integer.valueOf(WerteZumAnzeigen.get(i))]);
@@ -115,16 +97,13 @@ public class Terminefragment extends Fragment {
                         input4.add(WerteZumAnzeigen.get(i));
 
                     }// define an adapter
-
                     mAdapter = new MyAdapter(input, input2,input3,input4);
-
                     recyclerView.setAdapter(mAdapter);
                     speicher = true;
                 }else {
                     calendar.setVisibility(View.VISIBLE);
                     calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
                         public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-
                             List<String> input = new ArrayList<>();
                             List<String> input2 = new ArrayList<>();
                             List<String> input3 = new ArrayList<>();
@@ -134,15 +113,12 @@ public class Terminefragment extends Fragment {
                                 month2 = "0" + String.valueOf(month+1);
                             }else
                             {month2 = String.valueOf(month);}
-
                             if (dayOfMonth < 10) {
                                 day2 = "0" + String.valueOf(dayOfMonth);
                             }
                             else
                             {day2 = String.valueOf(dayOfMonth);}
-
                             year2 = String.valueOf(year);
-
                             date = year2 +"-"+ month2+"-"+day2;
                                     for (int i = 0; i < WerteZumAnzeigen.size(); i++) {
                                         String[] date2 = dateneinlesen.getDatum()[Integer.valueOf(WerteZumAnzeigen.get(i).toString())].toString().split(" ");
@@ -163,5 +139,4 @@ public class Terminefragment extends Fragment {
         });
         return v;
     }
-
 }

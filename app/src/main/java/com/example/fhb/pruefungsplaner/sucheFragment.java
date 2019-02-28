@@ -29,20 +29,16 @@ import static com.example.fhb.pruefungsplaner.Tabelle.ft;
 
 
 public class sucheFragment extends Fragment {
-
     RecyclerView.Adapter mAdapter;
     final List<String> Semester = new ArrayList();
     final List<String> Studiengang = new ArrayList();
     final List<String> Datum = new ArrayList();
     final List<String> Prof = new ArrayList();
-
     final List<Integer> Rueckgabe = new ArrayList();
     final List<Integer> RueckgabeStudiengang = new ArrayList();
     final List<Integer> RueckgabeDatum = new ArrayList();
     final List<Integer> RueckgabeSemester = new ArrayList();
     final List<String> Fertigsortiert = new ArrayList();
-
-
 
     public sucheFragment()
     {
@@ -51,30 +47,13 @@ public class sucheFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-
     }
-
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.activity_suche, container, false);
         //setContentView(R.layout.hauptfenster);
-
-
-
-
-
-
-
             Spinners spinner = new Spinners();
-
-
             final Button btnSemester1 = (Button)  v.findViewById(R.id.btns1);
             final Button btnSemester2 = (Button)  v.findViewById(R.id.btns2);
             final Button btnSemester3 = (Button)  v.findViewById(R.id.btns3);
@@ -83,6 +62,7 @@ public class sucheFragment extends Fragment {
             final Button btnSemester6 = (Button)  v.findViewById(R.id.btns6);
             final Button btnWoche1 = (Button) v.findViewById(R.id.btnWoche1);
             final Button btnWoche2 = (Button) v.findViewById(R.id.btnWoche2);
+
 
             RueckgabeSemester.clear();
             btnSemester1.setOnClickListener(new Button.OnClickListener() {
@@ -97,7 +77,17 @@ public class sucheFragment extends Fragment {
                     }
 
                     if(geklickt) {
-                        btnSemester1.setBackgroundColor(333333);
+                        for(int i = 0;i < dateneinlesen.laenge;i++) {
+                            if (String.valueOf(1).equals(dateneinlesen.semester[i].toString())) {
+                                btnSemester1.setBackgroundResource(R.drawable.button_rounded_corners);
+                                RueckgabeSemester.set(i,i);
+
+                            }
+                        }
+                        geklickt = false;
+                    }else {
+
+                        btnSemester1.setBackgroundResource(R.drawable.button_rounded_corners2);
 
                         for(int i = 0;i < dateneinlesen.laenge;i++)
                         {
@@ -107,22 +97,8 @@ public class sucheFragment extends Fragment {
                             }
                         }
 
-                        geklickt = false;
-                    }else {
-
-                        for(int i = 0;i < dateneinlesen.laenge;i++) {
-                            if (String.valueOf(1).equals(dateneinlesen.semester[i].toString())) {
-                                btnSemester1.setBackgroundResource(R.drawable.button_rounded_corners);
-                                RueckgabeSemester.set(i,i);
-
-                            }
-                        }
                         geklickt = true;
                     }
-
-
-
-
                 }
             });
 
@@ -130,15 +106,13 @@ public class sucheFragment extends Fragment {
             boolean geklickt = true;
             @Override
             public void onClick(View v) {
-
                 if (RueckgabeSemester.size() <= 0) {
                     for (int i = 0; i < (dateneinlesen.laenge); i++) {
                         RueckgabeSemester.add(i);
                     }
                 }
-
                 if(geklickt) {
-                    btnSemester2.setBackgroundColor(333333);
+                    btnSemester2.setBackgroundResource(R.drawable.button_rounded_corners2);
 
                     for(int i = 0;i < dateneinlesen.laenge;i++)
                     {
@@ -147,7 +121,6 @@ public class sucheFragment extends Fragment {
                             RueckgabeSemester.set(i,99999);
                         }
                     }
-
                     geklickt = false;
                 }else {
 
@@ -160,13 +133,8 @@ public class sucheFragment extends Fragment {
                     }
                     geklickt = true;
                 }
-
-
-
-
             }
         });
-
         btnSemester3.setOnClickListener(new Button.OnClickListener() {
             boolean geklickt = true;
             @Override
@@ -179,14 +147,12 @@ public class sucheFragment extends Fragment {
                 }
 
                 if(geklickt) {
-                    btnSemester3.setBackgroundColor(333333);
+                    btnSemester3.setBackgroundResource(R.drawable.button_rounded_corners2);
                     for(int i = 0;i < dateneinlesen.laenge;i++)
                     {
                         if (String.valueOf(3).equals(dateneinlesen.semester[i].toString()))
                         {
                             RueckgabeSemester.set(i,99999);
-
-
                         }
 
                     }
@@ -218,7 +184,7 @@ public class sucheFragment extends Fragment {
                 }
 
                 if(geklickt) {
-                    btnSemester4.setBackgroundColor(333333);
+                    btnSemester4.setBackgroundResource(R.drawable.button_rounded_corners2);
 
                     for(int i = 0;i < dateneinlesen.laenge;i++)
                     {
@@ -240,10 +206,6 @@ public class sucheFragment extends Fragment {
                     }
                     geklickt = true;
                 }
-
-
-
-
             }
         });
 
@@ -259,7 +221,7 @@ public class sucheFragment extends Fragment {
                 }
 
                 if(geklickt) {
-                    btnSemester5.setBackgroundColor(333333);
+                    btnSemester5.setBackgroundResource(R.drawable.button_rounded_corners2);
 
                     for(int i = 0;i < dateneinlesen.laenge;i++)
                     {
@@ -281,10 +243,6 @@ public class sucheFragment extends Fragment {
                     }
                     geklickt = true;
                 }
-
-
-
-
             }
         });
 
@@ -300,16 +258,14 @@ public class sucheFragment extends Fragment {
                 }
 
                 if(geklickt) {
-                    btnSemester6.setBackgroundColor(333333);
+                    btnSemester6.setBackgroundResource(R.drawable.button_rounded_corners2);
                     for(int i = 0;i < dateneinlesen.laenge;i++)
                     {
                         if (String.valueOf(6).equals(dateneinlesen.semester[i].toString()))
                         {
                             RueckgabeSemester.set(i,99999);
                         }
-
                     }
-
                     geklickt = false;
                 }else
                 {
@@ -325,9 +281,6 @@ public class sucheFragment extends Fragment {
                 }
             }
         });
-
-
-
         //Spinner aufruf und setzen der Spinner mit werten
             List<String> spinnerArray = new ArrayList<String>();
             List<String> spinnerArrayProf = new ArrayList<String>();
@@ -367,39 +320,27 @@ public class sucheFragment extends Fragment {
             //grafische ausgabe
             Spinner spStudiengang = (Spinner) v.findViewById(R.id.spStudiengang);
             spStudiengang.setAdapter(adapter);
-
             Spinner spProf = (Spinner) v.findViewById(R.id.spProf);
             spProf.setAdapter(adapterProf);
-
             Spinner spDatum = (Spinner) v.findViewById(R.id.spDatum);
             spDatum.setAdapter(adapterDatum);
-
             Spinner spSemester = (Spinner) v.findViewById(R.id.spSemester);
             spSemester.setAdapter(adapterSemester);
-
             final AutoCompleteTextView acProf = (AutoCompleteTextView) v.findViewById(R.id.acProfessor);
-
             acProf.setThreshold(1);//will start working from first character
-
             acProf.setAdapter(adapteracPof);//setting the adapter data into the AutoCompleteTextView
-
-
             Datum.add("Alle");
-            Semester.add("Alle");
+
             Prof.add("Alle");
             Studiengang.add("Alle");
-
-
             //initialisierung der anfagswerte
             int i;
             for (i = 0; i < dateneinlesen.laenge; i++) {
                 Rueckgabe.add(i);
                 RueckgabeStudiengang.add(i);
                 RueckgabeDatum.add(i);
-                RueckgabeSemester.add(i);
+
             }
-
-
             acProf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick (AdapterView<?> parent, View view, int position, long id) {
@@ -415,20 +356,16 @@ public class sucheFragment extends Fragment {
                             Rueckgabe.add(a);
                             TextView textt = (TextView) v.findViewById(R.id.txtmessage);
                             dateneinlesen.ab = Tabellenrueckgabe();
-
                         }
                     }
                     //txtview.setText(Prof.get(Prof.size()-1).toString() + dateneinlesen.profname[i].toString());
                 }
                 //... your stuf
             });
-
-
             spSemester.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     RueckgabeSemester.clear();
                     Semester.add(parent.getItemAtPosition(position).toString()); //this is your selected item
-
                     int i;
                     for (i = 0; i < (dateneinlesen.laenge); i++)
 
@@ -442,12 +379,8 @@ public class sucheFragment extends Fragment {
 
                             }
                         }
-
                         //txtview.setText(Prof.get(Prof.size()-1).toString() + dateneinlesen.profname[i].toString());
-
                     }
-
-
                 }
 
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -461,7 +394,6 @@ public class sucheFragment extends Fragment {
                     RueckgabeDatum.clear();
                     Datum.add(parent.getItemAtPosition(position).toString());
                     ; //this is your selected item
-
                     int i;
                     for (i = 0; i < (dateneinlesen.laenge); i++) {
 
@@ -490,9 +422,7 @@ public class sucheFragment extends Fragment {
                     for (i = 0; i < (dateneinlesen.laenge); i++) {
                         if (Prof.get(Prof.size() - 1).toString().equals("Alle")) {
                             //Rueckgabe.add(i);
-
                         } else {
-
                             if (Prof.get(Prof.size() - 1).toString().equals(dateneinlesen.profname[i].toString())) {
 
                                 //Rueckgabe.add(i);
@@ -511,12 +441,10 @@ public class sucheFragment extends Fragment {
             });
             spStudiengang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
                     RueckgabeStudiengang.clear();
                     Studiengang.add(parent.getItemAtPosition(position).toString()); //this is your selected item
                     int i;
                     String a;
-
                     for (i = 0; i < (dateneinlesen.laenge); i++) {
                         if (Studiengang.get(Studiengang.size() - 1).toString().equals("Alle")) {
                             RueckgabeStudiengang.add(i);
@@ -531,18 +459,13 @@ public class sucheFragment extends Fragment {
                         //txtview.setText(Prof.get(Prof.size()-1).toString() + dateneinlesen.profname[i].toString());
                     }
                 }
-
-
                 public void onNothingSelected(AdapterView<?> parent) {
 
                 }
             });
 
-
-
             Button but1 = (Button) v.findViewById(R.id.BtnOk);
             final TextView textt = (TextView) v.findViewById(R.id.txtmessage);
-
             but1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -574,10 +497,7 @@ public class sucheFragment extends Fragment {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         String dateTime2 = "0";
                         Date dateTime;
-
-
                         Calendar calendarendzeit =  Calendar.getInstance();
-
                         try {
                         String[] dtStart = dateneinlesen.datum[dateneinlesen.laenge-1].split(" ");
                         dateTime = dateFormat.parse(dtStart[0]);
@@ -586,8 +506,6 @@ public class sucheFragment extends Fragment {
                         calendarendzeit = Calendar.getInstance();
                         calendarendzeit.setTime(dateTime);
                         dateTime2 = String.valueOf(calendarendzeit.getTime());
-
-
                         calendarendzeit.set(Calendar.DAY_OF_MONTH,  Integer.valueOf(sa[2]));// for 5 days
                         } catch (ParseException e) {
 
@@ -604,18 +522,11 @@ public class sucheFragment extends Fragment {
 
                                 if(calendar.after(calendarendzeit))
                                 {
-
-
-
                                     Datum.add(dateTime2);
                                     ; //this is your selected item
-
-
                                     for (int a = 0; a < (dateneinlesen.laenge); a++) {
-
                                             String[] vergleich = dateneinlesen.datum[a].toString().split(" ");
                                             if (Datum.get(Datum.size() - 1).toString().equals(vergleich[0])) {
-
                                                 //Toast.makeText(getContext(),Datum.get(Datum.size() - 1)+" / "+  dtStart[0] ,Toast.LENGTH_SHORT/2).show();
                                                 RueckgabeDatum.add(a);
                                             }
@@ -627,8 +538,6 @@ public class sucheFragment extends Fragment {
                             } catch (ParseException e) {
                             }
                         }
-
-
                         Toast.makeText(getContext(),calendarendzeit.toString(),Toast.LENGTH_SHORT).show();
                         geklickt = false;
                     }else
@@ -648,14 +557,10 @@ public class sucheFragment extends Fragment {
 
 
     public List<String> Tabellenrueckgabe() {
-
         int i;
         int j;
         int k;
         int l;
-
-
-
         String test = "a";
         Fertigsortiert.clear();
         for (i = 0; i < (RueckgabeStudiengang.size()); i++) {
@@ -675,11 +580,7 @@ public class sucheFragment extends Fragment {
                 }
             }
             //txtview.setText(Prof.get(Prof.size()-1).toString() + dateneinlesen.profname[i].toString());
-
         }
         return (Fertigsortiert);
     }
-
-
-
 }
