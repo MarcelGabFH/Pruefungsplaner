@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -119,6 +121,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                     }
                 }
+
                 int i;
                 speicher = false;
                 for (i = 0;i < response.length();i++) {
@@ -134,6 +137,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                         response.put(index.get(position));
                         mEditor.putString("jsondata", response.toString());
                         mEditor.apply();
+
+                        Toast.makeText(v.getContext(),"Hinzugefügt", Toast.LENGTH_SHORT).show();
                     }
             }
         });

@@ -48,8 +48,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="false"
                 android:contentDescription="TODO"
-                android:padding="5sp"
-                android:src="@android:drawable/btn_star_big_off"
+                android:src="@android:drawable/ic_input_add"
                 tools:layout_editor_absoluteY="50dp"
                 tools:onClick="@android:drawable/btn_star" />
 

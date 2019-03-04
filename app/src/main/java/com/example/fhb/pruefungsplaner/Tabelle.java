@@ -96,6 +96,9 @@ public class Tabelle extends AppCompatActivity  {
                 case R.id.navigation_settings:
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
+                    btnsuche.setVisibility(View.GONE);
+                    ft.replace(R.id.frame_placeholder, new optionen());
+                    ft.commit();
                     return true;
             }
             return false;

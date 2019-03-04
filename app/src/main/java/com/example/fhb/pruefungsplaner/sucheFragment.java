@@ -44,6 +44,7 @@ public class sucheFragment extends Fragment {
     {
 
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,14 +70,13 @@ public class sucheFragment extends Fragment {
                 boolean geklickt = true;
                 @Override
                 public void onClick(View v) {
-
-                    if (RueckgabeSemester.size() <= 0) {
-                        for (int i = 0; i < (dateneinlesen.laenge); i++) {
-                            RueckgabeSemester.add(i);
-                        }
-                    }
-
                     if(geklickt) {
+                        if (RueckgabeSemester.size() <= 0) {
+                            for (int i = 0; i < (dateneinlesen.laenge); i++) {
+                                RueckgabeSemester.add(99999);
+                            }
+                        }
+
                         for(int i = 0;i < dateneinlesen.laenge;i++) {
                             if (String.valueOf(1).equals(dateneinlesen.semester[i].toString())) {
                                 btnSemester1.setBackgroundResource(R.drawable.button_rounded_corners);
@@ -106,12 +106,23 @@ public class sucheFragment extends Fragment {
             boolean geklickt = true;
             @Override
             public void onClick(View v) {
-                if (RueckgabeSemester.size() <= 0) {
-                    for (int i = 0; i < (dateneinlesen.laenge); i++) {
-                        RueckgabeSemester.add(i);
-                    }
-                }
                 if(geklickt) {
+                    if (RueckgabeSemester.size() <= 0) {
+                        for (int i = 0; i < (dateneinlesen.laenge); i++) {
+                            RueckgabeSemester.add(99999);
+                        }
+                    }
+
+                    for(int i = 0;i < dateneinlesen.laenge;i++) {
+                        if (String.valueOf(2).equals(dateneinlesen.semester[i].toString())) {
+                            btnSemester2.setBackgroundResource(R.drawable.button_rounded_corners);
+                            RueckgabeSemester.set(i,i);
+
+                        }
+                    }
+                    geklickt = false;
+                }else {
+
                     btnSemester2.setBackgroundResource(R.drawable.button_rounded_corners2);
 
                     for(int i = 0;i < dateneinlesen.laenge;i++)
@@ -121,16 +132,7 @@ public class sucheFragment extends Fragment {
                             RueckgabeSemester.set(i,99999);
                         }
                     }
-                    geklickt = false;
-                }else {
 
-                    for(int i = 0;i < dateneinlesen.laenge;i++) {
-                        if (String.valueOf(2).equals(dateneinlesen.semester[i].toString())) {
-                            btnSemester2.setBackgroundResource(R.drawable.button_rounded_corners);
-                            RueckgabeSemester.set(i,i);
-
-                        }
-                    }
                     geklickt = true;
                 }
             }
@@ -139,34 +141,33 @@ public class sucheFragment extends Fragment {
             boolean geklickt = true;
             @Override
             public void onClick(View v) {
-
-                if (RueckgabeSemester.size() <= 0) {
-                    for (int i = 0; i < (dateneinlesen.laenge); i++) {
-                        RueckgabeSemester.add(i);
-                    }
-                }
-
                 if(geklickt) {
+                    if (RueckgabeSemester.size() <= 0) {
+                        for (int i = 0; i < (dateneinlesen.laenge); i++) {
+                            RueckgabeSemester.add(99999);
+                        }
+                    }
+
+                    for(int i = 0;i < dateneinlesen.laenge;i++) {
+                        if (String.valueOf(3).equals(dateneinlesen.semester[i].toString())) {
+                            btnSemester3.setBackgroundResource(R.drawable.button_rounded_corners);
+                            RueckgabeSemester.set(i,i);
+
+                        }
+                    }
+                    geklickt = false;
+                }else {
+
                     btnSemester3.setBackgroundResource(R.drawable.button_rounded_corners2);
+
                     for(int i = 0;i < dateneinlesen.laenge;i++)
                     {
                         if (String.valueOf(3).equals(dateneinlesen.semester[i].toString()))
                         {
                             RueckgabeSemester.set(i,99999);
                         }
-
                     }
 
-                    geklickt = false;
-                }else
-                {
-                    for(int i = 0;i < dateneinlesen.laenge;i++)
-                    {
-                        if (String.valueOf(3).equals(dateneinlesen.semester[i].toString())) {
-                            btnSemester3.setBackgroundResource(R.drawable.button_rounded_corners);
-                            RueckgabeSemester.set(i,i);
-
-                        }}
                     geklickt = true;
                 }
             }
@@ -176,14 +177,23 @@ public class sucheFragment extends Fragment {
             boolean geklickt = true;
             @Override
             public void onClick(View v) {
-
-                if (RueckgabeSemester.size() <= 0) {
-                    for (int i = 0; i < (dateneinlesen.laenge); i++) {
-                        RueckgabeSemester.add(i);
-                    }
-                }
-
                 if(geklickt) {
+                    if (RueckgabeSemester.size() <= 0) {
+                        for (int i = 0; i < (dateneinlesen.laenge); i++) {
+                            RueckgabeSemester.add(99999);
+                        }
+                    }
+
+                    for(int i = 0;i < dateneinlesen.laenge;i++) {
+                        if (String.valueOf(4).equals(dateneinlesen.semester[i].toString())) {
+                            btnSemester4.setBackgroundResource(R.drawable.button_rounded_corners);
+                            RueckgabeSemester.set(i,i);
+
+                        }
+                    }
+                    geklickt = false;
+                }else {
+
                     btnSemester4.setBackgroundResource(R.drawable.button_rounded_corners2);
 
                     for(int i = 0;i < dateneinlesen.laenge;i++)
@@ -194,16 +204,6 @@ public class sucheFragment extends Fragment {
                         }
                     }
 
-                    geklickt = false;
-                }else {
-
-                    for(int i = 0;i < dateneinlesen.laenge;i++) {
-                        if (String.valueOf(4).equals(dateneinlesen.semester[i].toString())) {
-                            btnSemester4.setBackgroundResource(R.drawable.button_rounded_corners);
-                            RueckgabeSemester.set(i,i);
-
-                        }
-                    }
                     geklickt = true;
                 }
             }
@@ -213,32 +213,27 @@ public class sucheFragment extends Fragment {
             boolean geklickt = true;
             @Override
             public void onClick(View v) {
-
-                if (RueckgabeSemester.size() <= 0) {
-                    for (int i = 0; i < (dateneinlesen.laenge); i++) {
-                        RueckgabeSemester.add(i);
-                    }
-                }
-
                 if(geklickt) {
-                    btnSemester5.setBackgroundResource(R.drawable.button_rounded_corners2);
-
-                    for(int i = 0;i < dateneinlesen.laenge;i++)
-                    {
-                        if (String.valueOf(5).equals(dateneinlesen.semester[i].toString()))
-                        {
-                            RueckgabeSemester.set(i,99999);
+                    if (RueckgabeSemester.size() <= 0) {
+                        for (int i = 0; i < (dateneinlesen.laenge); i++) {
+                            RueckgabeSemester.add(99999);
                         }
                     }
-
-                    geklickt = false;
-                }else {
-
                     for(int i = 0;i < dateneinlesen.laenge;i++) {
                         if (String.valueOf(5).equals(dateneinlesen.semester[i].toString())) {
                             btnSemester5.setBackgroundResource(R.drawable.button_rounded_corners);
                             RueckgabeSemester.set(i,i);
 
+                        }
+                    }
+                    geklickt = false;
+                }else {
+                    btnSemester5.setBackgroundResource(R.drawable.button_rounded_corners2);
+                    for(int i = 0;i < dateneinlesen.laenge;i++)
+                    {
+                        if (String.valueOf(5).equals(dateneinlesen.semester[i].toString()))
+                        {
+                            RueckgabeSemester.set(i,99999);
                         }
                     }
                     geklickt = true;
@@ -250,15 +245,24 @@ public class sucheFragment extends Fragment {
             boolean geklickt = true;
             @Override
             public void onClick(View v) {
-
-                if (RueckgabeSemester.size() <= 0) {
-                    for (int i = 0; i < (dateneinlesen.laenge); i++) {
-                        RueckgabeSemester.add(i);
-                    }
-                }
-
                 if(geklickt) {
+                    if (RueckgabeSemester.size() <= 0) {
+                        for (int i = 0; i < (dateneinlesen.laenge); i++) {
+                            RueckgabeSemester.add(99999);
+                        }
+                    }
+                    for(int i = 0;i < dateneinlesen.laenge;i++) {
+                        if (String.valueOf(6).equals(dateneinlesen.semester[i].toString())) {
+                            btnSemester6.setBackgroundResource(R.drawable.button_rounded_corners);
+                            RueckgabeSemester.set(i,i);
+
+                        }
+                    }
+                    geklickt = false;
+                }else {
+
                     btnSemester6.setBackgroundResource(R.drawable.button_rounded_corners2);
+
                     for(int i = 0;i < dateneinlesen.laenge;i++)
                     {
                         if (String.valueOf(6).equals(dateneinlesen.semester[i].toString()))
@@ -266,17 +270,6 @@ public class sucheFragment extends Fragment {
                             RueckgabeSemester.set(i,99999);
                         }
                     }
-                    geklickt = false;
-                }else
-                {
-                    for(int i = 0;i < dateneinlesen.laenge;i++)
-                    {
-
-                        if (String.valueOf(6).equals(dateneinlesen.semester[i].toString())) {
-                            btnSemester6.setBackgroundResource(R.drawable.button_rounded_corners);
-                            RueckgabeSemester.set(i,i);
-
-                        }}
                     geklickt = true;
                 }
             }
@@ -362,32 +355,7 @@ public class sucheFragment extends Fragment {
                 }
                 //... your stuf
             });
-            spSemester.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    RueckgabeSemester.clear();
-                    Semester.add(parent.getItemAtPosition(position).toString()); //this is your selected item
-                    int i;
-                    for (i = 0; i < (dateneinlesen.laenge); i++)
 
-                    {
-                        if (Semester.get(Semester.size() - 1).toString().equals("Alle")) {
-                            RueckgabeSemester.add(i);
-                        } else {
-                            if (Semester.get(Semester.size() - 1).toString().equals(dateneinlesen.semester[i].toString())) {
-
-                                RueckgabeSemester.add(i);
-
-                            }
-                        }
-                        //txtview.setText(Prof.get(Prof.size()-1).toString() + dateneinlesen.profname[i].toString());
-                    }
-                }
-
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-
-            });
 
             spDatum.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -477,6 +445,7 @@ public class sucheFragment extends Fragment {
                         Rueckgabe.add(a);
                     }
                         }
+
                     dateneinlesen.ab = Tabellenrueckgabe();
                     textt.setText(dateneinlesen.ab.toString());
                     ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -550,7 +519,7 @@ public class sucheFragment extends Fragment {
                 }
             });
 
-
+        RueckgabeSemester.clear();
         return v;
     }
 

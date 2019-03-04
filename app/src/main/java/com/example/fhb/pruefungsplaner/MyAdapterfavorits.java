@@ -93,14 +93,13 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        name = values.get(position);
+        name = values.get(holder.getAdapterPosition());
         holder.txtHeader.setText(name);
         holder.ivicon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 //holder.zahl1 = position;
                 //holder.txtthirdline.setText(index.get(position));
-                remove(holder.getAdapterPosition());
                 SharedPreferences mSharedPreferences = v.getContext().getSharedPreferences("json6", 0);
                 //Creating editor to store values to shared preferences
                 SharedPreferences.Editor mEditor = mSharedPreferences.edit();
@@ -117,12 +116,13 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                             for ( i= 0;i < len;i++)
                             {
                                 //Excluding the item at position
-                                if (i != position)
+                                if (i != holder.getAdapterPosition())
                                 {
                                     list.put(response.get(i));
                                 }
                                 else
                                 {
+                                    remove(holder.getAdapterPosition());
                                     //holder.txtthirdline.setText(response.get(i).toString());
                                 }
                             }
@@ -187,6 +187,11 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
 
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
+
+
+                holder.txtthirdline.setText("Uhrzeit: " + s[1].substring(0,5).toString() +" Datum: " + ss[2].toString() +"."+ ss[1].toString() +"."+  ss[0].toString());
+
+                holder.txtFooter.setText("Prüfer: " + sa[0] +", "+ sa[1] +"  Semester: "+ sa[2]);
             }
         });
     }
