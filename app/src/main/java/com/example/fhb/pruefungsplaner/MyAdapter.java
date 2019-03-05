@@ -1,11 +1,15 @@
 package com.example.fhb.pruefungsplaner;
 
+import java.util.GregorianCalendar;
 import java.util.List;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.provider.CalendarContract;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +34,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private List<String> Datum;
     private  boolean speicher;
     private  String studiengang;
+    public JSONArray response2;
+    public Intent calIntent;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -43,9 +49,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         public LinearLayout layout2;
         public ImageView ivicon;
         public Button button;
+
         public View layout;
         SharedPreferences sharedpref;
         SharedPreferences.Editor editor;
+
+
+
         public ViewHolder(View v) {
             super(v);
             layout = v;
@@ -138,10 +148,60 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                         mEditor.putString("jsondata", response.toString());
                         mEditor.apply();
 
+                        SharedPreferences mSharedPreferences2 = v.getContext().getSharedPreferences("json7", 0);
+                        //Creating editor to store values to shared preferences
+                        SharedPreferences.Editor mEditor2 = mSharedPreferences2.edit();
+                        mEditor2.apply();
+                        response2 = new JSONArray();
+                        String strJson2 = mSharedPreferences2.getString("jsondata2","0");
+
+                        if (strJson2 != null) {
+                            try {
+                                response2 = new JSONArray(strJson2);
+                            } catch (JSONException e) {
+
+                            }
+                        }
+
+                        int i2;
+                        speicher = false;
+                        for (i2 = 0;i2 < response2.length();i2++) {
+                            { try {
+                                if (response2.get(i).toString().equals("1")) {
+                                    String[] s = Datum.get(position).split(" ");
+                                    String[] ss = s[0].split("-");
+                                    String name = values.get(position);
+                                    String[] modulname = name.split(" ");
+                                    studiengang = "";
+                                    int b;
+                                    for (b=0;b< (modulname.length-1);b++)
+                                    {
+                                        studiengang = (studiengang +" "+modulname[b]);
+
+                                    }
+                                    calIntent = new Intent(Intent.ACTION_INSERT);
+                                    calIntent.setType("vnd.android.cursor.item/event");
+                                    int uhrzeit1 = Integer.valueOf(s[1].substring(0,2));
+                                    int uhrzeit2 = Integer.valueOf(s[1].substring(4,5));
+                                    calIntent.putExtra(CalendarContract.Events.TITLE, studiengang);
+                                    calIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Fachhochschule Bielefeld");
+                                    calIntent.putExtra(CalendarContract.Events.DESCRIPTION, "");
+                                    GregorianCalendar calDate = new GregorianCalendar(Integer.valueOf(ss[0]), (Integer.valueOf(ss[1])-1), Integer.valueOf(ss[2]),uhrzeit1,uhrzeit2);
+                                    calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
+                                    calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                                            calDate.getTimeInMillis());
+                                    calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                                            (calDate.getTimeInMillis()+(90*60000)));
+
+                                    v.getContext().startActivity(calIntent);
+                                }
+                            } catch (JSONException e) {
+                            }}}
                         Toast.makeText(v.getContext(),"Hinzugefügt", Toast.LENGTH_SHORT).show();
                     }
             }
         });
+
 
 
         if (position > 0) {
