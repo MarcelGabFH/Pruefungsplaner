@@ -122,7 +122,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 SharedPreferences.Editor mEditor = mSharedPreferences.edit();
                 mEditor.apply();
                 JSONArray response = new JSONArray();
-                String strJson = mSharedPreferences.getString("jsondata","0");
+                String strJson = mSharedPreferences.getString("jsondata", "0");
                 //second parameter is necessary ie.,Value to return if this preference does not exist.
                 if (strJson != null) {
                     try {
@@ -134,75 +134,75 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                 int i;
                 speicher = false;
-                for (i = 0;i < response.length();i++) {
-                    { try {
-                        if (response.get(i).toString().equals(index.get(position))) {
-                            speicher = true;
-                        }
-                    } catch (JSONException e) {
-
-                    }
-                    } }
-                    if (!speicher){
-                        response.put(index.get(position));
-                        mEditor.putString("jsondata", response.toString());
-                        mEditor.apply();
-
-                        SharedPreferences mSharedPreferences2 = v.getContext().getSharedPreferences("json7", 0);
-                        //Creating editor to store values to shared preferences
-                        SharedPreferences.Editor mEditor2 = mSharedPreferences2.edit();
-                        mEditor2.apply();
-                        response2 = new JSONArray();
-                        String strJson2 = mSharedPreferences2.getString("jsondata2","0");
-
-                        if (strJson2 != null) {
-                            try {
-                                response2 = new JSONArray(strJson2);
-                            } catch (JSONException e) {
-
+                for (i = 0; i < response.length(); i++) {
+                    {
+                        try {
+                            if (response.get(i).toString().equals(index.get(position))) {
+                                speicher = true;
                             }
+                        } catch (JSONException e) {
+
                         }
-
-                        int i2;
-                        speicher = false;
-                        for (i2 = 0;i2 < response2.length();i2++) {
-                            { try {
-                                if (response2.get(i).toString().equals("1")) {
-                                    String[] s = Datum.get(position).split(" ");
-                                    String[] ss = s[0].split("-");
-                                    String name = values.get(position);
-                                    String[] modulname = name.split(" ");
-                                    studiengang = "";
-                                    int b;
-                                    for (b=0;b< (modulname.length-1);b++)
-                                    {
-                                        studiengang = (studiengang +" "+modulname[b]);
-
-                                    }
-                                    calIntent = new Intent(Intent.ACTION_INSERT);
-                                    calIntent.setType("vnd.android.cursor.item/event");
-                                    int uhrzeit1 = Integer.valueOf(s[1].substring(0,2));
-                                    int uhrzeit2 = Integer.valueOf(s[1].substring(4,5));
-                                    calIntent.putExtra(CalendarContract.Events.TITLE, studiengang);
-                                    calIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Fachhochschule Bielefeld");
-                                    calIntent.putExtra(CalendarContract.Events.DESCRIPTION, "");
-                                    GregorianCalendar calDate = new GregorianCalendar(Integer.valueOf(ss[0]), (Integer.valueOf(ss[1])-1), Integer.valueOf(ss[2]),uhrzeit1,uhrzeit2);
-                                    calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
-                                    calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                                            calDate.getTimeInMillis());
-                                    calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
-                                            (calDate.getTimeInMillis()+(90*60000)));
-
-                                    v.getContext().startActivity(calIntent);
-                                }
-                            } catch (JSONException e) {
-                            }}}
-                        Toast.makeText(v.getContext(),"Hinzugefügt", Toast.LENGTH_SHORT).show();
                     }
+                }
+
+
+                if (!speicher) {
+                    response.put(index.get(position));
+                    mEditor.putString("jsondata", response.toString());
+                    mEditor.apply();
+
+                    SharedPreferences mSharedPreferences2 = v.getContext().getSharedPreferences("json8", 0);
+                    //Creating editor to store values to shared preferences
+                    SharedPreferences.Editor mEditor2 = mSharedPreferences2.edit();
+                    mEditor2.apply();
+                    String strJson2 = mSharedPreferences2.getString("jsondata2", "0");
+
+                    boolean speicher2 = false;
+                    int a = 0;
+                    for (a = 0; a < strJson2.length(); a++) {
+
+                        String ss = String.valueOf(strJson2.charAt(a));
+                        if (ss.equals(String.valueOf(1))) {
+                            speicher2 = true;
+
+                        }
+                    }
+
+
+                    if (speicher2){
+                        String[] s = Datum.get(position).split(" ");
+                    String[] ss = s[0].split("-");
+                    String name = values.get(position);
+                    String[] modulname = name.split(" ");
+                    studiengang = "";
+                    int b;
+                    for (b = 0; b < (modulname.length - 1); b++) {
+                        studiengang = (studiengang + " " + modulname[b]);
+
+                    }
+                    calIntent = new Intent(Intent.ACTION_INSERT);
+                    calIntent.setType("vnd.android.cursor.item/event");
+                    int uhrzeit1 = Integer.valueOf(s[1].substring(0, 2));
+                    int uhrzeit2 = Integer.valueOf(s[1].substring(4, 5));
+                    calIntent.putExtra(CalendarContract.Events.TITLE, studiengang);
+                    calIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Fachhochschule Bielefeld");
+                    calIntent.putExtra(CalendarContract.Events.DESCRIPTION, "");
+                    GregorianCalendar calDate = new GregorianCalendar(Integer.valueOf(ss[0]), (Integer.valueOf(ss[1]) - 1), Integer.valueOf(ss[2]), uhrzeit1, uhrzeit2);
+                    calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
+                    calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                            calDate.getTimeInMillis());
+                    calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                            (calDate.getTimeInMillis() + (90 * 60000)));
+
+                    v.getContext().startActivity(calIntent);
+
+
+                }
+                    Toast.makeText(v.getContext(), "Hinzugefügt", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
-
 
         if (position > 0) {
             if (Datum.get(position - 1).toString().equals(Datum.get(position).toString())) {
@@ -234,7 +234,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     studiengang = (studiengang +" "+modulname[b]);
 
                 }
-
                 String[] s = Datum.get(position).split(" ");
                 String[] ss = s[0].split("-");
                 holder.txtthirdline.setText("Uhrzeit: " + s[1].substring(0,5).toString());
@@ -255,9 +254,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 alert11.show();
             }
         });
-
     }
-
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {

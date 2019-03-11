@@ -1,5 +1,6 @@
 package com.example.fhb.pruefungsplaner;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -49,10 +50,10 @@ public class optionen extends Fragment {
 
 
         //holder.zahl1 = position;
-        SharedPreferences mSharedPreferences = v.getContext().getSharedPreferences("json7", 0);
+        SharedPreferences mSharedPreferences = v.getContext().getSharedPreferences("json8",0);
         //Creating editor to store values to shared preferences
         mEditor = mSharedPreferences.edit();
-        mEditor.apply();
+
         response = new JSONArray();
         String strJson = mSharedPreferences.getString("jsondata2","0");
         //second parameter is necessary ie.,Value to return if this preference does not exist.
@@ -89,6 +90,8 @@ public class optionen extends Fragment {
                 // true if the switch is in the On position
                 if(isChecked)
                 {
+                    mEditor.clear();
+                    mEditor.apply();
                     response.put("1");
                     mEditor.putString("jsondata2", response.toString());
                     mEditor.apply();
@@ -97,8 +100,8 @@ public class optionen extends Fragment {
 
                 if(!isChecked)
                 {
-                    mEditor.clear();
-                    mEditor.apply();
+                    mEditor.clear().apply();
+                    mEditor.remove("jsondata2").apply();
                 }
 
             }
