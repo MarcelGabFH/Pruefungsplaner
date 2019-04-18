@@ -3,14 +3,20 @@ package com.example.fhb.pruefungsplaner;
 
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public final class GetterSetter extends Activity {
@@ -39,7 +45,29 @@ public final class GetterSetter extends Activity {
                 this.semester[i] = json.getJSONObject(i).getString("Semester");
                 this.studiengang[i] = json.getJSONObject(i).getString("Studiengang");
                 this.ID[i] = json.getJSONObject(i).getString("ID");
-                this.datum[i] = json.getJSONObject(i).getString("Datum");
+
+                Date sourceDate = null;
+                String date2 = json.getJSONObject(i).getString("Datum");
+                String date3 = date2.replaceFirst("CEST", "");
+                String targetdatevalue;
+                targetdatevalue = null;
+                try {
+                    DateFormat dateFormat = new SimpleDateFormat(
+                            "EEE MMM dd HH:mm:ss yyyy", Locale.US);
+                    Date date4 = dateFormat.parse(date3);
+
+
+                    SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+                    targetdatevalue= targetFormat.format(date4);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "error", Toast.LENGTH_LONG).show();
+                }
+                //Toast.makeText(this, date3.toString(), Toast.LENGTH_LONG).show();
+
+                this.datum[i] = targetdatevalue;
+                //this.datum[i] = json.getJSONObject(i).getString("Datum");
             }
             //anfangsinitialisierung von den startwerten
             if (ab.size() < 1) {

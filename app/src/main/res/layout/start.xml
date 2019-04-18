@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/nav_background"
-    tools:layout_editor_absoluteY="25dp">
+    tools:layout_editor_absoluteY="81dp">
 
 
     <TextView
@@ -26,7 +26,6 @@
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="52dp"
         android:src="@drawable/fhb"
         app:layout_constraintBottom_toTopOf="@+id/spStudiengang"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,24 +39,56 @@
         android:layout_marginLeft="28dp"
         android:layout_marginEnd="28dp"
         android:layout_marginRight="28dp"
-        android:layout_marginBottom="81dp"
+        android:layout_marginBottom="15dp"
+        android:padding="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/spDatum"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <Spinner
+        android:id="@+id/spDatum"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginBottom="18dp"
+        android:padding="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/spPrüfungsphase"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spStudiengang" />
+
+    <Spinner
+        android:id="@+id/spPrüfungsphase"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginBottom="36dp"
         android:padding="0dp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/btnGO"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/spDatum" />
 
     <Button
         android:id="@+id/btnGO"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="39dp"
         android:background="@drawable/button_rounded_corners"
         android:text="OK"
         android:textColor="#eeeeee"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spStudiengang" />
+        app:layout_constraintTop_toBottomOf="@+id/spPrüfungsphase" />
 </android.support.constraint.ConstraintLayout>

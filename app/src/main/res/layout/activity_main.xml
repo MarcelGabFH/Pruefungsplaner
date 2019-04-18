@@ -8,7 +8,7 @@
     android:background="@drawable/nav_background"
     android:screenOrientation="portrait"
     tools:context=".MainActivity"
-    tools:layout_editor_absoluteY="25dp">
+    tools:layout_editor_absoluteY="81dp">
 
 
     <TextView
@@ -16,10 +16,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="9dp"
         android:text="PRÜFUNGSPLAN"
         android:textColor="@android:color/background_light"
         android:textSize="30sp"
         app:fontFamily="serif"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,9 +29,10 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
         android:src="@drawable/fhb"
+        app:layout_constraintBottom_toTopOf="@+id/spStudiengang2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
@@ -37,9 +40,34 @@
         android:id="@+id/spStudiengang"
         android:layout_width="189dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_marginBottom="16dp"
         android:minHeight="40dp"
         android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/spStudiengang3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spStudiengang2" />
+
+    <Spinner
+        android:id="@+id/spStudiengang3"
+        android:layout_width="189dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="56dp"
+        android:minHeight="40dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/button4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spStudiengang" />
+
+    <Spinner
+        android:id="@+id/spStudiengang2"
+        android:layout_width="189dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:minHeight="40dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/spStudiengang"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
@@ -48,13 +76,14 @@
         android:id="@+id/button4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="33dp"
+        android:layout_marginBottom="34dp"
         android:background="@drawable/button_rounded_corners"
         android:text="GO"
         android:textColor="#eeeeee"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spStudiengang3" />
 
 
 </android.support.constraint.ConstraintLayout>

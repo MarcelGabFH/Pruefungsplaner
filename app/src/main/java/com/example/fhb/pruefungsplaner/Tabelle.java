@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.example.fhb.pruefungsplaner.MainActivity.RueckgabeStudiengang;
+//import static com.example.fhb.pruefungsplaner.MainActivity.RueckgabeStudiengang;
 import static com.example.fhb.pruefungsplaner.MainActivity.dateneinlesen;
 import static com.example.fhb.pruefungsplaner.MainActivity.mAdapter;
 import static com.example.fhb.pruefungsplaner.MainActivity.spStudiengangMain;
