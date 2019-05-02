@@ -1,53 +1,132 @@
 package com.example.fhb.pruefungsplaner;
 
-import android.app.Activity;
-import android.content.Intent;
+//////////////////////////////
+// Tabelle
+//
+//
+//
+// autor:
+// inhalt:  Verwaltung aufrufen der fragmente, hier ist der navigation bar hinterlegt
+// zugriffsdatum: 02.05.19
+//
+//
+//
+//
+//
+//
+//////////////////////////////
+
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-
-
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-//import static com.example.fhb.pruefungsplaner.MainActivity.RueckgabeStudiengang;
-import static com.example.fhb.pruefungsplaner.MainActivity.dateneinlesen;
-import static com.example.fhb.pruefungsplaner.MainActivity.mAdapter;
-import static com.example.fhb.pruefungsplaner.MainActivity.spStudiengangMain;
-
+//Eigentlich die Hauptklasse wurde noch nicht umgenannt von hier werden die fragmente aufgerufen
 public class Tabelle extends AppCompatActivity  {
-
-    SharedPreferences mSharedPreferences;
     static public FragmentTransaction ft;
-    public RecyclerView recyclerView;
-    public CalendarView calendar;
-    public Button btnsuche;
-
+    private RecyclerView recyclerView;
+    private CalendarView calendar;
+    private Button btnsuche;
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
+    private TextView txtanzeigemenu;
+    private TextView btnopen;
 
     @Override
+    //aufruf der starteinstelllungen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hauptfenster);
+        txtanzeigemenu = (TextView) findViewById(R.id.txtAnzeige);
+
+
+        btnopen = (TextView) findViewById(R.id.btnopen);
+        dl = (DrawerLayout)findViewById(R.id.drawer_layout);
+
+        nv = (NavigationView)findViewById(R.id.nav_view);
+
+        btnopen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dl.setVisibility(View.VISIBLE);
+                dl.openDrawer(Gravity.START);
+            }
+        });
+
+
+
+
+        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                ft = getSupportFragmentManager().beginTransaction();
+                switch(id)
+                {
+                    case R.id.navigation_calender:
+                        txtanzeigemenu.setText("Termine");
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        calendar.setVisibility(View.GONE);
+                        btnsuche.setVisibility(View.GONE);
+                        dl.setVisibility(View.GONE);
+                        ft.replace(R.id.frame_placeholder, new Terminefragment());
+                        ft.commit();
+                        return true;
+
+                    case R.id.navigation_medication:
+                        txtanzeigemenu.setText("Suche");
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        calendar.setVisibility(View.GONE);
+                        btnsuche.setVisibility(View.GONE);
+                        ft.replace(R.id.frame_placeholder, new sucheFragment());
+                        ft.commit();
+                        dl.setVisibility(View.GONE);
+                        return true;
+                    case R.id.navigation_diary:
+                        txtanzeigemenu.setText("Prüfungen");
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        calendar.setVisibility(View.GONE);
+                        btnsuche.setVisibility(View.GONE);
+                        dl.setVisibility(View.GONE);
+                        ft.replace(R.id.frame_placeholder, new Favoritenfragment());
+                        ft.commit();
+
+                        return true;
+                    case R.id.navigation_settings:
+                        txtanzeigemenu.setText("Optionen");
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        calendar.setVisibility(View.GONE);
+                        btnsuche.setVisibility(View.GONE);
+                        dl.setVisibility(View.GONE);
+                        ft.replace(R.id.frame_placeholder, new optionen());
+                        ft.commit();
+
+                        return true;
+                    default:
+                        dl.setVisibility(View.GONE);
+                        return true;
+
+                }
+
+            }
+        });
+
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView4);
@@ -62,6 +141,10 @@ public class Tabelle extends AppCompatActivity  {
         ft.commit();
     }
 
+
+
+
+    //navigation mit den menuepunkten
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -70,6 +153,8 @@ public class Tabelle extends AppCompatActivity  {
             ft = getSupportFragmentManager().beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation_calender:
+                    //fragment fuer das "terminefragment" layout
+                    txtanzeigemenu.setText("Termine");
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
@@ -78,6 +163,8 @@ public class Tabelle extends AppCompatActivity  {
                     return true;
 
                 case R.id.navigation_medication:
+                    //fragment fuer das "activity_suche" layout
+                    txtanzeigemenu.setText("Suche");
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
@@ -86,6 +173,8 @@ public class Tabelle extends AppCompatActivity  {
                     return true;
 
                 case R.id.navigation_diary:
+                    //fragment fuer das "favoriten" layout
+                    txtanzeigemenu.setText("Prüfungen");
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
@@ -94,6 +183,8 @@ public class Tabelle extends AppCompatActivity  {
                     return true;
 
                 case R.id.navigation_settings:
+                    //fragment fuer das "optionen" layout
+                    txtanzeigemenu.setText("Optionen");
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);

@@ -18,7 +18,19 @@ import org.json.JSONException;
 import java.util.List;
 
 //////////////////////////////
-// Adapter fuer Recycleview///
+// MyAdapterfavoriten für Recycleview
+//
+//
+//
+// autor:
+// inhalt:Anzeigen der favorisierten prüfungen in einzelnen tabellen.
+// zugriffsdatum: 02.05.19
+//
+//
+//
+//
+//
+//
 //////////////////////////////
 
 

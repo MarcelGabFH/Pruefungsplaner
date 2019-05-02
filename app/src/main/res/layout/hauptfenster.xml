@@ -61,11 +61,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/textView8"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="47dp"
-                android:background="@drawable/nav_background" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/btnopen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="47dp"
+                    android:layout_weight="0"
+                    android:background="@drawable/nav_background"
+                    android:gravity="center"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="..."
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="#dddddd"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/txtAnzeige"
+                    android:layout_width="wrap_content"
+                    android:layout_height="47dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/nav_background"
+                    android:gravity="center"
+                    android:text="Termine"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="#dddddd"
+                    android:textSize="24sp" />
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btnDatum"
@@ -149,6 +176,39 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="59dp"
+            android:layout_height="52dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="0dp"
+            android:layout_marginRight="0dp"
+            app:srcCompat="@mipmap/bielefeld" />
+
     </RelativeLayout>
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:openDrawer="start">
+
+        <include
+            layout="@layout/app_bar_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:theme="@style/Base.AlertDialog.AppCompat"
+            app:headerLayout="@layout/nav_header_main"
+            app:menu="@menu/navigation" />
+
+    </android.support.v4.widget.DrawerLayout>
 
 </android.support.constraint.ConstraintLayout>

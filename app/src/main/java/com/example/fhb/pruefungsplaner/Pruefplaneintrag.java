@@ -1,5 +1,21 @@
 package com.example.fhb.pruefungsplaner;
 
+//////////////////////////////
+// Prüfplaneintrag
+//
+//
+//
+// autor:
+// inhalt: aufteilen des json string in variablen damit von anderen Klassen drauf zu gegriffen werden kann
+// zugriffsdatum: 02.05.19
+//
+//
+//
+//
+//
+//
+//////////////////////////////
+
 
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +35,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public final class GetterSetter extends Activity {
+public final class Pruefplaneintrag extends Activity {
     //Klassenvariablen
     String[] profname = new  String[100];
     String[] profnamezwei = new  String[100];
@@ -31,12 +47,12 @@ public final class GetterSetter extends Activity {
     List<String> ab = new ArrayList<String>();
     int laenge;
     //constructor JSONarray aus der wird in die Klassenvariablen abgelegt
-    final public String[] GetterSetter(String beispiel)
+    final void Pruefdaten(String ausgewaehltePruefungen)
     {
         //Try abfrage für fehlerausgabe
         try {
             //JSONAarray mit den Daten aus der Datenbank
-            JSONArray json = new JSONArray(beispiel);
+            JSONArray json = new JSONArray(ausgewaehltePruefungen);
             //Zuweisung der Elemente des Arrays in die Klassenvariablen
             for (int i=0; i< json.length(); i++) {
                 this.Fach[i] = json.getJSONObject(i).getString("Modul");
@@ -81,8 +97,7 @@ public final class GetterSetter extends Activity {
         catch(Exception e){
             e.printStackTrace();
         }
-        //return beispiel
-        return (datum);
+
     }
     //getter methoden
     public int getlaenge() {

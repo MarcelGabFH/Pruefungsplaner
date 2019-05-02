@@ -1,4 +1,19 @@
 package com.example.fhb.pruefungsplaner;
+//////////////////////////////
+// favoritenfragment
+//
+//
+//
+// autor:
+// inhalt:  stelllt die favorisierten prüfungen bereit.
+// zugriffsdatum: 02.05.19
+//
+//
+//
+//
+//
+//
+//////////////////////////////
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -54,10 +69,10 @@ public class Favoritenfragment extends Fragment {
         calendar = (CalendarView) v.findViewById(R.id.caCalender);
         btnsuche = (Button) v.findViewById(R.id.btnDatum);
         calendar.setVisibility(View.GONE);
-        List<String> input = new ArrayList<>();
-        List<String> input2 = new ArrayList<>();
-        List<String> input3 = new ArrayList<>();
-        List<String> input4 = new ArrayList<>();
+        List<String> studiengang = new ArrayList<>();
+        List<String>  profnamen = new ArrayList<>();
+        List<String> datum = new ArrayList<>();
+        List<String> pruefungsNr = new ArrayList<>();
         //Creating editor to store values to shared preferences
         SharedPreferences mSharedPreferences = v.getContext().getSharedPreferences("json6" , 0);
         //Creating editor to store values to shared preferences
@@ -71,13 +86,13 @@ public class Favoritenfragment extends Fragment {
                 response = new JSONArray(strJson);
                 for (int i = 0; i < response.length(); i++) {
                     String[] date2 = dateneinlesen.getDatum()[Integer.valueOf(response.get(i).toString())].toString().split(" ");
-                    input.add(dateneinlesen.getFach()[Integer.valueOf(response.get(i).toString())] + " " + dateneinlesen.getStudiengang()[Integer.valueOf(response.get(i).toString())]);
-                    input2.add(dateneinlesen.getProfname()[Integer.valueOf(response.get(i).toString())] +  " " + dateneinlesen.getProfname2()[Integer.valueOf(response.get(i).toString())] + " " + dateneinlesen.getSemester()[Integer.valueOf(response.get(i).toString())]);
+                    studiengang.add(dateneinlesen.getFach()[Integer.valueOf(response.get(i).toString())] + " " + dateneinlesen.getStudiengang()[Integer.valueOf(response.get(i).toString())]);
+                    profnamen.add(dateneinlesen.getProfname()[Integer.valueOf(response.get(i).toString())] +  " " + dateneinlesen.getProfname2()[Integer.valueOf(response.get(i).toString())] + " " + dateneinlesen.getSemester()[Integer.valueOf(response.get(i).toString())]);
                     //input2.add(dateneinlesen.getProfname()[Integer.valueOf(response.get(i).toString())] + " " + dateneinlesen.getSemester()[Integer.valueOf(response.get(i).toString())] + " ");
-                    input3.add(dateneinlesen.getDatum()[Integer.valueOf(response.get(i).toString())]);
-                    input4.add(response.get(i).toString());
+                    datum.add(dateneinlesen.getDatum()[Integer.valueOf(response.get(i).toString())]);
+                    pruefungsNr.add(response.get(i).toString());
                 }// define an adapter
-                mAdapter = new MyAdapterfavorits(input, input2,input3,input4);
+                mAdapter = new MyAdapterfavorits(studiengang, profnamen,datum,pruefungsNr);
                 recyclerView.setAdapter(mAdapter);
             } catch (JSONException e) {
                 response = new JSONArray();
@@ -92,10 +107,10 @@ public class Favoritenfragment extends Fragment {
                     calendar.setVisibility(View.GONE);
                     //calendar.getLayoutParams().height = 0;
                     speicher = false;
-                    List<String> input = new ArrayList<>();
-                    List<String> input2 = new ArrayList<>();
-                    List<String> input3 = new ArrayList<>();
-                    List<String> input4 = new ArrayList<>();
+                    List<String> studiengang = new ArrayList<>();
+                    List<String> profnamen = new ArrayList<>();
+                    List<String> datum = new ArrayList<>();
+                    List<String> pruefungsNR = new ArrayList<>();
                     //Creating editor to store values to shared preferences
                     SharedPreferences mSharedPreferences = v.getContext().getSharedPreferences("json6" , 0);
                     //Creating editor to store values to shared preferences
@@ -111,13 +126,13 @@ public class Favoritenfragment extends Fragment {
                             for (int i = 0; i < response.length(); i++) {
                                 String[] date2 = dateneinlesen.getDatum()[Integer.valueOf(response.get(i).toString())].toString().split(" ");
 
-                                input.add(dateneinlesen.getFach()[Integer.valueOf(response.get(i).toString())] + " " + dateneinlesen.getStudiengang()[Integer.valueOf(response.get(i).toString())]);
-                                input2.add(dateneinlesen.getProfname()[Integer.valueOf(response.get(i).toString())] +  " " + dateneinlesen.getProfname2()[Integer.valueOf(response.get(i).toString())] +  " " + dateneinlesen.getSemester()[Integer.valueOf(response.get(i).toString())]);
+                                studiengang.add(dateneinlesen.getFach()[Integer.valueOf(response.get(i).toString())] + " " + dateneinlesen.getStudiengang()[Integer.valueOf(response.get(i).toString())]);
+                                profnamen.add(dateneinlesen.getProfname()[Integer.valueOf(response.get(i).toString())] +  " " + dateneinlesen.getProfname2()[Integer.valueOf(response.get(i).toString())] +  " " + dateneinlesen.getSemester()[Integer.valueOf(response.get(i).toString())]);
                                 //input2.add(dateneinlesen.getProfname()[Integer.valueOf(response.get(i).toString())] + " " + dateneinlesen.getSemester()[Integer.valueOf(response.get(i).toString())] + " ");
-                                input3.add(dateneinlesen.getDatum()[Integer.valueOf(response.get(i).toString())]);
-                                input4.add(response.get(i).toString());
+                                datum.add(dateneinlesen.getDatum()[Integer.valueOf(response.get(i).toString())]);
+                                pruefungsNR.add(response.get(i).toString());
                             }// define an adapter
-                            mAdapter = new MyAdapterfavorits(input, input2,input3,input4);
+                            mAdapter = new MyAdapterfavorits(studiengang, profnamen,datum,pruefungsNR);
                             recyclerView.setAdapter(mAdapter);
                         } catch (JSONException e) {
                             response = new JSONArray();
@@ -132,10 +147,10 @@ public class Favoritenfragment extends Fragment {
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                List<String> input = new ArrayList<>();
-                List<String> input2 = new ArrayList<>();
-                List<String> input3 = new ArrayList<>();
-                List<String> input4 = new ArrayList<>();
+                List<String> studiengang = new ArrayList<>();
+                List<String> profnamen = new ArrayList<>();
+                List<String> datum = new ArrayList<>();
+                List<String> pruefungsNR = new ArrayList<>();
                 //Creating editor to store values to shared preferences
                 SharedPreferences mSharedPreferences = v.getContext().getSharedPreferences("json6" , 0);
                 //Creating editor to store values to shared preferences
@@ -162,13 +177,13 @@ public class Favoritenfragment extends Fragment {
                         for (int i = 0; i < response.length(); i++) {
                             String[] date2 = dateneinlesen.getDatum()[Integer.valueOf(response.get(i).toString())].toString().split(" ");
                             if (date2[0].equals(date)) {
-                                input.add(dateneinlesen.getFach()[Integer.valueOf(response.get(i).toString())] + " " + dateneinlesen.getStudiengang()[Integer.valueOf(response.get(i).toString())]);
-                                input2.add(dateneinlesen.getProfname()[Integer.valueOf(response.get(i).toString())] +  " " + dateneinlesen.getProfname2()[Integer.valueOf(response.get(i).toString())] +  " " + dateneinlesen.getSemester()[Integer.valueOf(response.get(i).toString())]);
-                                input3.add(dateneinlesen.getDatum()[Integer.valueOf(response.get(i).toString())]);
-                                input4.add(response.get(i).toString());
+                                studiengang.add(dateneinlesen.getFach()[Integer.valueOf(response.get(i).toString())] + " " + dateneinlesen.getStudiengang()[Integer.valueOf(response.get(i).toString())]);
+                                profnamen.add(dateneinlesen.getProfname()[Integer.valueOf(response.get(i).toString())] +  " " + dateneinlesen.getProfname2()[Integer.valueOf(response.get(i).toString())] +  " " + dateneinlesen.getSemester()[Integer.valueOf(response.get(i).toString())]);
+                                datum.add(dateneinlesen.getDatum()[Integer.valueOf(response.get(i).toString())]);
+                                pruefungsNR.add(response.get(i).toString());
                             }
                         }// define an adapter
-                        mAdapter = new MyAdapterfavorits(input, input2,input3,input4);
+                        mAdapter = new MyAdapterfavorits(studiengang, profnamen,datum,pruefungsNR);
                         recyclerView.setAdapter(mAdapter);
                     } catch (JSONException e) {
                         response = new JSONArray();

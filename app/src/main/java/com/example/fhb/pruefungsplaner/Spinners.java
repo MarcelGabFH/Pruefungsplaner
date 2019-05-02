@@ -1,7 +1,7 @@
 package com.example.fhb.pruefungsplaner;
 
 import android.app.Activity;
-import com.example.fhb.pruefungsplaner.GetterSetter;
+import com.example.fhb.pruefungsplaner.Pruefplaneintrag;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import  android.widget.ArrayAdapter;
 import android.content.Context;
 
 public class Spinners extends Activity {
-    GetterSetter datenausgabe = new GetterSetter();
+    Pruefplaneintrag datenausgabe = new Pruefplaneintrag();
     Context context;
     //Klassenvariablen
     String[] profname = new  String[100];

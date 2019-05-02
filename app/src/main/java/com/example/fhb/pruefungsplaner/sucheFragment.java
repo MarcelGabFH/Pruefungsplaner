@@ -1,5 +1,21 @@
 package com.example.fhb.pruefungsplaner;
 
+//////////////////////////////
+// sucheFragment
+//
+//
+//
+// autor:
+// inhalt:  auswählen und suchen von professoren,modulen,semestern, prüfungsphase
+// zugriffsdatum: 02.05.19
+//
+//
+//
+//
+//
+//
+//////////////////////////////
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -24,7 +40,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.fhb.pruefungsplaner.MainActivity.dateneinlesen;
-import static com.example.fhb.pruefungsplaner.MainActivity.spStudiengangMain;
+//import static com.example.fhb.pruefungsplaner.MainActivity.spStudiengangMain;
 import static com.example.fhb.pruefungsplaner.Tabelle.ft;
 
 

@@ -1,15 +1,26 @@
 package com.example.fhb.pruefungsplaner;
 
-import java.util.GregorianCalendar;
-import java.util.List;
+//////////////////////////////
+// MyAdapter Recycleview
+//
+//
+//
+// autor:
+// inhalt:  unterteilung von allen Prüfungen in einzelne tabellen und darstellung
+// zugriffsdatum: 02.05.19
+//
+//
+//
+//
+//
+//
+//////////////////////////////
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.provider.CalendarContract;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,65 +35,36 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-//////////////////////////////
-// Adapter fuer Recycleview///
-//////////////////////////////
+import java.util.GregorianCalendar;
+import java.util.List;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private List<String> values;
     private List<String> studiengang2;
     private List<String> index;
     private List<String> Datum;
-    private  boolean speicher;
-    private  String studiengang;
-    public JSONArray response2;
-    public Intent calIntent;
+    private boolean speicher;
+    private String studiengang;
+    private Intent calIntent;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public TextView txtHeader;
-        public TextView txtFooter;
-        public Integer zahl1;
-        public TextView txtthirdline;
-        public LinearLayout layout2;
-        public ImageView ivicon;
-        public Button button;
-
-        public View layout;
-        SharedPreferences sharedpref;
-        SharedPreferences.Editor editor;
-
-
-
-        public ViewHolder(View v) {
-            super(v);
-            layout = v;
-            ivicon = (ImageView) v.findViewById(R.id.icon);
-            txtHeader = (TextView) v.findViewById(R.id.firstLine);
-            txtFooter = (TextView) v.findViewById(R.id.secondLine);
-            txtthirdline = (TextView) v.findViewById(R.id.thirdLine);
-            button = (Button) v.findViewById(R.id.button7);
-            //button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            layout2 = (LinearLayout) v.findViewById(R.id.linearLayout);
-        }
-    }
-    public void add(int position, String item,String studiengang) {
-        values.add(position, item);
-        notifyItemInserted(position);
-    }
-    public void remove(int position) {
-        values.remove(position);
-        notifyItemRemoved(position);
-    }
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(List<String> myDataset,List<String> myDataset2,List<String>myDatasetDatum,List<String>index2) {
+    public MyAdapter(List<String> myDataset, List<String> myDataset2, List<String> myDatasetDatum, List<String> index2) {
         values = myDataset;
         Datum = myDatasetDatum;
         studiengang2 = myDataset2;
         index = index2;
     }
+
+    public void add(int position, String item, String studiengang) {
+        values.add(position, item);
+        notifyItemInserted(position);
+    }
+
+    public void remove(int position) {
+        values.remove(position);
+        notifyItemRemoved(position);
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
@@ -96,6 +78,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
+
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
@@ -103,11 +86,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         // - replace the contents of the view with that element
         String name = values.get(position);
         String[] modulname = name.split(" ");
-         studiengang = "";
+        studiengang = "";
         int b;
-        for (b=0;b< (modulname.length-1);b++)
-        {
-            studiengang = (studiengang +" "+modulname[b]);
+        for (b = 0; b < (modulname.length - 1); b++) {
+            studiengang = (studiengang + " " + modulname[b]);
 
         }
 
@@ -170,35 +152,35 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     }
 
 
-                    if (speicher2){
+                    if (speicher2) {
                         String[] s = Datum.get(position).split(" ");
-                    String[] ss = s[0].split("-");
-                    String name = values.get(position);
-                    String[] modulname = name.split(" ");
-                    studiengang = "";
-                    int b;
-                    for (b = 0; b < (modulname.length - 1); b++) {
-                        studiengang = (studiengang + " " + modulname[b]);
+                        String[] ss = s[0].split("-");
+                        String name = values.get(position);
+                        String[] modulname = name.split(" ");
+                        studiengang = "";
+                        int b;
+                        for (b = 0; b < (modulname.length - 1); b++) {
+                            studiengang = (studiengang + " " + modulname[b]);
+
+                        }
+                        calIntent = new Intent(Intent.ACTION_INSERT);
+                        calIntent.setType("vnd.android.cursor.item/event");
+                        int uhrzeit1 = Integer.valueOf(s[1].substring(0, 2));
+                        int uhrzeit2 = Integer.valueOf(s[1].substring(4, 5));
+                        calIntent.putExtra(CalendarContract.Events.TITLE, studiengang);
+                        calIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Fachhochschule Bielefeld");
+                        calIntent.putExtra(CalendarContract.Events.DESCRIPTION, "");
+                        GregorianCalendar calDate = new GregorianCalendar(Integer.valueOf(ss[0]), (Integer.valueOf(ss[1]) - 1), Integer.valueOf(ss[2]), uhrzeit1, uhrzeit2);
+                        calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
+                        calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                                calDate.getTimeInMillis());
+                        calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                                (calDate.getTimeInMillis() + (90 * 60000)));
+
+                        v.getContext().startActivity(calIntent);
+
 
                     }
-                    calIntent = new Intent(Intent.ACTION_INSERT);
-                    calIntent.setType("vnd.android.cursor.item/event");
-                    int uhrzeit1 = Integer.valueOf(s[1].substring(0, 2));
-                    int uhrzeit2 = Integer.valueOf(s[1].substring(4, 5));
-                    calIntent.putExtra(CalendarContract.Events.TITLE, studiengang);
-                    calIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Fachhochschule Bielefeld");
-                    calIntent.putExtra(CalendarContract.Events.DESCRIPTION, "");
-                    GregorianCalendar calDate = new GregorianCalendar(Integer.valueOf(ss[0]), (Integer.valueOf(ss[1]) - 1), Integer.valueOf(ss[2]), uhrzeit1, uhrzeit2);
-                    calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
-                    calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                            calDate.getTimeInMillis());
-                    calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
-                            (calDate.getTimeInMillis() + (90 * 60000)));
-
-                    v.getContext().startActivity(calIntent);
-
-
-                }
                     Toast.makeText(v.getContext(), "Hinzugefügt", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -211,37 +193,32 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
         String[] s = Datum.get(position).split(" ");
         String[] ss = s[0].split("-");
-        holder.txtthirdline.setText("Uhrzeit: " + s[1].substring(0,5).toString());
-        holder.button.setText(ss[2].toString() +"."+ ss[1].toString() +"."+  ss[0].toString());
+        holder.txtthirdline.setText("Uhrzeit: " + s[1].substring(0, 5).toString());
+        holder.button.setText(ss[2].toString() + "." + ss[1].toString() + "." + ss[0].toString());
         final String[] sa = studiengang2.get(position).split(" ");
-        holder.txtFooter.setText("Prüfer: " + sa[0] +", "+ sa[1] +"  Semester: "+ sa[2]);
-        String Semester =  String.valueOf(holder.txtFooter.getText());
+        holder.txtFooter.setText("Prüfer: " + sa[0] + ", " + sa[1] + "  Semester: " + sa[2]);
+        String Semester = String.valueOf(holder.txtFooter.getText());
         String Semester5 = Semester.toString();
         //holder.txtthirdline.setText("Semester: " + Semester5.toString());
 
-        holder.layout2.setOnClickListener(new OnClickListener()
-        {
+        holder.layout2.setOnClickListener(new OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 String name = values.get(position);
                 String[] modulname = name.split(" ");
                 studiengang = "";
                 int b;
-                for (b=0;b< (modulname.length-1);b++)
-                {
-                    studiengang = (studiengang +" "+modulname[b]);
+                for (b = 0; b < (modulname.length - 1); b++) {
+                    studiengang = (studiengang + " " + modulname[b]);
 
                 }
-                String[] s = Datum.get(position).split(" ");
-                String[] ss = s[0].split("-");
-                holder.txtthirdline.setText("Uhrzeit: " + s[1].substring(0,5).toString());
+                String[] aufteilung1 = Datum.get(position).split(" ");
+                String[] aufteilung2 = aufteilung1[0].split("-");
+                holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
                 final String[] sa = studiengang2.get(position).split(" ");
-                String Semester =  String.valueOf(holder.txtFooter.getText());
-                String Semester5 = Semester.toString();
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
-                builder1.setMessage("Informationen zur Prüfung \n \n Studiengang: "+ modulname[modulname.length-1]+ "\n Modul: "+ studiengang  + "\n Erstprüfer: " + sa[0]  +" \n Zweitprüfer: "+ sa[1] + "\n Datum: " + ss[2].toString() +"."+ ss[1].toString() +"."+  ss[0].toString() +" \n Uhrzeit: "+s[1].substring(0,5).toString()+" \n Raum: \n Prüfungsform: \n \n \n \n \n \n ");
+                builder1.setMessage("Informationen zur Prüfung \n \n Studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " +aufteilung2[2].toString() + "." + aufteilung2[1].toString() + "." + aufteilung2[0].toString() + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() + " \n Raum: \n Prüfungsform: \n \n \n \n \n \n ");
                 builder1.setCancelable(true);
                 builder1.setPositiveButton(
                         "Ok",
@@ -255,13 +232,43 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             }
         });
     }
+
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return values.size();
     }
+
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    // Provide a reference to the views for each data item
+    // Complex data items may need more than one view per item, and
+    // you provide access to all the views for a data item in a view holder
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+        private TextView txtHeader;
+        private TextView txtFooter;
+        private Integer zahl1;
+        private TextView txtthirdline;
+        private LinearLayout layout2;
+        private ImageView ivicon;
+        private Button button;
+        private View layout;
+
+
+        private ViewHolder(View v) {
+            super(v);
+            layout = v;
+            ivicon = (ImageView) v.findViewById(R.id.icon);
+            txtHeader = (TextView) v.findViewById(R.id.firstLine);
+            txtFooter = (TextView) v.findViewById(R.id.secondLine);
+            txtthirdline = (TextView) v.findViewById(R.id.thirdLine);
+            button = (Button) v.findViewById(R.id.button7);
+            //button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            layout2 = (LinearLayout) v.findViewById(R.id.linearLayout);
+        }
     }
 }

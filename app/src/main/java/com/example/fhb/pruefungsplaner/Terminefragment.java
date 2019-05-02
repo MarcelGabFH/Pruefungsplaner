@@ -1,5 +1,21 @@
 package com.example.fhb.pruefungsplaner;
 
+//////////////////////////////
+// Terminefragment
+//
+//
+//
+// autor:
+// inhalt:  Prüfungen aus der Klasse Prüfplaneintrag werden abgefragt und zur darstelllung an den Recycleview adapter übergeben
+// zugriffsdatum: 02.05.19
+//
+//
+//
+//
+//
+//
+//////////////////////////////
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,14 +40,14 @@ import static com.example.fhb.pruefungsplaner.MainActivity.mAdapter;
 
 public class Terminefragment extends Fragment {
     SharedPreferences mSharedPreferences;
-    public FragmentTransaction ft;
-    public RecyclerView recyclerView;
-    public CalendarView calendar;
-    public Button btnsuche;
-    public String date;
-    public String month2;
-    public String day2;
-    public String year2;
+    private FragmentTransaction ft;
+    private RecyclerView recyclerView;
+    private CalendarView calendar;
+    private Button btnsuche;
+    private String date;
+    private String month2;
+    private String day2;
+    private String year2;
     List<String> WerteZumAnzeigen;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +58,7 @@ public class Terminefragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.terminefragment, container, false);
-        //setContentView(R.layout.hauptfenster);
+
         WerteZumAnzeigen = dateneinlesen.getab();
         //hinzufügen von recycleview
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);

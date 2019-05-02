@@ -1,39 +1,40 @@
 package com.example.fhb.pruefungsplaner;
 
-import android.content.Context;
+
+
+//////////////////////////////
+// optionen
+//
+//
+//
+// autor:
+// inhalt:  Abfragen ob prüfungen zum Kalender hinzugefügt werden sollen und login
+// zugriffsdatum: 02.05.19
+//
+//
+//
+//
+//
+//
+//////////////////////////////
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-import static com.example.fhb.pruefungsplaner.MainActivity.dateneinlesen;
-import static com.example.fhb.pruefungsplaner.MainActivity.mAdapter;
-
 public class optionen extends Fragment {
-    public Intent calIntent;
-    public boolean speicher;
-    public SharedPreferences.Editor mEditor;
-    public JSONArray response;
+    private boolean speicher;
+    private SharedPreferences.Editor mEditor;
+    private JSONArray response;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -47,13 +48,10 @@ public class optionen extends Fragment {
         final View v = inflater.inflate(R.layout.optionfragment, container, false);
 
         Switch SWgooglecalender = (Switch) v.findViewById(R.id.switch2);
-
-
         //holder.zahl1 = position;
         SharedPreferences mSharedPreferences = v.getContext().getSharedPreferences("json8",0);
         //Creating editor to store values to shared preferences
         mEditor = mSharedPreferences.edit();
-
         response = new JSONArray();
         String strJson = mSharedPreferences.getString("jsondata2","0");
         //second parameter is necessary ie.,Value to return if this preference does not exist.
@@ -77,12 +75,7 @@ public class optionen extends Fragment {
 
             }}}
         if (!speicher){
-
-
         }
-
-
-
 
        SWgooglecalender.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

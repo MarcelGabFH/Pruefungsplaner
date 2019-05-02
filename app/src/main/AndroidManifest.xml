@@ -26,6 +26,8 @@
             android:name=".Tabelle"
             android:label="@string/title_activity_recycleview_tabelle"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Pruefplaneintrag" />
+        <activity android:name=".dbconnect" />
     </application>
 
 </manifest>
