@@ -21,6 +21,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import android.content.SharedPreferences;
+
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
 import android.content.Context;
 import org.json.JSONArray;
@@ -33,12 +35,17 @@ public final class dbconnect extends Activity {
         private Context context;
         private  String URLFHB;
         private  String adresse;
+        private boolean warteaufresponse;
 
     public int database(Context a,String Jahr,String Studiengang,String Pruefungsphase,String Termin) {
         //Serveradresse
         URLFHB = "http://thor.ad.fh-bielefeld.de:8080/";
+
+
+        //URLFHB = "http://192.168.178.39:44631/";
         //uebergabe der parameter an die Adresse
         adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+Termin+"/"+Jahr+"/"+Studiengang+"/";
+        //adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+0+"/"+Jahr+"/"+Studiengang+"/";
 
         //init shared pref und editor
         final SharedPreferences pref = a.getSharedPreferences("JSON", 0); // 0 - for private mode
@@ -46,9 +53,13 @@ public final class dbconnect extends Activity {
 
         //volley init
         //Datenbank adresse
+        RequestQueue requestQueue = Volley.newRequestQueue(a);
+        warteaufresponse = false;
         String url = URLFHB+adresse;
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+
             @Override
+
             public void onResponse(JSONArray response) {
                 editor.clear().apply();
 
@@ -62,9 +73,13 @@ public final class dbconnect extends Activity {
 
                     }
                 }
+
+
                 editor.putString("JSON",response.toString()); // Storing string
                 //editor neuladen/bestätigen
-                editor.apply();
+                editor.commit();
+
+                warteaufresponse = true;
 
             }
         }, new Response.ErrorListener() {
@@ -78,10 +93,14 @@ public final class dbconnect extends Activity {
 
             }
         });
-        RequestQueue requestQueue = Volley.newRequestQueue(a);
-        requestQueue.add(jsonArrayRequest);
 
-    return 1;
+
+        requestQueue.add(jsonArrayRequest);
+        return 1;
+
+    }
+    public boolean warteresponse() {
+        return warteaufresponse;
     }
 
     }

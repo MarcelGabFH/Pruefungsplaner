@@ -15,36 +15,37 @@ package com.example.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.content.SharedPreferences.Editor;
-import android.content.*;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    static public RecyclerView.Adapter mAdapter;
+    static Pruefplaneintrag dateneinlesen = new Pruefplaneintrag();
+    String Jahr;
+    String Pruefphase;
+    String RueckgabeStudiengang;
+    dbconnect database = new dbconnect();
     //KlassenVariablen
     private Spinner spStudiengangMain;
     private Spinner spPruef;
     private Spinner spJahr;
-    String Jahr;
-    String Pruefphase;
-    String RueckgabeStudiengang;
-    static Pruefplaneintrag dateneinlesen = new Pruefplaneintrag();
-    dbconnect  database = new dbconnect();
-    static public RecyclerView.Adapter mAdapter;
 
     @Override
-    public void onCreate(Bundle savedInstanceState ) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         final Context context = getBaseContext();
@@ -60,17 +61,21 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //aufruf der Webseite mit eingaben der spinner
-                database.database(context,Jahr,RueckgabeStudiengang.toString(),Pruefphase,"0");
+                database.database(context, Jahr, RueckgabeStudiengang.toString(), Pruefphase, "0");
 
-                SharedPreferences pref = getApplicationContext().getSharedPreferences("JSON", 0); // 0 - for private mode
-                //einlesen der daten ausdem json String und übergeben an die interne Datenbank
-                String ausgewaehltePruefungen = pref.getString("JSON", "speicher");
-                dateneinlesen.Pruefdaten(ausgewaehltePruefungen);
-                //aufruf der neuen activity
-                Intent hauptfenster = new Intent(getApplicationContext(),Tabelle.class);
-                startActivity(hauptfenster);
-                finish();
-            }
+                    SharedPreferences pref = getApplicationContext().getSharedPreferences("JSON", 0); // 0 - for private mode
+                    //einlesen der daten ausdem json String und übergeben an die interne Datenbank
+                    String ausgewaehltePruefungen = pref.getString("JSON", "speicher");
+                    dateneinlesen.Pruefdaten(ausgewaehltePruefungen);
+                    //aufruf der neuen activity
+                    Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
+                    startActivity(hauptfenster);
+                    finish();
+                }
+
+
+
+
         });
 
         //definieren des Arrays jahreszeit
@@ -93,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     Pruefphase = "W";
                 }
             }
+
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
@@ -100,9 +106,9 @@ public class MainActivity extends AppCompatActivity {
         //Kalender damit das aktuelle und die letzten 4 jahre auszuwählen
         Calendar calendar = Calendar.getInstance();
         List<String> spinnerArray3 = new ArrayList<String>();
-        for( int i = 0 ;i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             int thisYear = calendar.get(Calendar.YEAR);
-            spinnerArray3.add(String.valueOf((thisYear-i)));
+            spinnerArray3.add(String.valueOf((thisYear - i)));
 
         }
 
@@ -117,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Jahr = parent.getItemAtPosition(position).toString();
             }
+
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
@@ -124,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
         //spinnerarray für die studiengänge
         List<String> spinnerArray = new ArrayList<String>();
+        spinnerArray.add("Studiengang wählen");
         spinnerArray.add("Ingenieurinformatik");
         spinnerArray.add("Elektrotechnik");
         spinnerArray.add("Regenenerative Energien");
@@ -143,21 +151,22 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 Studiengang.add(parent.getItemAtPosition(position).toString()); //this is your selected item
-                    if (Studiengang.get(Studiengang.size() - 1).toString().equals("Ingenieurinformatik")) {
-                        RueckgabeStudiengang = "1";
-                    }
-                    if (Studiengang.get(Studiengang.size() - 1).toString().equals("Elektrotechnik")) {
-                        RueckgabeStudiengang = "2";
-                    }
-                    if (Studiengang.get(Studiengang.size() - 1).toString().equals("Regenenerative Energien")) {
-                        RueckgabeStudiengang = "4";
-                    }
-                    if (Studiengang.get(Studiengang.size() - 1).toString().equals("Elektrotechnik Master")) {
-                        RueckgabeStudiengang = "5";
-                    }
+                if (Studiengang.get(Studiengang.size() - 1).toString().equals("Ingenieurinformatik")) {
+                    RueckgabeStudiengang = "1";
+                }
+                if (Studiengang.get(Studiengang.size() - 1).toString().equals("Elektrotechnik")) {
+                    RueckgabeStudiengang = "2";
+                }
+                if (Studiengang.get(Studiengang.size() - 1).toString().equals("Regenenerative Energien")) {
+                    RueckgabeStudiengang = "4";
+                }
+                if (Studiengang.get(Studiengang.size() - 1).toString().equals("Elektrotechnik Master")) {
+                    RueckgabeStudiengang = "5";
+                }
             }
+
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
-    }
+}

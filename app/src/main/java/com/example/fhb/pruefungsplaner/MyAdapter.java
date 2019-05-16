@@ -38,8 +38,9 @@ import org.json.JSONException;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    private List<String> values;
+    public List<String> values;
     private List<String> studiengang2;
     private List<String> index;
     private List<String> Datum;
@@ -53,6 +54,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         Datum = myDatasetDatum;
         studiengang2 = myDataset2;
         index = index2;
+
     }
 
     public void add(int position, String item, String studiengang) {
@@ -76,6 +78,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 inflater.inflate(R.layout.termine, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
+
         return vh;
     }
 
@@ -85,6 +88,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         String name = values.get(position);
+
         String[] modulname = name.split(" ");
         studiengang = "";
         int b;
@@ -92,6 +96,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             studiengang = (studiengang + " " + modulname[b]);
 
         }
+
 
         holder.txtHeader.setText(name);
 
@@ -218,7 +223,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
                 final String[] sa = studiengang2.get(position).split(" ");
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
-                builder1.setMessage("Informationen zur Prüfung \n \n Studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " +aufteilung2[2].toString() + "." + aufteilung2[1].toString() + "." + aufteilung2[0].toString() + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() + " \n Raum: \n Prüfungsform: \n \n \n \n \n \n ");
+                builder1.setMessage("Informationen zur Prüfung \n \n Studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " + aufteilung2[2].toString() + "." + aufteilung2[1].toString() + "." + aufteilung2[0].toString() + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() + " \n Raum: \n Prüfungsform: \n \n \n \n \n \n ");
                 builder1.setCancelable(true);
                 builder1.setPositiveButton(
                         "Ok",
@@ -231,6 +236,30 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 alert11.show();
             }
         });
+
+
+
+
+    }
+
+
+    public String giveString(int position) {
+        String name = values.get(position);
+        String[] modulname = name.split(" ");
+        studiengang = "";
+        int b;
+        for (b = 0; b < (modulname.length - 1); b++) {
+            studiengang = (studiengang + " " + modulname[b]);
+
+        }
+        String[] aufteilung1 = Datum.get(position).split(" ");
+        String[] aufteilung2 = aufteilung1[0].split("-");
+        //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
+        final String[] sa = studiengang2.get(position).split(" ");
+        //AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
+        String s = ("Informationen zur Prüfung \n \n Studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " + aufteilung2[2].toString() + "." + aufteilung2[1].toString() + "." + aufteilung2[0].toString() + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() + " \n Raum: \n Prüfungsform: \n \n \n \n \n \n ");
+
+        return (s);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -239,8 +268,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return values.size();
     }
 
+
+    public int disabbleview() {
+        return 1;
+    }
+
     @Override
     public int getItemViewType(int position) {
+
+
         return position;
     }
 
@@ -253,7 +289,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private TextView txtFooter;
         private Integer zahl1;
         private TextView txtthirdline;
-        private LinearLayout layout2;
+        public LinearLayout layout2;
         private ImageView ivicon;
         private Button button;
         private View layout;
@@ -269,6 +305,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             button = (Button) v.findViewById(R.id.button7);
             //button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             layout2 = (LinearLayout) v.findViewById(R.id.linearLayout);
+
         }
+
+
     }
+
+
 }

@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,14 +38,14 @@ import static com.example.fhb.pruefungsplaner.MainActivity.mAdapter;
 
 public class Favoritenfragment extends Fragment {
     SharedPreferences mSharedPreferences;
-    public FragmentTransaction ft;
-    public RecyclerView recyclerView;
-    public CalendarView calendar;
-    public  Button btnsuche;
-    public String date;
-    public String month2;
-    public String day2;
-    public String year2;
+    private FragmentTransaction ft;
+    private RecyclerView recyclerView;
+    private CalendarView calendar;
+    private  Button btnsuche;
+    private String date;
+    private String month2;
+    private String day2;
+    private String year2;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

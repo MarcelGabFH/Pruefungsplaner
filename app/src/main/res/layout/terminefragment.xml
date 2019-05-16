@@ -46,4 +46,5 @@
         app:layout_constraintTop_toBottomOf="@+id/caCalender">
 
     </android.support.v7.widget.RecyclerView>
+
 </android.support.constraint.ConstraintLayout>
