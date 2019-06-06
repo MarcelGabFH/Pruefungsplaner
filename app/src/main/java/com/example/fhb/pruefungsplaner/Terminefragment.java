@@ -103,35 +103,45 @@ public class Terminefragment extends Fragment {
 
                 if  ((position+2) >= mAdapter.getItemCount())
                 {
-                    View viewItem = recyclerView.getLayoutManager().findViewByPosition(position-2);
-                    View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position-3);
-                    viewItem.setVisibility(View.INVISIBLE);
-                    viewItem2.setVisibility(View.INVISIBLE);
-                    mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
+                    try {
+                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position - 2);
+                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position - 3);
+                        viewItem.setVisibility(View.INVISIBLE);
+                        viewItem2.setVisibility(View.INVISIBLE);
+                        mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
 
-                    recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-                        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
 
-                            //swipeController.onDrawup(c);
-                        }
-                    });
+                                //swipeController.onDrawup(c);
+                            }
+                        });
+                    }
+                    catch (NullPointerException e){
 
+
+                    }
 
                 }
                else {
-                    positionspeichern = mAdapter.values.get(position);
-                    View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
-                    View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position + 1);
-                    viewItem.setVisibility(View.INVISIBLE);
-                    viewItem2.setVisibility(View.INVISIBLE);
+                    try {
+                        positionspeichern = mAdapter.values.get(position);
+                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
+                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position + 1);
+                        viewItem.setVisibility(View.INVISIBLE);
+                        viewItem2.setVisibility(View.INVISIBLE);
 
-                    recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-                        @Override
-                        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                           String s =  mAdapter.giveString(position2);
-                            swipeController.onDraw(c,s);
-                        }
-                    });
+                        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                            @Override
+                            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                                String s = mAdapter.giveString(position2);
+                                swipeController.onDraw(c, s);
+                            }
+                        });
+                    }catch(NullPointerException e)
+                    {
+
+                    }
 
                 }
                // mAdapter.values.remove(position);
@@ -143,20 +153,27 @@ public class Terminefragment extends Fragment {
             public void onRightClicked(int position) {
                 position = position + 1;
 
-                if  ((position+2) >= mAdapter.getItemCount())
-                {
-                    View viewItem = recyclerView.getLayoutManager().findViewByPosition(position-2);
-                    View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position-3);
-                    viewItem.setVisibility(View.VISIBLE);
-                    viewItem2.setVisibility(View.VISIBLE);
+                try {
 
-                }else {
-                    View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
-                    View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position + 1);
-                    viewItem.setVisibility(View.VISIBLE);
-                    viewItem2.setVisibility(View.VISIBLE);
+
+                    if ((position + 2) >= mAdapter.getItemCount()) {
+
+                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position - 2);
+                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position - 3);
+                        viewItem.setVisibility(View.VISIBLE);
+                        viewItem2.setVisibility(View.VISIBLE);
+
+                    } else {
+                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
+                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position + 1);
+                        viewItem.setVisibility(View.VISIBLE);
+                        viewItem2.setVisibility(View.VISIBLE);
+                    }
                 }
+                catch(NullPointerException e)
+                {
 
+                }
                 //mAdapter.values.set(position,positionspeichern);
                 //mAdapter.notifyItemInserted(position);
 

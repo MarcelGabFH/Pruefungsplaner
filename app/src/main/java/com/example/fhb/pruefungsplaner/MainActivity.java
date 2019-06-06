@@ -28,6 +28,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.example.fhb.pruefungsplaner.model.RetrofitConnect;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     String Jahr;
     String Pruefphase;
     String RueckgabeStudiengang;
-    dbconnect database = new dbconnect();
+    dbconnect dbconnect = new dbconnect();
     //KlassenVariablen
     private Spinner spStudiengangMain;
     private Spinner spPruef;
@@ -60,17 +62,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                RetrofitConnect retrofit = new RetrofitConnect();
+                retrofit.retro();
                 //aufruf der Webseite mit eingaben der spinner
-                database.database(context, Jahr, RueckgabeStudiengang.toString(), Pruefphase, "0");
+                dbconnect.database(context, Jahr, RueckgabeStudiengang.toString(), Pruefphase, "0",dateneinlesen);
 
                     SharedPreferences pref = getApplicationContext().getSharedPreferences("JSON", 0); // 0 - for private mode
                     //einlesen der daten ausdem json String und übergeben an die interne Datenbank
-                    String ausgewaehltePruefungen = pref.getString("JSON", "speicher");
-                    dateneinlesen.Pruefdaten(ausgewaehltePruefungen);
+                   // String ausgewaehltePruefungen = pref.getString("JSON", "speicher");
+                    //dateneinlesen.Pruefdaten(ausgewaehltePruefungen);
                     //aufruf der neuen activity
-                    Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
-                    startActivity(hauptfenster);
-                    finish();
+
+                Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
+                startActivity(hauptfenster);
+                finish();
+
                 }
 
 
@@ -169,4 +175,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }
+

@@ -2,7 +2,7 @@ package com.example.fhb.pruefungsplaner;
 
 
 //////////////////////////////
-// optionen
+// Optionen
 //
 //
 //
@@ -30,7 +30,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-public class optionen extends Fragment {
+public class Optionen extends Fragment {
     private boolean speicher;
     private SharedPreferences.Editor mEditor;
     private JSONArray response;

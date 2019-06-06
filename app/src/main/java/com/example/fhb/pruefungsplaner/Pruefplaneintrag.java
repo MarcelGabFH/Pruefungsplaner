@@ -25,6 +25,7 @@ import org.json.JSONArray;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,8 +60,14 @@ public final class Pruefplaneintrag extends Activity {
                 this.ID[i] = json.getJSONObject(i).getString("ID");
 
                 Date sourceDate = null;
+                String date3;
                 String date2 = json.getJSONObject(i).getString("Datum");
-                String date3 = date2.replaceFirst("CEST", "");
+
+
+                    date3 = date2.replaceFirst("CEST", "");
+
+
+
                 String targetdatevalue;
                 targetdatevalue = null;
                 try {

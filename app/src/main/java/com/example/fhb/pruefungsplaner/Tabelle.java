@@ -17,7 +17,6 @@ package com.example.fhb.pruefungsplaner;
 //////////////////////////////
 
 
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -27,7 +26,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,10 +35,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 
 //Eigentlich die Hauptklasse wurde noch nicht umgenannt von hier werden die fragmente aufgerufen
 public class Tabelle extends AppCompatActivity  {
-    static public FragmentTransaction ft;
+    static public FragmentTransaction ft ;
     private RecyclerView recyclerView;
     private CalendarView calendar;
     private Button btnsuche;
@@ -81,12 +81,16 @@ public class Tabelle extends AppCompatActivity  {
                 Btnlogin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (!login.checkUsername(user.getText().toString())) {
-                            if (!login.checkPasswort(passwort.getText().toString())) {
+                        if (!login.checkUsername(user.getText().toString(),getBaseContext())) {
+                            try {
+                                if (!login.checkPasswort(passwort.getText().toString())) {
 
-                                Toast.makeText(getApplicationContext(), "eingeloggt \nUsername: " + user.getText().toString() + "\n" + "Passwort: " + passwort.getText().toString() + "", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Passwort stimmt nicht", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(),  login.total , Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Passwort stimmt nicht", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "Username stimmt nicht", Toast.LENGTH_SHORT).show();
@@ -188,7 +192,7 @@ public class Tabelle extends AppCompatActivity  {
                         dl.closeDrawer(Gravity.START);
                        // dl.setVisibility(View.GONE);
                        // dl.setVisibility(View.GONE);
-                        ft.replace(R.id.frame_placeholder, new optionen());
+                        ft.replace(R.id.frame_placeholder, new Optionen());
                         ft.commit();
 
                         return true;
@@ -216,6 +220,7 @@ public class Tabelle extends AppCompatActivity  {
         ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frame_placeholder, new Terminefragment());
         ft.commit();
+
     }
 
 
@@ -260,12 +265,12 @@ public class Tabelle extends AppCompatActivity  {
                     return true;
 
                 case R.id.navigation_settings:
-                    //fragment fuer das "optionen" layout
+                    //fragment fuer das "Optionen" layout
                     txtanzeigemenu.setText("Optionen");
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
-                    ft.replace(R.id.frame_placeholder, new optionen());
+                    ft.replace(R.id.frame_placeholder, new Optionen());
                     ft.commit();
                     return true;
             }

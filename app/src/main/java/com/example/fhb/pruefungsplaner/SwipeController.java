@@ -46,7 +46,7 @@ public class SwipeController extends Callback {
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        return makeMovementFlags(0, LEFT | RIGHT);
+        return makeMovementFlags(0, LEFT );
     }
 
     @Override
@@ -172,9 +172,9 @@ public class SwipeController extends Callback {
         //c.drawRoundRect(leftButton, corners, corners, p);
         //drawText("EDIT", c, leftButton, p);
 
-        RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), (itemView.getBottom()*2));
+        RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), itemView.getTop()+ 1000);
         //p.setColor(Color.DKGRAY);
-        p.setShader(new LinearGradient(0, 0, 0, c.getHeight(), Color.DKGRAY, Color.BLACK, Shader.TileMode.MIRROR));
+        p.setShader(new LinearGradient(0, 0, 0,itemView.getScaleY()*2, Color.DKGRAY, Color.BLACK, Shader.TileMode.MIRROR));
         c.drawRoundRect(rightButton, corners, corners, p);
         drawText(s, c, rightButton, p);
 
@@ -199,14 +199,14 @@ public class SwipeController extends Callback {
         //c.drawRoundRect(leftButton, corners, corners, p);
         //drawText("EDIT", c, leftButton, p);
 
-        RectF leftButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop()-((itemView.getBottom() - itemView.getTop())*2), itemView.getRight(), (itemView.getBottom()));
+        RectF leftButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop()-((itemView.getBottom() - itemView.getTop())*2), itemView.getRight(), itemView.getHeight()*1);
         p.setColor(Color.BLACK);
         c.drawRoundRect(leftButton, corners, corners, p);
         drawText("INFOS", c, leftButton, p);
 
         buttonInstance = null;
         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
-            //buttonInstance = leftButton;
+            buttonInstance = leftButton;
         }
         else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
             buttonInstance = leftButton;

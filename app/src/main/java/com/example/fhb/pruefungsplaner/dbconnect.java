@@ -20,29 +20,37 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+
+import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public final class dbconnect extends Activity {
+import static com.android.volley.VolleyLog.TAG;
+
+public final class dbconnect extends AppCompatActivity {
 
         // variable to hold context
+
         private Context context;
         private  String URLFHB;
         private  String adresse;
         private boolean warteaufresponse;
 
-    public int database(Context a,String Jahr,String Studiengang,String Pruefungsphase,String Termin) {
+    public int database(final Context a, String Jahr, String Studiengang, String Pruefungsphase, String Termin, final Pruefplaneintrag pruefplan) {
         //Serveradresse
         URLFHB = "http://thor.ad.fh-bielefeld.de:8080/";
 
 
-        //URLFHB = "http://192.168.178.39:44631/";
+       // URLFHB = "http://192.168.178.39:44631/";
         //uebergabe der parameter an die Adresse
         adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+Termin+"/"+Jahr+"/"+Studiengang+"/";
         //adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+0+"/"+Jahr+"/"+Studiengang+"/";
@@ -56,30 +64,35 @@ public final class dbconnect extends Activity {
         RequestQueue requestQueue = Volley.newRequestQueue(a);
         warteaufresponse = false;
         String url = URLFHB+adresse;
+
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
 
             @Override
-
             public void onResponse(JSONArray response) {
                 editor.clear().apply();
 
-                for (int i = 0; i < response.length(); i++) {
+                //for (int i = 0; i < response.length(); i++) {
                     try {
-                        JSONObject jsonObject = response.getJSONObject(i);
+                        response.getJSONObject(0);
+                        Log.d(TAG, response.toString());
                         //JSONArray jsonarray = new JSONArray();
                         //jsonarray.put(i,jsonObject);
+                        pruefplan.Pruefdaten(response.toString());
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
 
                     }
-                }
-
+                //}
+                warteaufresponse = true;
 
                 editor.putString("JSON",response.toString()); // Storing string
                 //editor neuladen/bestätigen
                 editor.commit();
 
-                warteaufresponse = true;
+
+
 
             }
         }, new Response.ErrorListener() {
@@ -95,12 +108,13 @@ public final class dbconnect extends Activity {
         });
 
 
-        requestQueue.add(jsonArrayRequest);
-        return 1;
 
+        requestQueue.add(jsonArrayRequest);
+      return 1;
     }
+
     public boolean warteresponse() {
-        return warteaufresponse;
+        return this.warteaufresponse;
     }
 
     }
