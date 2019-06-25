@@ -64,8 +64,8 @@ public final class Pruefplaneintrag extends Activity {
                 String date2 = json.getJSONObject(i).getString("Datum");
 
 
-                    date3 = date2.replaceFirst("CEST", "");
-
+                date3 = date2.replaceFirst("CET", "");
+                date3 = date3.replaceFirst("CEST","");
 
 
                 String targetdatevalue;

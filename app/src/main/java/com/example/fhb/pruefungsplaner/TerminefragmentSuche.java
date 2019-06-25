@@ -41,7 +41,7 @@ import static com.example.fhb.pruefungsplaner.MainActivity.dateneinlesen;
 import static com.example.fhb.pruefungsplaner.MainActivity.mAdapter;
 import static com.example.fhb.pruefungsplaner.MainActivity.roomdaten;
 
-public class Terminefragment extends Fragment {
+public class TerminefragmentSuche extends Fragment {
 
     SharedPreferences mSharedPreferences;
     public List<String> WerteZumAnzeigen;
@@ -58,81 +58,10 @@ public class Terminefragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
 
-        LongOperation asynctask = new LongOperation();
-
-        asynctask.execute("");
-
         super.onCreate(savedInstanceState);
 
 
     }
-
-    class LongOperation extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            for (int c = 0; c < 1000; c++) {
-                try {
-                    if (RetrofitConnect.checkuebertragung)
-                    {
-
-                        return "Executed";
-                    }
-                    Thread.sleep(1000);
-
-                } catch (InterruptedException e) {
-                    Thread.interrupted();
-                }
-            }
-
-            return "Executed";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-
-            List<User> userdaten = roomdaten.userDao().getAll();
-
-            List<String> input = new ArrayList<>();
-            List<String> input2 = new ArrayList<>();
-            List<String> input3 = new ArrayList<>();
-            List<String> input4 = new ArrayList<>();
-
-
-            for (int i = 0; i < userdaten.size(); i++) {
-                input.add(userdaten.get(i).getModul() + "\n " + userdaten.get(i).getStudiengang());
-                input2.add(userdaten.get(i).getErstpruefer() + " " + userdaten.get(i).getZweitpruefer() + " " + userdaten.get(i).getSemester() + " ");
-                input3.add(userdaten.get(i).getDatum());
-
-            }// define an adapter
-
-            if (dateneinlesen.ab.size() < 1) {
-                for (int i = 0; i < userdaten.size(); i++){
-                    input4.add(userdaten.get(i).getModul());
-                }
-            }
-            else {
-                for (int i = 0; i < dateneinlesen.ab.size(); i++){
-                    input4.add(dateneinlesen.ab.get(i));
-                }}
-            System.out.println(String.valueOf(userdaten.size()));
-
-            mAdapter = new MyAdapter(input, input2, input3, input4);
-
-            recyclerView.setAdapter(mAdapter);
-            // might want to change "executed" for the returned string passed
-            // into onPostExecute() but that is upto you
-        }
-
-        @Override
-        protected void onPreExecute() {}
-
-        @Override
-        protected void onProgressUpdate(Void... values) {}
-    }
-
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -157,7 +86,23 @@ public class Terminefragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
 
+        List<String> input = new ArrayList<>();
+        List<String> input2 = new ArrayList<>();
+        List<String> input3 = new ArrayList<>();
+        List<String> input4 = new ArrayList<>();
+        //gr
+        List<User> userdaten = roomdaten.userDao().getAll();
 
+        for (int i = 0; i < WerteZumAnzeigen.size(); i++) {
+
+            input.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul() + "\n " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getStudiengang());
+            input2.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getErstpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getZweitpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getSemester() + " ");
+            input3.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getDatum());
+            input4.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul());
+
+        }// define an adapter
+        mAdapter = new MyAdapter(input, input2, input3, input4);
+        recyclerView.setAdapter(mAdapter);
 
 
 
@@ -260,7 +205,7 @@ public class Terminefragment extends Fragment {
             public void onClick(View v) {
                 if (!speicher) {
                     calendar.setVisibility(View.GONE);
-
+                    //calendar.getLayoutParams().height = 0;
                     List<String> input = new ArrayList<>();
                     List<String> input2 = new ArrayList<>();
                     List<String> input3 = new ArrayList<>();
@@ -278,6 +223,8 @@ public class Terminefragment extends Fragment {
                     }// define an adapter
                     mAdapter = new MyAdapter(input, input2, input3, input4);
                     recyclerView.setAdapter(mAdapter);
+
+
                     speicher = true;
                 } else {
                     calendar.setVisibility(View.VISIBLE);

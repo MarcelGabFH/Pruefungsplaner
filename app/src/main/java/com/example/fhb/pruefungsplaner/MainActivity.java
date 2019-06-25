@@ -15,6 +15,7 @@ package com.example.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.arch.persistence.room.Dao;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +29,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.example.fhb.pruefungsplaner.data.AppDatabase;
+import com.example.fhb.pruefungsplaner.data.User;
+import com.example.fhb.pruefungsplaner.data.UserDao;
+import com.example.fhb.pruefungsplaner.data.UserDao_Impl;
 import com.example.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import java.util.ArrayList;
@@ -37,6 +42,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     static public RecyclerView.Adapter mAdapter;
     static Pruefplaneintrag dateneinlesen = new Pruefplaneintrag();
+    static AppDatabase roomdaten;
+
     String Jahr;
     String Pruefphase;
     String RueckgabeStudiengang;
@@ -62,8 +69,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                //initialisierung room database
+                 roomdaten =  AppDatabase.getAppDatabase(getBaseContext());
+
+                //retrofit auruf
                 RetrofitConnect retrofit = new RetrofitConnect();
-                retrofit.retro();
+                retrofit.retro(roomdaten, Jahr, RueckgabeStudiengang.toString(), Pruefphase, "0");
                 //aufruf der Webseite mit eingaben der spinner
                 dbconnect.database(context, Jahr, RueckgabeStudiengang.toString(), Pruefphase, "0",dateneinlesen);
 
@@ -72,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
                    // String ausgewaehltePruefungen = pref.getString("JSON", "speicher");
                     //dateneinlesen.Pruefdaten(ausgewaehltePruefungen);
                     //aufruf der neuen activity
+
+
+
 
                 Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
                 startActivity(hauptfenster);

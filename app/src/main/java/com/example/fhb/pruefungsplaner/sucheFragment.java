@@ -465,7 +465,7 @@ public class sucheFragment extends Fragment {
                     dateneinlesen.ab = Tabellenrueckgabe();
                     textt.setText(dateneinlesen.ab.toString());
                     ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.frame_placeholder, new Terminefragment());
+                    ft.replace(R.id.frame_placeholder, new TerminefragmentSuche());
                     ft.commit();
 
                 }

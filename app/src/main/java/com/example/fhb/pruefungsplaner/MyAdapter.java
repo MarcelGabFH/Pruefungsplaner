@@ -197,7 +197,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             }
         }
         String[] s = Datum.get(position).split(" ");
+        System.out.println(s[0]);
         String[] ss = s[0].split("-");
+        System.out.println(s[0]);
         holder.txtthirdline.setText("Uhrzeit: " + s[1].substring(0, 5).toString());
         holder.button.setText(ss[2].toString() + "." + ss[1].toString() + "." + ss[0].toString());
         final String[] sa = studiengang2.get(position).split(" ");

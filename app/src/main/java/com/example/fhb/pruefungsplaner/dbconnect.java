@@ -50,7 +50,7 @@ public final class dbconnect extends AppCompatActivity {
         URLFHB = "http://thor.ad.fh-bielefeld.de:8080/";
 
 
-       // URLFHB = "http://192.168.178.39:44631/";
+        //URLFHB = "http://192.168.178.39:44631/";
         //uebergabe der parameter an die Adresse
         adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+Termin+"/"+Jahr+"/"+Studiengang+"/";
         //adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+0+"/"+Jahr+"/"+Studiengang+"/";
