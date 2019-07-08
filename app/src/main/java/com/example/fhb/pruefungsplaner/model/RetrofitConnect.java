@@ -1,5 +1,6 @@
 package com.example.fhb.pruefungsplaner.model;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -24,14 +25,17 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitConnect {
-
-
+    public  final String Jahr = null,Studiengang= null,Pruefungsphase= null,Termin = null;
     public static boolean checkuebertragung = false;
+    private boolean checkvalidate = false;
 
-    public void retro(final AppDatabase roomdaten,String Jahr, String Studiengang, String Pruefungsphase, String Termin){
+
+    public void retro(final AppDatabase roomdaten, final String Jahr, final String Studiengang, final String Pruefungsphase, String Termin){
+
+
         //Serveradresse
         String URLFHB = "http://thor.ad.fh-bielefeld.de:8080/";
-        //URLFHB = "http://192.168.178.39:44631/";
+        //String URLFHB = "http://192.168.178.39:44631/";
         //uebergabe der parameter an die Adresse
         //String adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+Termin+"/"+Jahr+"/";
         String adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+0+"/"+Jahr+"/"+Studiengang+"/";
@@ -49,7 +53,16 @@ public class RetrofitConnect {
             public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                 response.body();
                 if (response.isSuccessful()) {
-                    roomdaten.clearAllTables();
+                    List<User> userdaten = roomdaten.userDao().getAll2();
+                    //roomdaten.clearAllTables();
+
+                    String validation = Jahr+Studiengang+Pruefungsphase;
+
+                    for(int j = 0; j < userdaten.size();j++) {
+                        if (userdaten.get(j).getValidation().equals(validation)){
+                            checkvalidate = true;
+                        }}
+
                     for (int i = 0; i < response.body().size();i++) {
 
                         User user = new User();
@@ -76,15 +89,21 @@ public class RetrofitConnect {
 
                         }
                         //Toast.makeText(this, date3.toString(), Toast.LENGTH_LONG).show();
-                        user.setErstpruefer(response.body().get(i).getErstpruefer());
-                        user.setZweitpruefer(response.body().get(i).getZweitpruefer());
-                        user.setDatum(String.valueOf(targetdatevalue));
-                        user.setID(response.body().get(i).getID());
-                        user.setStudiengang(response.body().get(i).getStudiengang());
-                        user.setModul(response.body().get(i).getModul());
-                        user.setSemester(response.body().get(i).getSemester());
-                        user.setPruefform(response.body().get(i).getPruefform());
-                        addUser(roomdaten, user);
+
+
+                         if(!checkvalidate){
+                            user.setErstpruefer(response.body().get(i).getErstpruefer());
+                            user.setZweitpruefer(response.body().get(i).getZweitpruefer());
+                            user.setDatum(String.valueOf(targetdatevalue));
+                            user.setID(response.body().get(i).getID());
+                            user.setStudiengang(response.body().get(i).getStudiengang());
+                            user.setModul(response.body().get(i).getModul());
+                            user.setSemester(response.body().get(i).getSemester());
+                            user.setPruefform(response.body().get(i).getPruefform());
+                            user.setValidation(Jahr + Studiengang + Pruefungsphase);
+                            addUser(roomdaten, user);
+
+                        }
                     }
                     checkuebertragung = true;
                 }

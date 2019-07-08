@@ -4,9 +4,13 @@ package com.example.fhb.pruefungsplaner.data;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+
+import java.util.List;
 
 @Entity(tableName = "user")
 public class User {
+
 
 
 
@@ -16,11 +20,21 @@ public class User {
     @ColumnInfo(name = "ID")
     private String ID;
 
+    @ColumnInfo(name = "Favorit")
+    private boolean Favorit;
+
+    @ColumnInfo(name = "Ausgewaehlt")
+    private boolean ausgewaehlt;
+
     @ColumnInfo(name = "Erstpruefer")
     private String Erstpruefer;
 
     @ColumnInfo(name = "Zweitpruefer")
     private String Zweitpruefer;
+
+
+    @ColumnInfo(name = "Validation")
+    private String Validation;
 
     @ColumnInfo(name = "Datum")
     private String Datum;
@@ -122,4 +136,29 @@ public class User {
     public void setCount(int count) {
         Count = count;
     }
+
+    public String getValidation() {
+        return Validation;
+    }
+
+    public void setValidation(String validation) {
+        Validation = validation;
+    }
+
+    public boolean getFavorit() {
+        return Favorit;
+    }
+
+    public void setFavorit(boolean fav) {
+        Favorit = fav;
+    }
+
+    public boolean getAusgewaehlt() {
+        return ausgewaehlt;
+    }
+
+    public void setAusgewaehlt(boolean ausgewaehlt) {
+        this.ausgewaehlt = ausgewaehlt;
+    }
+
 }

@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.fhb.pruefungsplaner.data.AppDatabase;
 import com.example.fhb.pruefungsplaner.data.User;
@@ -41,13 +42,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     static public RecyclerView.Adapter mAdapter;
-    static Pruefplaneintrag dateneinlesen = new Pruefplaneintrag();
-    static AppDatabase roomdaten;
 
-    String Jahr;
-    String Pruefphase;
-    String RueckgabeStudiengang;
-    dbconnect dbconnect = new dbconnect();
+
+   public static String Jahr = null;
+   public static String Pruefphase = null;
+   public static String RueckgabeStudiengang = null;
+
     //KlassenVariablen
     private Spinner spStudiengangMain;
     private Spinner spPruef;
@@ -70,22 +70,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //initialisierung room database
-                 roomdaten =  AppDatabase.getAppDatabase(getBaseContext());
+                 AppDatabase roomdaten =  AppDatabase.getAppDatabase(getBaseContext());
 
                 //retrofit auruf
                 RetrofitConnect retrofit = new RetrofitConnect();
                 retrofit.retro(roomdaten, Jahr, RueckgabeStudiengang.toString(), Pruefphase, "0");
-                //aufruf der Webseite mit eingaben der spinner
-                dbconnect.database(context, Jahr, RueckgabeStudiengang.toString(), Pruefphase, "0",dateneinlesen);
-
-                    SharedPreferences pref = getApplicationContext().getSharedPreferences("JSON", 0); // 0 - for private mode
-                    //einlesen der daten ausdem json String und übergeben an die interne Datenbank
-                   // String ausgewaehltePruefungen = pref.getString("JSON", "speicher");
-                    //dateneinlesen.Pruefdaten(ausgewaehltePruefungen);
-                    //aufruf der neuen activity
-
-
-
 
                 Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
                 startActivity(hauptfenster);
@@ -98,15 +87,34 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+
+        Button btngo2 = (Button) findViewById(R.id.btnGO2);
+        btngo2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String validation = Jahr + RueckgabeStudiengang +  Pruefphase;
+
+                update(validation);
+
+            }
+
+
+
+
+        });
+
         //definieren des Arrays jahreszeit
         List<String> jahreszeit = new ArrayList<String>();
-        jahreszeit.add("Semester wählen");
         jahreszeit.add("Sommer");
         jahreszeit.add("Winter");
+
+
         //spinner füllen mit werten für Sommer/Winter
         ArrayAdapter<String> studiengang = new ArrayAdapter<String>(
                 getBaseContext(), R.layout.simple_spinner_item, jahreszeit);
         studiengang.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+
         spPruef = (Spinner) findViewById(R.id.spPrüfungsphase);
         spPruef.setAdapter(studiengang);
         spPruef.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -126,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         //Kalender damit das aktuelle und die letzten 4 jahre auszuwählen
         Calendar calendar = Calendar.getInstance();
         List<String> spinnerArray3 = new ArrayList<String>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 2; i++) {
             int thisYear = calendar.get(Calendar.YEAR);
             spinnerArray3.add(String.valueOf((thisYear - i)));
 
@@ -151,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
 
         //spinnerarray für die studiengänge
         List<String> spinnerArray = new ArrayList<String>();
-        spinnerArray.add("Studiengang wählen");
         spinnerArray.add("Ingenieurinformatik");
         spinnerArray.add("Elektrotechnik");
         spinnerArray.add("Regenenerative Energien");
@@ -190,5 +197,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+   public void update(String validation){
+
+        AppDatabase database = AppDatabase.getAppDatabase(getBaseContext());
+        database.clearAllTables();
+        Toast.makeText(getBaseContext(), "Studiengang wurde aktualisiert", Toast.LENGTH_SHORT).show();
+
+   }
 }
 

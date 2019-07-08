@@ -31,15 +31,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
 
+import com.example.fhb.pruefungsplaner.data.AppDatabase;
 import com.example.fhb.pruefungsplaner.data.User;
 import com.example.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.fhb.pruefungsplaner.MainActivity.dateneinlesen;
-import static com.example.fhb.pruefungsplaner.MainActivity.mAdapter;
-import static com.example.fhb.pruefungsplaner.MainActivity.roomdaten;
+import static com.example.fhb.pruefungsplaner.MainActivity.Jahr;
+import static com.example.fhb.pruefungsplaner.MainActivity.Pruefphase;
+import static com.example.fhb.pruefungsplaner.MainActivity.RueckgabeStudiengang;
+
 
 public class Terminefragment extends Fragment {
 
@@ -53,14 +55,20 @@ public class Terminefragment extends Fragment {
     private String month2;
     private String day2;
     private String year2;
+    public static String validation;
     SwipeController swipeController = null;
     MyAdapter mAdapter;
+
+    AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
+    List<User>dateneinlesen = roomdaten.userDao().getAll(validation);
+
 
     public void onCreate(Bundle savedInstanceState) {
 
         LongOperation asynctask = new LongOperation();
 
         asynctask.execute("");
+       validation = Jahr+RueckgabeStudiengang+Pruefphase;
 
         super.onCreate(savedInstanceState);
 
@@ -91,33 +99,29 @@ public class Terminefragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
 
-            List<User> userdaten = roomdaten.userDao().getAll();
+            List<User> userdaten = roomdaten.userDao().getAll(validation);
 
             List<String> input = new ArrayList<>();
             List<String> input2 = new ArrayList<>();
             List<String> input3 = new ArrayList<>();
             List<String> input4 = new ArrayList<>();
+            List<String> ID = new ArrayList<>();
+            List<String> Pruefform = new ArrayList<>();
 
 
             for (int i = 0; i < userdaten.size(); i++) {
                 input.add(userdaten.get(i).getModul() + "\n " + userdaten.get(i).getStudiengang());
                 input2.add(userdaten.get(i).getErstpruefer() + " " + userdaten.get(i).getZweitpruefer() + " " + userdaten.get(i).getSemester() + " ");
                 input3.add(userdaten.get(i).getDatum());
-
+                input4.add(userdaten.get(i).getID());
+                ID.add(userdaten.get(i).getID());
+                Pruefform.add(userdaten.get(i).getPruefform());
             }// define an adapter
 
-            if (dateneinlesen.ab.size() < 1) {
-                for (int i = 0; i < userdaten.size(); i++){
-                    input4.add(userdaten.get(i).getModul());
-                }
-            }
-            else {
-                for (int i = 0; i < dateneinlesen.ab.size(); i++){
-                    input4.add(dateneinlesen.ab.get(i));
-                }}
-            System.out.println(String.valueOf(userdaten.size()));
 
-            mAdapter = new MyAdapter(input, input2, input3, input4);
+           // System.out.println(String.valueOf(userdaten.size()));
+
+            mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
 
             recyclerView.setAdapter(mAdapter);
             // might want to change "executed" for the returned string passed
@@ -139,7 +143,6 @@ public class Terminefragment extends Fragment {
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.terminefragment, container, false);
 
-        WerteZumAnzeigen = dateneinlesen.getab();
 
         //hinzufügen von recycleview
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
@@ -261,39 +264,58 @@ public class Terminefragment extends Fragment {
                 if (!speicher) {
                     calendar.setVisibility(View.GONE);
 
+                    List<User> userdaten = roomdaten.userDao().getAll(validation);
+
                     List<String> input = new ArrayList<>();
                     List<String> input2 = new ArrayList<>();
                     List<String> input3 = new ArrayList<>();
                     List<String> input4 = new ArrayList<>();
-                    //gr
-                    List<User> userdaten = roomdaten.userDao().getAll();
+                    List<String> ID = new ArrayList<>();
+                    List<String> Pruefform = new ArrayList<>();
 
-                    for (int i = 0; i < WerteZumAnzeigen.size(); i++) {
 
-                        input.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul() + "\n " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getStudiengang());
-                        input2.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getErstpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getZweitpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getSemester() + " ");
-                        input3.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getDatum());
-                        input4.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul());
-
+                    for (int i = 0; i < userdaten.size(); i++) {
+                        input.add(userdaten.get(i).getModul() + "\n " + userdaten.get(i).getStudiengang());
+                        input2.add(userdaten.get(i).getErstpruefer() + " " + userdaten.get(i).getZweitpruefer() + " " + userdaten.get(i).getSemester() + " ");
+                        input3.add(userdaten.get(i).getDatum());
+                        input4.add(userdaten.get(i).getID());
+                        ID.add(userdaten.get(i).getID());
+                        Pruefform.add(userdaten.get(i).getPruefform());
                     }// define an adapter
-                    mAdapter = new MyAdapter(input, input2, input3, input4);
+
+                    if (dateneinlesen.size() < 1) {
+                        for (int i = 0; i < userdaten.size(); i++){
+                            input4.add(userdaten.get(i).getID());
+                        }
+                    }
+                    else {
+                        for (int i = 0; i < dateneinlesen.size(); i++){
+                            input4.add(userdaten.get(i).getID());
+                        }}
+                   // System.out.println(String.valueOf(userdaten.size()));
+
+                    mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
+
                     recyclerView.setAdapter(mAdapter);
+
                     speicher = true;
                 } else {
                     calendar.setVisibility(View.VISIBLE);
                     calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                         public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                            List<User> userdaten = roomdaten.userDao().getAll();
+                            List<User> userdaten = roomdaten.userDao().getAll(validation);
 
                             List<String> input = new ArrayList<>();
                             List<String> input2 = new ArrayList<>();
                             List<String> input3 = new ArrayList<>();
                             List<String> input4 = new ArrayList<>();
+                            List<String> ID = new ArrayList<>();
+                            List<String> Pruefform = new ArrayList<>();
                             //Creating editor to store values to shared preferences
                             if (month < 10) {
                                 month2 = "0" + String.valueOf(month + 1);
                             } else {
-                                month2 = String.valueOf(month);
+                                month2 = String.valueOf(month+1);
                             }
                             if (dayOfMonth < 10) {
                                 day2 = "0" + String.valueOf(dayOfMonth);
@@ -312,9 +334,11 @@ public class Terminefragment extends Fragment {
                                     input2.add(userdaten.get(i).getErstpruefer() + " " + userdaten.get(i).getZweitpruefer() + " " + userdaten.get(i).getSemester() + " ");
                                     input3.add(userdaten.get(i).getDatum());
                                     input4.add(userdaten.get(i).getModul());
+                                    ID.add(userdaten.get(i).getID());
+                                    Pruefform.add(userdaten.get(i).getID());
                                 }
                             }// define an adapter
-                            mAdapter = new MyAdapter(input, input2, input3, input4);
+                            mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
 
                             recyclerView.setAdapter(mAdapter);
                         }
@@ -328,28 +352,6 @@ public class Terminefragment extends Fragment {
 
 
         return v;
-    }
-
-
-    public void checkuebertragung() {
-
-        List<User> userdaten = roomdaten.userDao().getAll();
-
-        List<String> input = new ArrayList<>();
-        List<String> input2 = new ArrayList<>();
-        List<String> input3 = new ArrayList<>();
-        List<String> input4 = new ArrayList<>();
-        if (RetrofitConnect.checkuebertragung) {
-
-        }
-        for (int i = 0; i < userdaten.size(); i++) {
-            input.add(userdaten.get(i).getModul() + " " + userdaten.get(i).getModul());
-            input2.add(userdaten.get(i).getModul() + " " + userdaten.get(i).getModul() + " " + userdaten.get(i).getModul() + " ");
-            input3.add(userdaten.get(i).getModul());
-            input4.add(userdaten.get(i).getModul());
-        }// define an adapter
-        System.out.println(String.valueOf(userdaten.size()));
-
     }
 
 

@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.fhb.pruefungsplaner.data.AppDatabase;
+import com.example.fhb.pruefungsplaner.data.User;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -37,7 +40,7 @@ import java.util.List;
 public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.ViewHolder> {
     private List<String> values;
     private List<String> studiengang2;
-    private List<String> index;
+    private List<String> ppid;
     private List<String> Datum;
 
     private String studiengang;
@@ -48,7 +51,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         values = myDataset;
         Datum = myDatasetDatum;
         studiengang2 = myDataset2;
-        index = index2;
+        ppid = index2;
 
     }
 
@@ -75,6 +78,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                 inflater.inflate(R.layout.favoriten, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
+
         return vh;
     }
 
@@ -88,41 +92,25 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         holder.ivicon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                //holder.zahl1 = position;
-                //holder.txtthirdline.setText(index.get(position));
-                SharedPreferences mSharedPreferences = v.getContext().getSharedPreferences("json6", 0);
-                //Creating editor to store values to shared preferences
-                SharedPreferences.Editor mEditor = mSharedPreferences.edit();
-                JSONArray response = new JSONArray();
-                String strJson = mSharedPreferences.getString("jsondata", "0");
+
+                AppDatabase roomdaten2 =  AppDatabase.getAppDatabase(v.getContext());
+
+                List<User> userdaten = roomdaten2.userDao().getAll2();
+
                 //second parameter is necessary ie.,Value to return if this preference does not exist.
-                if (strJson != null) {
-                    try {
-                        response = new JSONArray(strJson);
-                        JSONArray list = new JSONArray();
-                        int len = response.length();
-                        if (response != null) {
-                            int i;
-                            for (i = 0; i < len; i++) {
-                                //Excluding the item at position
-                                if (i != holder.getAdapterPosition()) {
-                                    list.put(response.get(i));
-                                } else {
-                                    remove(holder.getAdapterPosition());
-                                    //holder.txtthirdline.setText(response.get(i).toString());
-                                }
-                            }
+                for (int i = 0; i < userdaten.size();i++){
+                    if(userdaten.get(i).getFavorit()){
+
+                        if(userdaten.get(i).getID().equals(ppid.get(position))){
+                            roomdaten2.userDao().update(false,Integer.valueOf(ppid.get(position)));
+                            remove(holder.getAdapterPosition());
+
                         }
-                        mEditor.clear();
-                        mEditor.putString("jsondata", list.toString());
-                        mEditor.apply();
-                    } catch (JSONException e) {
                     }
                 }
             }
         });
         holder.txtFooter.setText("Prüfer: " + studiengang2.get(position).toString());
-
         name = values.get(position);
         String[] modulname = name.split(" ");
         studiengang = "";

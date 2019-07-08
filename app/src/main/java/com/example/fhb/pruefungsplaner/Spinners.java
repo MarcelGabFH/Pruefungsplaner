@@ -1,17 +1,14 @@
 package com.example.fhb.pruefungsplaner;
 
 import android.app.Activity;
-import com.example.fhb.pruefungsplaner.Pruefplaneintrag;
 
 import java.util.List;
 import java.util.ArrayList;
 
-import android.support.v7.app.AppCompatActivity;
-import  android.widget.ArrayAdapter;
 import android.content.Context;
 
 public class Spinners extends Activity {
-    Pruefplaneintrag datenausgabe = new Pruefplaneintrag();
+
     Context context;
     //Klassenvariablen
     String[] profname = new  String[100];

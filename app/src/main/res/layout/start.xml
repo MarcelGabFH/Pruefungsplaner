@@ -16,7 +16,7 @@
         android:text="PRÜFUNGSPLAN"
         android:textColor="@android:color/background_light"
         android:textSize="30sp"
-        app:fontFamily="serif"
+        app:fontFamily="monospace"
         app:layout_constraintBottom_toTopOf="@+id/imageView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,4 +91,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spPrüfungsphase" />
+
+    <Button
+        android:id="@+id/btnGO2"
+        android:layout_width="46dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="39dp"
+        android:background="@drawable/button_rounded_corners"
+        android:text="update"
+        android:textColor="#eeeeee"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spPrüfungsphase"
+        app:layout_constraintVertical_bias="1.0" />
 </android.support.constraint.ConstraintLayout>
