@@ -145,7 +145,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                 String Semester = String.valueOf(holder.txtFooter.getText());
                 String Semester5 = Semester.toString();
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
-                builder1.setMessage("Informationen zur Prüfung \n \n Studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " + ss[2].toString() + "." + ss[1].toString() + "." + ss[0].toString() + " \n Uhrzeit: " + s[1].substring(0, 5).toString() + " \n Raum: \n Prüfungsform: \n \n \n \n \n \n ");
+                builder1.setMessage("Informationen zur Prüfung \n \n Studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " + ss[2].toString() + "." + ss[1].toString() + "." + ss[0].toString() + " \n Uhrzeit: " + s[1].substring(0, 5).toString() + " \n \n \n \n \n \n ");
                 builder1.setCancelable(true);
                 builder1.setPositiveButton(
                         "Ok",

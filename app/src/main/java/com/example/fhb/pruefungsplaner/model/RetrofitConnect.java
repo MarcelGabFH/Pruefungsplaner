@@ -31,14 +31,12 @@ public class RetrofitConnect {
 
 
     public void retro(final AppDatabase roomdaten, final String Jahr, final String Studiengang, final String Pruefungsphase, String Termin){
-
-
         //Serveradresse
         String URLFHB = "http://thor.ad.fh-bielefeld.de:8080/";
         //String URLFHB = "http://192.168.178.39:44631/";
         //uebergabe der parameter an die Adresse
         //String adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+Termin+"/"+Jahr+"/";
-        String adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+0+"/"+Jahr+"/"+Studiengang+"/";
+        String adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+Termin+"/"+Jahr+"/"+Studiengang+"/";
 
         String URL = URLFHB+adresse;
         Retrofit retrofit = new Retrofit.Builder()
@@ -101,7 +99,7 @@ public class RetrofitConnect {
                             user.setSemester(response.body().get(i).getSemester());
                             user.setPruefform(response.body().get(i).getPruefform());
                             user.setValidation(Jahr + Studiengang + Pruefungsphase);
-                            addUser(roomdaten, user);
+                             addUser(roomdaten, user);
 
                         }
                     }

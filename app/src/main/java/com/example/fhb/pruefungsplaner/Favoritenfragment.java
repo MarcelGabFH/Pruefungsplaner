@@ -81,7 +81,7 @@ public class Favoritenfragment extends Fragment {
         List<String> profnamen = new ArrayList<>();
         List<String> datum = new ArrayList<>();
         List<String> pruefungsNr = new ArrayList<>();
-
+        btnsuche.setVisibility(View.INVISIBLE);
         List<User> userdaten = roomdaten.userDao().getAll2();
 
         for (int i = 0; i < userdaten.size(); i++) {

@@ -7,7 +7,7 @@ package com.example.fhb.pruefungsplaner;
 //
 // autor:
 // inhalt:  Prüfungen aus der Klasse Prüfplaneintrag werden abgefragt und zur darstelllung an den Recycleview adapter übergeben
-// zugriffsdatum: 02.05.19
+// zugriffsdatum: 07.09.19
 //
 //
 //
@@ -136,27 +136,8 @@ public class TerminefragmentSuche extends Fragment {
 
                 position = position + 1;
                 final int position2 = position - 1;
+                if( position < (mAdapter.getItemCount() -1)) {
 
-                if ((position + 2) >= mAdapter.getItemCount()) {
-                    try {
-                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position - 2);
-                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position - 3);
-                        viewItem.setVisibility(View.INVISIBLE);
-                        viewItem2.setVisibility(View.INVISIBLE);
-                        mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
-
-                        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-                            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-
-                                //swipeController.onDrawup(c);
-                            }
-                        });
-                    } catch (NullPointerException e) {
-
-
-                    }
-
-                } else {
                     try {
                         positionspeichern = mAdapter.values.get(position);
                         View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
@@ -175,6 +156,14 @@ public class TerminefragmentSuche extends Fragment {
 
                     }
 
+                }else{
+                    recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                        @Override
+                        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                            String s = mAdapter.giveString(position2);
+                            swipeController.onDraw(c, s);
+                        }
+                    });
                 }
                 // mAdapter.values.remove(position);
                 //    mAdapter.notifyItemRemoved(position);
@@ -186,13 +175,9 @@ public class TerminefragmentSuche extends Fragment {
                 position = position + 1;
 
                 try {
-                    if ((position + 2) >= mAdapter.getItemCount()) {
+                    if (position < (mAdapter.getItemCount()-1)) {
 
-                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position - 2);
-                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position - 3);
-                        viewItem.setVisibility(View.VISIBLE);
-                        viewItem2.setVisibility(View.VISIBLE);
-                    } else {
+
                         View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
                         View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position + 1);
                         viewItem.setVisibility(View.VISIBLE);

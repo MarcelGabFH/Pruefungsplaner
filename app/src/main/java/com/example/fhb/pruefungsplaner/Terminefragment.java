@@ -7,7 +7,7 @@ package com.example.fhb.pruefungsplaner;
 //
 // autor:
 // inhalt:  Prüfungen aus der Klasse Prüfplaneintrag werden abgefragt und zur darstelllung an den Recycleview adapter übergeben
-// zugriffsdatum: 02.05.19
+// zugriffsdatum: 07.09.19
 //
 //
 //
@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.Toast;
 
 import com.example.fhb.pruefungsplaner.data.AppDatabase;
 import com.example.fhb.pruefungsplaner.data.User;
@@ -41,6 +42,7 @@ import java.util.List;
 import static com.example.fhb.pruefungsplaner.MainActivity.Jahr;
 import static com.example.fhb.pruefungsplaner.MainActivity.Pruefphase;
 import static com.example.fhb.pruefungsplaner.MainActivity.RueckgabeStudiengang;
+import static com.example.fhb.pruefungsplaner.MainActivity.Termin;
 
 
 public class Terminefragment extends Fragment {
@@ -65,12 +67,15 @@ public class Terminefragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
 
+
+
+
         LongOperation asynctask = new LongOperation();
 
         asynctask.execute("");
        validation = Jahr+RueckgabeStudiengang+Pruefphase;
 
-        super.onCreate(savedInstanceState);
+       super.onCreate(savedInstanceState);
 
 
     }
@@ -81,15 +86,18 @@ public class Terminefragment extends Fragment {
         protected String doInBackground(String... params) {
             for (int c = 0; c < 1000; c++) {
                 try {
+                    Thread.sleep(3000);
                     if (RetrofitConnect.checkuebertragung)
                     {
 
                         return "Executed";
                     }
-                    Thread.sleep(1000);
+
+
 
                 } catch (InterruptedException e) {
                     Thread.interrupted();
+                    return"Executed";
                 }
             }
 
@@ -129,7 +137,10 @@ public class Terminefragment extends Fragment {
         }
 
         @Override
-        protected void onPreExecute() {}
+        protected void onPreExecute() {
+
+
+        }
 
         @Override
         protected void onProgressUpdate(Void... values) {}
@@ -160,6 +171,31 @@ public class Terminefragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
 
+        List<User> userdaten = roomdaten.userDao().getAll(validation);
+
+        List<String> input = new ArrayList<>();
+        List<String> input2 = new ArrayList<>();
+        List<String> input3 = new ArrayList<>();
+        List<String> input4 = new ArrayList<>();
+        List<String> ID = new ArrayList<>();
+        List<String> Pruefform = new ArrayList<>();
+
+
+        for (int i = 0; i < userdaten.size(); i++) {
+            input.add(userdaten.get(i).getModul() + "\n " + userdaten.get(i).getStudiengang());
+            input2.add(userdaten.get(i).getErstpruefer() + " " + userdaten.get(i).getZweitpruefer() + " " + userdaten.get(i).getSemester() + " ");
+            input3.add(userdaten.get(i).getDatum());
+            input4.add(userdaten.get(i).getID());
+            ID.add(userdaten.get(i).getID());
+            Pruefform.add(userdaten.get(i).getPruefform());
+        }// define an adapter
+
+
+        // System.out.println(String.valueOf(userdaten.size()));
+
+        mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
+
+        recyclerView.setAdapter(mAdapter);
 
 
 
@@ -169,30 +205,10 @@ public class Terminefragment extends Fragment {
 
             @Override
             public void onLeftClicked(int position) {
+                if( position < (mAdapter.getItemCount() -1)) {
+                    position = position + 1;
+                    final int position2 = position - 1;
 
-                position = position + 1;
-                final int position2 = position - 1;
-
-                if ((position + 2) >= mAdapter.getItemCount()) {
-                    try {
-                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position - 2);
-                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position - 3);
-                        viewItem.setVisibility(View.INVISIBLE);
-                        viewItem2.setVisibility(View.INVISIBLE);
-                        mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
-
-                        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-                            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-
-                                //swipeController.onDrawup(c);
-                            }
-                        });
-                    } catch (NullPointerException e) {
-
-
-                    }
-
-                } else {
                     try {
                         positionspeichern = mAdapter.values.get(position);
                         View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
@@ -212,31 +228,36 @@ public class Terminefragment extends Fragment {
                     }
 
                 }
-                // mAdapter.values.remove(position);
-                //    mAdapter.notifyItemRemoved(position);
-                // mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
-            }
+                else{
+                    final int position2 = position - 1;
+                    recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                        @Override
+                        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                            String s = mAdapter.giveString(position2);
+                            swipeController.onDraw(c, s);
+                        }
+                    });
+
+                }
+                    // mAdapter.values.remove(position);
+                    //    mAdapter.notifyItemRemoved(position);
+                    // mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
+                }
+
 
 
             public void onRightClicked(int position) {
+                if( position < (mAdapter.getItemCount() - 1)) {
                 position = position + 1;
+                    try {
 
-                try {
-                    if ((position + 2) >= mAdapter.getItemCount()) {
-
-                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position - 2);
-                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position - 3);
-                        viewItem.setVisibility(View.VISIBLE);
-                        viewItem2.setVisibility(View.VISIBLE);
-
-                    } else {
                         View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
                         View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position + 1);
                         viewItem.setVisibility(View.VISIBLE);
                         viewItem2.setVisibility(View.VISIBLE);
-                    }
-                } catch (NullPointerException e) {
+                    } catch (NullPointerException e) {
 
+                    }
                 }
                 //mAdapter.values.set(position,positionspeichern);
                 //mAdapter.notifyItemInserted(position);

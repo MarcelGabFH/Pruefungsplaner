@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -47,11 +48,12 @@ public class MainActivity extends AppCompatActivity {
    public static String Jahr = null;
    public static String Pruefphase = null;
    public static String RueckgabeStudiengang = null;
-
+   public static String Termin;
     //KlassenVariablen
     private Spinner spStudiengangMain;
     private Spinner spPruef;
     private Spinner spJahr;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
         //aufrufen des startlayouts
         setContentView(R.layout.start);
 
+        Termin = "0";
+        final RadioButton rBPruefungsphase1 = (RadioButton) findViewById(R.id.rBPruefung1);
+        final RadioButton rBPruefungsphase2 = (RadioButton) findViewById(R.id.rBPruefung2);
+
 
         //OK Button, hier wird die neue activity aufgerufen --> aufruf von dem layout "hauptfenster" und der Klasse Tabelle
         Button btngo = (Button) findViewById(R.id.btnGO);
@@ -69,12 +75,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                if (rBPruefungsphase1.isChecked()) {
+                    Termin = "0";
+                } else if (rBPruefungsphase2.isChecked()) {
+                    Termin = "1";
+                }
+
                 //initialisierung room database
                  AppDatabase roomdaten =  AppDatabase.getAppDatabase(getBaseContext());
 
                 //retrofit auruf
                 RetrofitConnect retrofit = new RetrofitConnect();
-                retrofit.retro(roomdaten, Jahr, RueckgabeStudiengang.toString(), Pruefphase, "0");
+                retrofit.retro(roomdaten, Jahr, RueckgabeStudiengang.toString(), Pruefphase, Termin);
 
                 Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
                 startActivity(hauptfenster);

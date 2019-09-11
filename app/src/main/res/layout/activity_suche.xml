@@ -198,52 +198,11 @@
             tools:layout_editor_absoluteX="4dp"
             tools:layout_editor_absoluteY="153dp" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5sp"
-            android:text="Prüfungswoche:"
-            android:textColor="#eeeeee"
-            android:textSize="20sp"
-            tools:layout_editor_absoluteX="5dp"
-            tools:layout_editor_absoluteY="199dp" />
-
         <LinearLayout
             android:layout_width="123dp"
             android:layout_height="76dp"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnWoche1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="47dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rounded_corners2"
-                android:text="Woche 1"
-                android:textColor="#eeeeee"
-                android:textSize="10sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
-
-            <Button
-                android:id="@+id/btnWoche2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginBottom="47dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rounded_corners2"
-                android:text="Woche 2"
-                android:textColor="#eeeeee"
-                android:textSize="10sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
         </LinearLayout>
 
         <Spinner
