@@ -35,7 +35,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fhb.pruefungsplaner.data.AppDatabase;
+import com.example.fhb.pruefungsplaner.data.User;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.example.fhb.pruefungsplaner.MainActivity.Jahr;
+import static com.example.fhb.pruefungsplaner.MainActivity.Pruefphase;
+import static com.example.fhb.pruefungsplaner.MainActivity.RueckgabeStudiengang;
 
 
 //Eigentlich die Hauptklasse wurde noch nicht umgenannt von hier werden die fragmente aufgerufen
@@ -163,14 +172,29 @@ public class Tabelle extends AppCompatActivity  {
                         return true;
 
                     case R.id.navigation_medication:
+
+                        String validation = Jahr+RueckgabeStudiengang+Pruefphase;
+                        AppDatabase roomdaten = AppDatabase.getAppDatabase(getApplicationContext());
+
+                        List<User> userdaten = roomdaten.userDao().getAll(validation);
+
+
+
+
                         txtanzeigemenu.setText("Suche");
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
                         dl.closeDrawer(Gravity.START);
                         //dl.setVisibility(View.GONE);
-                        ft.replace(R.id.frame_placeholder, new sucheFragment());
-                        ft.commit();
+                        if (userdaten.size() < 2) {
+
+                        }else{
+                            ft.replace(R.id.frame_placeholder, new sucheFragment());
+                            ft.commit();
+                        }
+
+
 
                         return true;
                     case R.id.navigation_diary:
@@ -184,6 +208,7 @@ public class Tabelle extends AppCompatActivity  {
                         ft.commit();
 
                         return true;
+
                     case R.id.navigation_settings:
                         txtanzeigemenu.setText("Optionen");
                         recyclerView.setVisibility(View.INVISIBLE);
@@ -222,6 +247,7 @@ public class Tabelle extends AppCompatActivity  {
         ft.commit();
 
     }
+
 
 
 

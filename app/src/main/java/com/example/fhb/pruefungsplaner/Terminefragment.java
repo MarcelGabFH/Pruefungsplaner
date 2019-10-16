@@ -56,6 +56,7 @@ public class Terminefragment extends Fragment {
     private String date;
     private String month2;
     private String day2;
+    private int position2 = 0;
     private String year2;
     public static String validation;
     SwipeController swipeController = null;
@@ -92,8 +93,6 @@ public class Terminefragment extends Fragment {
 
                         return "Executed";
                     }
-
-
 
                 } catch (InterruptedException e) {
                     Thread.interrupted();
@@ -204,7 +203,9 @@ public class Terminefragment extends Fragment {
             String positionspeichern;
 
             @Override
-            public void onLeftClicked(int position) {
+            public void onLeftClicked( int position) {
+
+                position2 = position;
                 if( position < (mAdapter.getItemCount() -1)) {
                     position = position + 1;
                     final int position2 = position - 1;
@@ -245,7 +246,6 @@ public class Terminefragment extends Fragment {
                 }
 
 
-
             public void onRightClicked(int position) {
                 if( position < (mAdapter.getItemCount() - 1)) {
                 position = position + 1;
@@ -265,10 +265,32 @@ public class Terminefragment extends Fragment {
 
             }
 
+
+
+        });
+
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if( position2 < (mAdapter.getItemCount() - 1)) {
+                    try {
+
+                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position2 +1);
+                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position2 + 2);
+                        viewItem.setVisibility(View.VISIBLE);
+                        viewItem2.setVisibility(View.VISIBLE);
+                    } catch (NullPointerException e) {
+
+                    }
+                }
+            }
         });
 
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
         itemTouchhelper.attachToRecyclerView(recyclerView);
+
 
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
@@ -374,6 +396,8 @@ public class Terminefragment extends Fragment {
 
         return v;
     }
+
+
 
 
 }

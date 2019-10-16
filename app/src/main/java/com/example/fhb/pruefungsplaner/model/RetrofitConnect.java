@@ -104,6 +104,7 @@ public class RetrofitConnect {
                         }
                     }
                     checkuebertragung = true;
+
                 }
                 else { System.out.println(" :::. NO RESPONSE .::: "); }
             }
@@ -113,10 +114,9 @@ public class RetrofitConnect {
             @Override
             public void onFailure(Call<List<JsonResponse>> call, Throwable t) {
                 Log.d("Error",t.getMessage());
+
             }
         });
-
-
     }
 
     public static User addUser(final AppDatabase db, User user) {
@@ -126,6 +126,4 @@ public class RetrofitConnect {
         System.out.println("\n");
         return user;
     }
-
-
     }

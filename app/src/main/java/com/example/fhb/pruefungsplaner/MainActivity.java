@@ -15,6 +15,7 @@ package com.example.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.app.Activity;
 import android.arch.persistence.room.Dao;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,9 +39,18 @@ import com.example.fhb.pruefungsplaner.data.UserDao;
 import com.example.fhb.pruefungsplaner.data.UserDao_Impl;
 import com.example.fhb.pruefungsplaner.model.RetrofitConnect;
 
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static android.view.View.Z;
 
 public class MainActivity extends AppCompatActivity {
     static public RecyclerView.Adapter mAdapter;
@@ -87,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 //retrofit auruf
                 RetrofitConnect retrofit = new RetrofitConnect();
                 retrofit.retro(roomdaten, Jahr, RueckgabeStudiengang.toString(), Pruefphase, Termin);
+
 
                 Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
                 startActivity(hauptfenster);
@@ -145,8 +157,27 @@ public class MainActivity extends AppCompatActivity {
 
         //Kalender damit das aktuelle und die letzten 4 jahre auszuwählen
         Calendar calendar = Calendar.getInstance();
+        int KalenderMonat = calendar.get(Calendar.MONTH);
+
+        if (KalenderMonat  <= 3)
+        {
+            Pruefphase = "W";
+        }
+
+
+        if (KalenderMonat  > 3)
+        {
+            Pruefphase = "S";
+        }
+
+
+        if (KalenderMonat > 11) {
+
+            Pruefphase = "W";
+        }
+
         List<String> spinnerArray3 = new ArrayList<String>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 1; i++) {
             int thisYear = calendar.get(Calendar.YEAR);
             spinnerArray3.add(String.valueOf((thisYear - i)));
 
@@ -211,10 +242,73 @@ public class MainActivity extends AppCompatActivity {
 
    public void update(String validation){
 
-        AppDatabase database = AppDatabase.getAppDatabase(getBaseContext());
-        database.clearAllTables();
-        Toast.makeText(getBaseContext(), "Studiengang wurde aktualisiert", Toast.LENGTH_SHORT).show();
+            boolean a = pingUrl("thor.ad.fh-bielefeld.de:8080/");
+
 
    }
+
+    public void update2(){
+        MainActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(getBaseContext(), "Keine Verbindung zum Server möglich", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    public void update3(){
+        MainActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(getBaseContext(), "Prüfungen wurden aktualisiert", Toast.LENGTH_SHORT).show();
+                AppDatabase database = AppDatabase.getAppDatabase(getBaseContext());
+
+                List<User> userdaten = database.userDao().getAll2();
+
+                for (int i = 0; i < userdaten.size(); i++) {
+                    if (userdaten.get(i).getFavorit()) {
+                        List<String> ID = new ArrayList<String>();
+                        List<String> Studiengang = new ArrayList<String>();
+                        ID.add(userdaten.get(i).getID().toString());
+                        Studiengang.add(userdaten.get(i).getStudiengang().toString());
+                    }
+                }// define an adapter
+
+                database.clearAllTables();
+
+
+            }
+        });
+
+    }
+
+    public boolean pingUrl(final String address) {
+
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    final URL url = new URL("http://" + address);
+                    final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+                    urlConn.setConnectTimeout(1000 * 10); // mTimeout is in seconds
+                    final long startTime = System.currentTimeMillis();
+                    urlConn.connect();
+                    final long endTime = System.currentTimeMillis();
+                    if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        System.out.println("Time (ms) : " + (endTime - startTime));
+                        System.out.println("Ping to " + address + " was success");
+                        update3();
+
+
+                    }
+                }
+                catch (final Exception e)
+                {
+                    update2();
+                }
+
+            }
+        }).start();
+
+        return true;
+    }
 }
 

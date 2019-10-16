@@ -292,7 +292,7 @@ public class sucheFragment extends Fragment {
         //aufruf spinnerklasse
 
         spinnerArray = database.userDao().getModul();
-        spinnerArray.add(1,"Alle Module");
+        spinnerArray.add(0,"Alle Module");
         spinnerArrayProf = database.userDao().getErstpruefer();
 
         for (int i = 0;i< spinnerArray.size();i++){
@@ -357,7 +357,6 @@ public class sucheFragment extends Fragment {
                         Rueckgabe.add(a);
 
                     } else if (acProf.getText().toString().equals(dateneinlesen.get(a).getErstpruefer())) {
-
                         Rueckgabe.add(a);
                         TextView textt = (TextView) v.findViewById(R.id.txtmessage);
 
@@ -405,13 +404,11 @@ public class sucheFragment extends Fragment {
                     int a;
                     Rueckgabe.clear();
                     for (a = 0; a < (dateneinlesen.size()); a++) {
-
                         Rueckgabe.add(a);
                     }
                 }
 
                 database.userDao().suchezuruecksetzen(false);
-
                 List<User> userdaten = AppDatabase.getAppDatabase(v.getContext()).userDao().getAll(validation);
                 for (int i =0; i< Tabellenrueckgabe().size();i++) {
                    // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();

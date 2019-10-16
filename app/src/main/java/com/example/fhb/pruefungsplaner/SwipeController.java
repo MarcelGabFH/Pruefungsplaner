@@ -2,6 +2,7 @@ package com.example.fhb.pruefungsplaner;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.*;
 
+import android.content.res.Resources;
 import android.graphics.Canvas;
         import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -38,11 +39,17 @@ public class SwipeController extends Callback {
 
     private SwipeControllerActions buttonsActions;
 
-    private static final float buttonWidth = 1000;
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    private static final float buttonWidth = getScreenWidth()-100;
 
     public SwipeController(SwipeControllerActions buttonsActions) {
         this.buttonsActions = buttonsActions;
     }
+
+
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
@@ -53,6 +60,9 @@ public class SwipeController extends Callback {
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         return false;
     }
+
+
+
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
@@ -93,8 +103,7 @@ public class SwipeController extends Callback {
             public boolean onTouch(View v, MotionEvent event) {
                 swipeBack = event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP;
                 if (swipeBack) {
-                    if (dX < -buttonWidth) {buttonShowedState = ButtonsState.RIGHT_VISIBLE; }
-                    else if (dX > buttonWidth) buttonShowedState  = ButtonsState.LEFT_VISIBLE;
+                    if (dX < -100) {buttonShowedState = ButtonsState.RIGHT_VISIBLE; }
 
                     if (buttonShowedState != ButtonsState.GONE) {
                         buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
@@ -141,7 +150,7 @@ public class SwipeController extends Callback {
 
                     if (buttonsActions != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
                         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
-                            buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
+                            buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
                         }
                         else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
                             buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
@@ -184,7 +193,7 @@ public class SwipeController extends Callback {
             buttonInstance = leftButton;
         }
         else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-            buttonInstance = rightButton;
+            buttonInstance = leftButton;
         }
     }
 
@@ -222,7 +231,6 @@ public class SwipeController extends Callback {
 
         float textWidth = p.measureText(text);
        // c.drawText(text, button.centerX(), button.centerY(), p);
-
 
 
         TextPaint mTextPaint=new TextPaint();
