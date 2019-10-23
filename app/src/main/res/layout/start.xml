@@ -117,6 +117,7 @@
         android:layout_height="wrap_content"
         android:text="Prüfungsphase 1"
         android:textColor="#eeeeee"
+        android:visibility="gone"
         app:layout_constraintBaseline_toBaselineOf="@+id/rBPruefung2"
         app:layout_constraintStart_toStartOf="@+id/spPrüfungsphase" />
 
@@ -129,6 +130,7 @@
         android:layout_marginBottom="24dp"
         android:text="Prüfungsphase 2"
         android:textColor="#eeeeee"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/btnGO"
         app:layout_constraintStart_toEndOf="@+id/rBPruefung1" />
 </android.support.constraint.ConstraintLayout>
