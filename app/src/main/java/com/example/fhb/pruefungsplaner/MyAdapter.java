@@ -230,17 +230,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
 
     public String giveString(int position) {
-        String name = values.get(position);
-        String[] modulname = name.split(" ");
-        studiengang = "";
-        int b;
-        for (b = 0; b < (modulname.length - 1); b++) {
-            studiengang = (studiengang + " " + modulname[b]);
 
-        }
-        AppDatabase roomdaten2 =  AppDatabase.getAppDatabase(context);
+        try {
+            String name = values.get(position);
+            String[] modulname = name.split(" ");
+            studiengang = "";
+            int b;
+            for (b = 0; b < (modulname.length - 1); b++) {
+                studiengang = (studiengang + " " + modulname[b]);
 
-        List<User> userdaten = roomdaten2.userDao().getAll2();
+            }
+            AppDatabase roomdaten2 = AppDatabase.getAppDatabase(context);
+
+            List<User> userdaten = roomdaten2.userDao().getAll2();
 
 
         String[] aufteilung1 = Datum.get(position).split(" ");
@@ -252,6 +254,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         ) + "\n \n \n \n \n \n ");
 
         return (s);
+        }catch(Exception e){
+
+        }
+        return ("0");
     }
 
     // Return the size of your dataset (invoked by the layout manager)

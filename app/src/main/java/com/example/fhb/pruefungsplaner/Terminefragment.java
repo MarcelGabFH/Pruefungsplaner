@@ -223,7 +223,7 @@ public class Terminefragment extends Fragment {
                                 swipeController.onDraw(c, s);
                             }
                         });
-                    } catch (NullPointerException e) {
+                    } catch (Exception e) {
 
                     }
 
@@ -353,8 +353,9 @@ public class Terminefragment extends Fragment {
                             List<String> input4 = new ArrayList<>();
                             List<String> ID = new ArrayList<>();
                             List<String> Pruefform = new ArrayList<>();
+
                             //Creating editor to store values to shared preferences
-                            if (month < 10) {
+                            if (month < 9) {
                                 month2 = "0" + String.valueOf(month + 1);
                             } else {
                                 month2 = String.valueOf(month+1);
@@ -368,10 +369,12 @@ public class Terminefragment extends Fragment {
 
                             year2 = String.valueOf(year);
                             date = year2 + "-" + month2 + "-" + day2;
-
+                            System.out.println(date);
                             for (int i = 0; i < userdaten.size(); i++) {
                                 String[] date2 = userdaten.get(i).getDatum().split(" ");
+                                System.out.println(date2[0]);
                                 if (date2[0].equals(date)) {
+                                    System.out.println("check");
                                     input.add(userdaten.get(i).getModul() + "\n " + userdaten.get(i).getStudiengang());
                                     input2.add(userdaten.get(i).getErstpruefer() + " " + userdaten.get(i).getZweitpruefer() + " " + userdaten.get(i).getSemester() + " ");
                                     input3.add(userdaten.get(i).getDatum());
