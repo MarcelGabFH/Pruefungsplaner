@@ -24,12 +24,44 @@
             android:id="@+id/txtAdresse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="http://thor.ad.fh-bielefeld.de:8080/"
             android:textColor="#eeeeee"
             app:layout_constraintBottom_toTopOf="parent"
             tools:layout_editor_absoluteX="8dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnFav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners"
+                android:text=" Favoriten löschen "
+                android:textAppearance="@style/spinnerDropDownItemStyle"
+                android:textColor="#eeeeee"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnDB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners"
+                android:text=" Datenbank löschen "
+                android:textAppearance="@style/spinnerDropDownItemStyle"
+                android:textColor="#eeeeee"
+                android:textSize="18sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,6 +80,7 @@
                 android:text="Push Benachrichtigung"
                 android:textColor="#eeeeee"
                 android:textSize="18sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -57,15 +90,24 @@
             android:orientation="horizontal"
             android:padding="5dp">
 
-            <Switch
-                android:id="@+id/switch2"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingLeft="5dp"
-                android:text="Synchronisation Kalender"
-                android:textColor="#eeeeee"
-                android:textSize="18sp" />
+                android:orientation="vertical">
+
+                <Switch
+                    android:id="@+id/switch2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp"
+                    android:text="Synchronisation Kalender"
+                    android:textColor="#eeeeee"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <ImageView

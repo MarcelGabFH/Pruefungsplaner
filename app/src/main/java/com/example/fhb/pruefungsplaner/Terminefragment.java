@@ -209,7 +209,6 @@ public class Terminefragment extends Fragment {
                 if( position < (mAdapter.getItemCount() -1)) {
                     position = position + 1;
                     final int position2 = position - 1;
-
                     try {
                         positionspeichern = mAdapter.values.get(position);
                         View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);

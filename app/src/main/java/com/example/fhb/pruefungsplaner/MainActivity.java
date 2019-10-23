@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spStudiengangMain;
     private Spinner spPruef;
     private Spinner spJahr;
+    List<String> ID = new ArrayList<String>();
 
 
     @Override
@@ -86,6 +87,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                AppDatabase database2 = AppDatabase.getAppDatabase(getBaseContext());
+                List<User> userdaten2 = database2.userDao().getAll2();
+                Log.d("Test4", String.valueOf(userdaten2.size()));
+
+                for (int i = 0; i < userdaten2.size(); i++) {
+                    for (int j = 0; j < ID.size(); j++) {
+                        if (userdaten2.get(i).getID().equals(ID.get(j))) {
+
+                            Log.d("Test4", String.valueOf(userdaten2.get(i).getID()));
+                            database2.userDao().update(true,Integer.valueOf(userdaten2.get(i).getID()));
+                        }
+                    }
+                }// define an adapter
+
+
+
                 if (rBPruefungsphase1.isChecked()) {
                     Termin = "0";
                 } else if (rBPruefungsphase2.isChecked()) {
@@ -97,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //retrofit auruf
                 RetrofitConnect retrofit = new RetrofitConnect();
-                retrofit.retro(roomdaten, Jahr, RueckgabeStudiengang.toString(), Pruefphase, Termin);
+                retrofit.retro(getApplicationContext(),roomdaten, "2018", RueckgabeStudiengang.toString(), Pruefphase, Termin);
 
 
                 Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
@@ -193,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
         spJahr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Jahr = parent.getItemAtPosition(position).toString();
+                Jahr = "2018";
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -263,17 +281,51 @@ public class MainActivity extends AppCompatActivity {
                 AppDatabase database = AppDatabase.getAppDatabase(getBaseContext());
 
                 List<User> userdaten = database.userDao().getAll2();
+                List<String> validation = new ArrayList<String>();
+                validation.add("0");
+
+                Log.d("Test",String.valueOf(userdaten.size()));
+
 
                 for (int i = 0; i < userdaten.size(); i++) {
+                    Log.d("Test",String.valueOf(userdaten.get(i).getFavorit()));
                     if (userdaten.get(i).getFavorit()) {
-                        List<String> ID = new ArrayList<String>();
-                        List<String> Studiengang = new ArrayList<String>();
                         ID.add(userdaten.get(i).getID().toString());
-                        Studiengang.add(userdaten.get(i).getStudiengang().toString());
+                        validation.add(userdaten.get(i).getValidation().toString());
+                        Log.d("Test2",String.valueOf(userdaten.get(i).getValidation()));
+
                     }
                 }// define an adapter
 
                 database.clearAllTables();
+
+
+
+                Termin = "0";
+                final RadioButton rBPruefungsphase1 = (RadioButton) findViewById(R.id.rBPruefung1);
+                final RadioButton rBPruefungsphase2 = (RadioButton) findViewById(R.id.rBPruefung2);
+
+
+                if (rBPruefungsphase1.isChecked()) {
+                    Termin = "0";
+                } else if (rBPruefungsphase2.isChecked()) {
+                    Termin = "1";
+                }
+
+                //initialisierung room database
+                AppDatabase roomdaten =  AppDatabase.getAppDatabase(getBaseContext());
+
+                //retrofit auruf
+
+
+                for( int a = 1; a < validation.size();a++ ) {
+                   String[] stringaufteilung = validation.get(a).split("");
+                    RetrofitConnect retrofit = new RetrofitConnect();
+                    retrofit.retro(getApplicationContext(),roomdaten, Jahr, stringaufteilung[5], Pruefphase, Termin);
+                    Log.d("Test3",String.valueOf(stringaufteilung[5]));
+
+
+                }
 
 
             }

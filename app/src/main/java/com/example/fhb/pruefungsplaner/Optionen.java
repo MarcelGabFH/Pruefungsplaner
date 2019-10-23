@@ -22,17 +22,24 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fhb.pruefungsplaner.data.AppDatabase;
+import com.example.fhb.pruefungsplaner.data.User;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.util.List;
 
 public class Optionen extends Fragment {
     private boolean speicher;
@@ -53,6 +60,10 @@ public class Optionen extends Fragment {
 
         final View v = inflater.inflate(R.layout.optionfragment, container, false);
 
+
+        Button btnDb = (Button) v.findViewById(R.id.btnDB);
+        Button btnFav = (Button) v.findViewById(R.id.btnFav);
+
         Switch SWgooglecalender = (Switch) v.findViewById(R.id.switch2);
         txtAdresse = (EditText) v.findViewById(R.id.txtAdresse);
         //holder.zahl1 = position;
@@ -64,7 +75,7 @@ public class Optionen extends Fragment {
         //Creating editor to store values to shared preferences
         mEditorAdresse = mSharedPreferencesAdresse.edit();
 
-        txtAdresse.setText(mSharedPreferencesAdresse.getString("Server-Adresse","http://thor.ad.fh-bielefeld.de:8080/"));
+        txtAdresse.setText(mSharedPreferencesAdresse.getString("Server-Adresse2","http://thor.ad.fh-bielefeld.de:8080/"));
 
         response = new JSONArray();
         String strJson = mSharedPreferences.getString("jsondata2", "0");
@@ -123,7 +134,7 @@ public class Optionen extends Fragment {
 
                 mEditorAdresse.clear();
                 mEditorAdresse.apply();
-                mEditorAdresse.putString("Server-Adresse", txtAdresse.getText().toString());
+                mEditorAdresse.putString("Server-Adresse2", txtAdresse.getText().toString());
                 mEditorAdresse.apply();
             }
 
@@ -135,6 +146,38 @@ public class Optionen extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
+
+            }
+        });
+
+        btnDb.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                AppDatabase database2 = AppDatabase.getAppDatabase(v.getContext());
+                Log.d("Test", "interne Db löschen");
+                database2.clearAllTables();
+
+                Toast.makeText(v.getContext(), "Datenbank gelöscht", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        btnFav.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                AppDatabase database2 = AppDatabase.getAppDatabase(v.getContext());
+                List<User> userdaten2 = database2.userDao().getAll2();
+
+                for (int i = 0; i < userdaten2.size(); i++) {
+                        if (userdaten2.get(i).getFavorit()) {
+
+                            Log.d("Test favoriten löschen", String.valueOf(userdaten2.get(i).getID()));
+                            database2.userDao().update(false,Integer.valueOf(userdaten2.get(i).getID()));
+                            Toast.makeText(v.getContext(), "Favorisierte Prüfungen gelöscht", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                // define an adapter
 
             }
         });

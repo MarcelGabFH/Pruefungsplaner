@@ -1,9 +1,13 @@
 package com.example.fhb.pruefungsplaner.model;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.fhb.pruefungsplaner.MainActivity;
 import com.example.fhb.pruefungsplaner.RequestInterface;
 import com.example.fhb.pruefungsplaner.Terminefragment;
 import com.example.fhb.pruefungsplaner.data.AppDatabase;
@@ -14,6 +18,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -24,15 +29,24 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
 public class RetrofitConnect {
-    public  final String Jahr = null,Studiengang= null,Pruefungsphase= null,Termin = null;
+    public  String Jahr = null,Studiengang= null,Pruefungsphase= null,Termin = null,Termine;
     public static boolean checkuebertragung = false;
     private boolean checkvalidate = false;
+    Context ctx2;
 
-
-    public void retro(final AppDatabase roomdaten, final String Jahr, final String Studiengang, final String Pruefungsphase, String Termin){
+    public void retro(Context ctx, final AppDatabase roomdaten, final String Jahr, final String Studiengang, final String Pruefungsphase, final String Termin){
         //Serveradresse
-        String URLFHB = "http://thor.ad.fh-bielefeld.de:8080/";
+        SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
+
+
+         ctx2 = ctx;
+         Termine = Termin;
+        //Creating editor to store values to shared preferences
+        String URLFHB = mSharedPreferencesAdresse.getString("Server-Adresse2","http://thor.ad.fh-bielefeld.de:8080/");
+
+        //String URLFHB = "http://thor.ad.fh-bielefeld.de:8080/";
         //String URLFHB = "http://192.168.178.39:44631/";
         //uebergabe der parameter an die Adresse
         //String adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+Termin+"/"+Jahr+"/";
@@ -58,6 +72,7 @@ public class RetrofitConnect {
 
                     for(int j = 0; j < userdaten.size();j++) {
                         if (userdaten.get(j).getValidation().equals(validation)){
+                            System.out.println("aufgerufen2223");
                             checkvalidate = true;
                         }}
 
@@ -82,6 +97,28 @@ public class RetrofitConnect {
                             SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
                             targetdatevalue = targetFormat.format(date4);
 
+                            String[] stdate = targetdatevalue.split("-");
+
+                            Date c = Calendar.getInstance().getTime();
+
+
+                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+                            String formattedDate = df.format(c);
+                            String[] stdate2 = formattedDate.split("-");
+                            System.out.println("Current time => " + stdate2[1]);
+                            System.out.println("Current time => " + stdate[1]);
+                            System.out.println("Current time => " + Termine);
+
+                            if(Integer.valueOf(stdate[1]) < Integer.valueOf(stdate2[1]))
+                            {
+                                if (Termine.equals("0")) {
+                                    roomdaten.clearAllTables();
+                                    retro(ctx2, roomdaten, "2018", Studiengang, Pruefungsphase, "1");
+                                    System.out.println("aufgerufen");
+                                    break;
+                                }
+                            }
+
                         } catch (ParseException e) {
                             e.printStackTrace();
 
@@ -90,6 +127,7 @@ public class RetrofitConnect {
 
 
                          if(!checkvalidate){
+                             System.out.println("aufgerufen222");
                             user.setErstpruefer(response.body().get(i).getErstpruefer());
                             user.setZweitpruefer(response.body().get(i).getZweitpruefer());
                             user.setDatum(String.valueOf(targetdatevalue));
@@ -97,8 +135,16 @@ public class RetrofitConnect {
                             user.setStudiengang(response.body().get(i).getStudiengang());
                             user.setModul(response.body().get(i).getModul());
                             user.setSemester(response.body().get(i).getSemester());
-                            user.setPruefform(response.body().get(i).getPruefform());
+
+                            String Klausur = "K_90";
+                            if(Klausur.equals(response.body().get(i).getPruefform())) {
+                                user.setPruefform("Klausur");
+                            }else{
+                                user.setPruefform("Mündliche Prüfung");
+
+                            }
                             user.setValidation(Jahr + Studiengang + Pruefungsphase);
+                             System.out.println(Jahr + Studiengang + Pruefungsphase);
                              addUser(roomdaten, user);
 
                         }
@@ -126,4 +172,6 @@ public class RetrofitConnect {
         System.out.println("\n");
         return user;
     }
+
+
     }
