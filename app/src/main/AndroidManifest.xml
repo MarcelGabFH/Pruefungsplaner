@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.fhb.pruefungsplaner">
+    package="com.Fachhochschulebib.fhb.pruefungsplaner">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -13,17 +13,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity">
+        <activity android:name="com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Spinners" />
+        <activity android:name="com.Fachhochschulebib.fhb.pruefungsplaner.Spinners" />
         <activity android:name=".GetterSetter" />
         <activity
-            android:name=".Tabelle"
+            android:name="com.Fachhochschulebib.fhb.pruefungsplaner.Tabelle"
             android:label="@string/title_activity_recycleview_tabelle"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>

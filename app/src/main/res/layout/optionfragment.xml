@@ -20,6 +20,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="   Serveradresse:"
+            android:textColor="#eeeeee"
+            android:textSize="10sp" />
+
         <EditText
             android:id="@+id/txtAdresse"
             android:layout_width="match_parent"
@@ -42,10 +50,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/button_rounded_corners"
+                android:background="@drawable/button_rounded_corners2"
                 android:text=" Favoriten löschen "
                 android:textAppearance="@style/spinnerDropDownItemStyle"
                 android:textColor="#eeeeee"
@@ -55,9 +63,21 @@
                 android:id="@+id/btnDB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/button_rounded_corners"
+                android:background="@drawable/button_rounded_corners2"
                 android:text=" Datenbank löschen "
+                android:textAppearance="@style/spinnerDropDownItemStyle"
+                android:textColor="#eeeeee"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnupdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:text="Prüfungen aktualisieren"
                 android:textAppearance="@style/spinnerDropDownItemStyle"
                 android:textColor="#eeeeee"
                 android:textSize="18sp" />
