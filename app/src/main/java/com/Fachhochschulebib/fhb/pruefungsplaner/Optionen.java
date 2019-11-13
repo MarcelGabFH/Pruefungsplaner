@@ -231,7 +231,8 @@ public class Optionen extends Fragment {
     public void update(String validation){
 
         boolean a = pingUrl("thor.ad.fh-bielefeld.de:8080/");
-
+        //boolean a = pingUrl("192.168.178.39:44631/PruefplanApplika/");
+       // http://localhost:44631/PruefplanApplika/
 
     }
 
@@ -264,30 +265,20 @@ public class Optionen extends Fragment {
                         ID.add(userdaten.get(i).getID().toString());
                         validation.add(userdaten.get(i).getValidation().toString());
                         Log.d("Test2",String.valueOf(userdaten.get(i).getValidation()));
-
                     }
                 }// define an adapter
 
                 database.clearAllTables();
-
-
-
                 Termin = "0";
-
                 //initialisierung room database
                 AppDatabase roomdaten =  AppDatabase.getAppDatabase(getContext());
-
                 //retrofit auruf
-
-
                 for( int a = 1; a < validation.size();a++ ) {
                     String[] stringaufteilung = validation.get(a).split("");
                     RetrofitConnect retrofit = new RetrofitConnect();
                     retrofit.retro(getContext(),roomdaten, Jahr, stringaufteilung[5], Pruefphase, Termin);
                     Log.d("Test3",String.valueOf(stringaufteilung[5]));
                 }
-
-
             }
         });
 

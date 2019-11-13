@@ -80,7 +80,6 @@ public class sucheFragment extends Fragment {
         RueckgabeSemester.clear();
         btnSemester1.setOnClickListener(new Button.OnClickListener() {
             boolean geklickt = true;
-
             @Override
             public void onClick(View v) {
                 if (geklickt) {
@@ -285,7 +284,7 @@ public class sucheFragment extends Fragment {
         //aufruf spinnerklasse
 
         spinnerArray = database.userDao().getModul();
-        spinnerArray.add(0,"Alle Module");
+        spinnerArray.add(1,"Alle Module");
         spinnerArrayProf = database.userDao().getErstpruefer();
 
         for (int i = 0;i< spinnerArray.size();i++){

@@ -42,6 +42,13 @@ public class RetrofitConnect {
         //Creating editor to store values to shared preferences
         String URLFHB = mSharedPreferencesAdresse.getString("Server-Adresse2","http://thor.ad.fh-bielefeld.de:8080/");
 
+        Log.d("Output Studiengang",Pruefungsphase.toString());
+        Log.d("Output Studiengang",Termin.toString());
+        Log.d("Output Studiengang",Jahr.toString());
+
+
+
+
         //String URLFHB = "http://thor.ad.fh-bielefeld.de:8080/";
         //String URLFHB = "http://192.168.178.39:44631/";
         //uebergabe der parameter an die Adresse
@@ -93,7 +100,7 @@ public class RetrofitConnect {
                             Date date4 = dateFormat.parse(date3);
 
 
-                            SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+                            SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             targetdatevalue = targetFormat.format(date4);
 
                             String[] stdate = targetdatevalue.split("-");
@@ -101,20 +108,23 @@ public class RetrofitConnect {
                             Date c = Calendar.getInstance().getTime();
 
 
-                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             String formattedDate = df.format(c);
                             String[] stdate2 = formattedDate.split("-");
+
+                            String st= stdate[1].replace("0", "");
+
                             System.out.println("Current time => " + stdate2[1]);
-                            System.out.println("Current time => " + stdate[1]);
+                            System.out.println("Current time => " + st);
                             System.out.println("Current time => " + Termine);
 
-                            if(Integer.valueOf(stdate[1]) < Integer.valueOf(stdate2[1]))
+
+                            if(Integer.valueOf(st) > Integer.valueOf(stdate2[1]))
                             {
                                 if (Termine.equals("0")) {
                                     if(!checkTermin.equals("1")) {
                                         //roomdaten.clearAllTables();
                                     }
-
                                     retro(ctx2, roomdaten, Jahr, Studiengang, Pruefungsphase, "1");
                                     System.out.println("aufgerufen");
                                     break;

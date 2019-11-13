@@ -38,11 +38,11 @@
 
         <TextView
             android:id="@+id/textView4"
-            android:layout_width="127dp"
+            android:layout_width="306dp"
             android:layout_height="wrap_content"
 
             android:layout_marginBottom="5sp"
-            android:text="Modul:"
+            android:text="Modul (aktuelle Prüfperiode):"
             android:textColor="#eeeeee"
             android:textSize="20sp"
             tools:layout_editor_absoluteX="6dp"
@@ -72,8 +72,9 @@
             android:id="@+id/acProfessor"
             android:layout_width="403dp"
             android:layout_height="wrap_content"
-            android:hint="Alle"
             android:layout_marginBottom="5sp"
+            android:hint="Alle"
+            android:singleLine="true"
             android:textColor="#eeeeee"
             android:textColorLink="@color/colorPrimary"
             android:textSize="20sp"
@@ -228,11 +229,13 @@
         android:id="@+id/BtnOk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="272dp"
         android:background="@drawable/button_rounded_corners"
         android:text="OK"
         android:textColor="#eeeeee"
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.907"
         app:layout_constraintStart_toStartOf="parent" />
 
 
