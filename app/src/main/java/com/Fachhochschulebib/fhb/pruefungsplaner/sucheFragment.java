@@ -422,6 +422,27 @@ public class sucheFragment extends Fragment {
             int k;
             int l;
             String test = "a";
+            boolean checkSemester = true;
+            for(int z =0;z<RueckgabeSemester.size();z++)
+            {
+                if(RueckgabeSemester.get(z).equals(RueckgabeSemester.get(z+1)))
+                {
+
+                }
+                else{
+                    checkSemester = false;
+                    break;
+                }
+
+            }
+            if (checkSemester)
+            {
+                for (int z = 0; z < dateneinlesen.size(); z++) {
+                        RueckgabeSemester.add(z);
+                }
+            }
+
+
             Fertigsortiert.clear();
             for (i = 0; i < (RueckgabeStudiengang.size()); i++) {
                 for (j = 0; j < (RueckgabeSemester.size()); j++) {
