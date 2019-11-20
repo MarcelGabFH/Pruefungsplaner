@@ -70,14 +70,12 @@ public class TerminefragmentSuche extends Fragment {
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.terminefragment, container, false);
 
-
+        //Datenbank initialisieren
         AppDatabase roomdaten = AppDatabase.getAppDatabase(v.getContext());
-
-
         List<User> userdaten = roomdaten.userDao().getAll(validation);
 
 
-
+        //
         for (int i =0;i<userdaten.size();i++) {
             System.out.println(userdaten.get(i).getAusgewaehlt());
             if(userdaten.get(i).getAusgewaehlt()) {
@@ -88,8 +86,6 @@ public class TerminefragmentSuche extends Fragment {
 
         //hinzufügen von recycleview
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
-
-
         recyclerView.setVisibility(View.VISIBLE);
         // use this setting to
         // improve performance if you know that changes
@@ -102,16 +98,16 @@ public class TerminefragmentSuche extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
 
+        //Variablen zum speichern der Werte
         List<String> input = new ArrayList<>();
         List<String> input2 = new ArrayList<>();
         List<String> input3 = new ArrayList<>();
         List<String> input4 = new ArrayList<>();
         List<String> ID = new ArrayList<>();
         List<String> Pruefform = new ArrayList<>();
-        //gr
 
+        //Variablen mit Werten aus der lokalen Datenbank füllen
         for (int i = 0; i < WerteZumAnzeigen.size(); i++) {
-
             input.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul() + "\n " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getStudiengang());
             input2.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getErstpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getZweitpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getSemester() + " ");
             input3.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getDatum());
@@ -119,17 +115,18 @@ public class TerminefragmentSuche extends Fragment {
             ID.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getID());
             Pruefform.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getPruefform());
 
-        }// define an adapter
+        }
+
+        // define an adapter
         mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
         recyclerView.setAdapter(mAdapter);
 
 
+        //überprüfung ob das Prüfitem geswippt wurde
         swipeController = new SwipeController(new SwipeControllerActions() {
             String positionspeichern;
-
             @Override
             public void onLeftClicked(int position) {
-
                 position = position + 1;
                 final int position2 = position - 1;
                 if( position < (mAdapter.getItemCount() -1)) {
@@ -165,8 +162,6 @@ public class TerminefragmentSuche extends Fragment {
                 //    mAdapter.notifyItemRemoved(position);
                 // mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
             }
-
-
             public void onRightClicked(int position) {
                 position = position + 1;
 
@@ -195,15 +190,17 @@ public class TerminefragmentSuche extends Fragment {
         itemTouchhelper.attachToRecyclerView(recyclerView);
 
 
+        //Userinterface Komponenten Initialiseren
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
         recyclerView.setVisibility(View.VISIBLE);
         calendar = (CalendarView) v.findViewById(R.id.caCalender);
         btnsuche = (Button) v.findViewById(R.id.btnDatum);
 
+        //btnsuche clicklistener überprüft ob der Kalender öffnen button angetippt wurde
+        //Es werden bei eingeschalteten Kalender nur Prüfobjekte mit übereinstimmenden Datum angezeigt
         calendar.setVisibility(View.GONE);
         btnsuche.setOnClickListener(new View.OnClickListener() {
             boolean speicher = true;
-
             @Override
             public void onClick(View v) {
                 if (!speicher) {
@@ -215,12 +212,11 @@ public class TerminefragmentSuche extends Fragment {
                     List<String> input4 = new ArrayList<>();
                     List<String> ID = new ArrayList<>();
                     List<String> Pruefform = new ArrayList<>();
-                    //gr
+                    //Lokale Datenbank initialisieren
                     AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
                     List<User> userdaten = roomdaten.userDao().getAll(validation);
 
                     for (int i = 0; i < WerteZumAnzeigen.size(); i++) {
-
                         input.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul() + "\n " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getStudiengang());
                         input2.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getErstpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getZweitpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getSemester() + " ");
                         input3.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getDatum());
@@ -228,13 +224,13 @@ public class TerminefragmentSuche extends Fragment {
                         ID.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getID());
                         Pruefform.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getPruefform());
 
-                    }// define an adapter
+                    }
+                    // define an adapter
                     mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
                     recyclerView.setAdapter(mAdapter);
-
-
                     speicher = true;
                 } else {
+                    //Kalender ist geöffnet, nur übereinstimmende Prüfungen anzeigen
                     calendar.setVisibility(View.VISIBLE);
                     calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                         public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
@@ -258,11 +254,8 @@ public class TerminefragmentSuche extends Fragment {
                             } else {
                                 day2 = String.valueOf(dayOfMonth);
                             }
-
-
                             year2 = String.valueOf(year);
                             date = year2 + "-" + month2 + "-" + day2;
-
                             for (int i = 0; i < userdaten.size(); i++) {
                                 String[] date2 = userdaten.get(i).getDatum().split(" ");
                                 if (date2[0].equals(date)) {
@@ -272,11 +265,13 @@ public class TerminefragmentSuche extends Fragment {
                                     input4.add(userdaten.get(i).getModul());
                                     ID.add(userdaten.get(i).getID());
                                     Pruefform.add(userdaten.get(i).getPruefform());
-
                                 }
-                            }// define an adapter
-                            mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
+                            }
 
+                            // define an adapter
+                            //Werte an den Adapter übergeben
+                            mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
+                            //Anzeigen von recyclerview
                             recyclerView.setAdapter(mAdapter);
                         }
                     });
@@ -284,16 +279,8 @@ public class TerminefragmentSuche extends Fragment {
                 }
             }
         });
-
-
-
-
         return v;
     }
-
-
-
-
 }
 
 

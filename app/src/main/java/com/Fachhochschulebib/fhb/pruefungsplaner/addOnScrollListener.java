@@ -2,6 +2,11 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 import android.support.v7.widget.RecyclerView;
 
+
+
+//überprüfung ob im RecyclerView gescrollt wird.
+//wird von den Klasse myAdapter abgefragt
+//dient zur überprüfung bei scrollen ob ein Prüfitem mit geöffneten Tab "mehr informationen" geschlossen werden kann
 public class addOnScrollListener extends RecyclerView.OnScrollListener {
     public void CustomScrollListener() {
     }

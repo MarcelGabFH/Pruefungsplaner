@@ -38,7 +38,6 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
     private List<String> studiengang2;
     private List<String> ppid;
     private List<String> Datum;
-
     private String studiengang;
     private String name;
 
@@ -85,18 +84,16 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         // - replace the contents of the view with that element
         name = values.get(holder.getAdapterPosition());
         holder.txtHeader.setText(name);
+
+        //Prüfitem von der Favoritenliste löschen
         holder.ivicon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 AppDatabase roomdaten2 =  AppDatabase.getAppDatabase(v.getContext());
-
                 List<User> userdaten = roomdaten2.userDao().getAll2();
-
                 //second parameter is necessary ie.,Value to return if this preference does not exist.
                 for (int i = 0; i < userdaten.size();i++){
                     if(userdaten.get(i).getFavorit()){
-
                         if(userdaten.get(i).getID().equals(ppid.get(position))){
                             roomdaten2.userDao().update(false,Integer.valueOf(ppid.get(position)));
                             remove(holder.getAdapterPosition());
@@ -106,6 +103,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                 }
             }
         });
+
         holder.txtFooter.setText("Prüfer: " + studiengang2.get(position).toString());
         name = values.get(position);
         String[] modulname = name.split(" ");
@@ -116,12 +114,15 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
 
         }
 
+        //darstellen der Informationen für das Prüfitem
         String[] s = Datum.get(position).split(" ");
         String[] ss = s[0].split("-");
         holder.txtthirdline.setText("Uhrzeit: " + s[1].substring(0, 5).toString() + " Datum: " + ss[2].toString() + "." + ss[1].toString() + "." + ss[0].toString());
         final String[] sa = studiengang2.get(position).split(" ");
         holder.txtFooter.setText("Prüfer: " + sa[0] + ", " + sa[1] + "  Semester: " + sa[2]);
 
+
+        //darstellen der Weiteren Informationen
         holder.layout2.setOnClickListener(new OnClickListener() {
 
             @Override

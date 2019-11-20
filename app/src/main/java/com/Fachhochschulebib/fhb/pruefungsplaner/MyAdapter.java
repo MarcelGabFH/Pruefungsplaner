@@ -111,6 +111,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                 List<User> userdaten = roomdaten2.userDao().getAll2();
 
+
+                //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
                 int i;
                 //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()), Toast.LENGTH_SHORT).show();
                 speicher = false;
@@ -122,12 +124,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                             }
 
                 }
-
-
-
+                //Speichern des Prüfitem als Favorit
                 if (!speicher) {
                    // Toast.makeText(v.getContext(), "137", Toast.LENGTH_SHORT).show();
-
                     for (i = 0; i < userdaten.size(); i++) {
 
                             if ((userdaten.get(i).getID().toString().equals(ppid2.get(position) ) & (!userdaten.get(i).getFavorit() ))) {
@@ -140,16 +139,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     }
 
 
+                    //Überprüfung ob Pürfungen zum Google Kalender Hinzugefügt werden sollen
                     SharedPreferences mSharedPreferences2 = v.getContext().getSharedPreferences("json8", 0);
                     //Creating editor to store values to shared preferences
                     SharedPreferences.Editor mEditor2 = mSharedPreferences2.edit();
                     mEditor2.apply();
                     String strJson2 = mSharedPreferences2.getString("jsondata2", "0");
 
+                    //Überprüfung des Wertes, wenn strJson2 "true" ist dann ist der Google Kalender aktiviert
                     boolean speicher2 = false;
                     int a = 0;
                     for (a = 0; a < strJson2.length(); a++) {
-
                          String ss1 = String.valueOf(strJson2.charAt(a));
                         if (ss1.equals(String.valueOf(1))) {
                             speicher2 = true;
@@ -157,7 +157,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                         }
                     }
 
-
+                    //Hinzufügen der Prüfungen zum Google Kalender
                     if (speicher2) {
                         String[] s = Datum.get(position).split(" ");
                         System.out.println(s[0]);
@@ -169,11 +169,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                         holder.txtFooter.setText("Prüfer: " + sa[0] + ", " + sa[1] + "  Semester: " + sa[2]);
                         String Semester = String.valueOf(holder.txtFooter.getText());
                         String Semester5 = Semester.toString();
-
                         String name = values.get(position);
                         String[] modulname = name.split(" ");
                         studiengang = "";
-
                         int b;
                         for (b = 0; b < (modulname.length - 1); b++) {
                             studiengang = (studiengang + " " + modulname[b]);
@@ -194,8 +192,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                 (calDate.getTimeInMillis() + (90 * 60000)));
 
                         v.getContext().startActivity(calIntent);
-
-
                     }
                     Toast.makeText(v.getContext(), "Hinzugefügt", Toast.LENGTH_SHORT).show();
                 }
@@ -203,8 +199,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         });
 
 
+        //Aufteilung Nach Verschieden tagen
         String[] s = Datum.get(position).split(" ");
-
         System.out.println(s[0]);
         if (position > 0) {
             String[] s2 = Datum.get(position - 1).split(" ");
@@ -213,6 +209,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             }
         }
 
+
+        //darstellen der Werte in der Prüfitem Komponente
         String[] ss = s[0].split("-");
         System.out.println(s[0]);
         holder.txtthirdline.setText("Uhrzeit: " + s[1].substring(0, 5).toString());
@@ -225,7 +223,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     }
 
-
+    //Methode zum darstellen der "weiteren Informationen"
     public String giveString(int position) {
 
         try {
@@ -238,7 +236,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
             }
             AppDatabase roomdaten2 = AppDatabase.getAppDatabase(context);
-
             List<User> userdaten = roomdaten2.userDao().getAll2();
 
 

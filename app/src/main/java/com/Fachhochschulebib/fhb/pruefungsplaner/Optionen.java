@@ -74,6 +74,7 @@ public class Optionen extends Fragment {
 
 
 
+        //Button zum updaten der Prüfungen
         Button btngo2 = (Button) v.findViewById(R.id.btnupdate);
         btngo2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,25 +91,22 @@ public class Optionen extends Fragment {
 
         });
 
+
+        //layout Komponenten
         Button btnDb = (Button) v.findViewById(R.id.btnDB);
         Button btnFav = (Button) v.findViewById(R.id.btnFav);
-
         Switch SWgooglecalender = (Switch) v.findViewById(R.id.switch2);
         txtAdresse = (EditText) v.findViewById(R.id.txtAdresse);
         //holder.zahl1 = position;
+
+
         SharedPreferences mSharedPreferences = v.getContext().getSharedPreferences("json8", 0);
         //Creating editor to store values to shared preferences
         mEditor = mSharedPreferences.edit();
-
         SharedPreferences mSharedPreferencesAdresse = v.getContext().getSharedPreferences("Server-Adresse", 0);
         //Creating editor to store values to shared preferences
         mEditorAdresse = mSharedPreferencesAdresse.edit();
-
         txtAdresse.setText(mSharedPreferencesAdresse.getString("Server-Adresse2","http://thor.ad.fh-bielefeld.de:8080/"));
-
-
-
-
 
 
         response = new JSONArray();
@@ -139,6 +137,8 @@ public class Optionen extends Fragment {
         if (!speicher) {
         }
 
+
+        //Abfrage ob der Google kalender Ein/Ausgeschaltet ist
         SWgooglecalender.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // do something, the isChecked will be
@@ -160,9 +160,10 @@ public class Optionen extends Fragment {
             }
         });
 
+        //Change Listener für die Serveradresse
+        //speichert den neu eingegebenen Wert
         txtAdresse.addTextChangedListener(new TextWatcher() {
             boolean validate = false;
-
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -173,12 +174,10 @@ public class Optionen extends Fragment {
                     mEditorAdresse.apply();
                 }
             }
-
             @Override
             public void beforeTextChanged(CharSequence s, int start,
                                           int count, int after) {
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
@@ -189,6 +188,7 @@ public class Optionen extends Fragment {
             }
         });
 
+        //interne DB löschen
         btnDb.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 AppDatabase database2 = AppDatabase.getAppDatabase(v.getContext());
@@ -200,12 +200,11 @@ public class Optionen extends Fragment {
             }
         });
 
+        //Favoriten Löschen
         btnFav.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 AppDatabase database2 = AppDatabase.getAppDatabase(v.getContext());
                 List<User> userdaten2 = database2.userDao().getAll2();
-
                 for (int i = 0; i < userdaten2.size(); i++) {
                         if (userdaten2.get(i).getFavorit()) {
 
@@ -236,6 +235,7 @@ public class Optionen extends Fragment {
 
     }
 
+    //Methode zum Anzeigen das keine Verbindungs zum Server möglich ist
     public void update2(){
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
@@ -245,6 +245,10 @@ public class Optionen extends Fragment {
 
     }
 
+    //Methode zum aktualiseren der Prüfungen
+    //ID der gespeicherten Prüfungen wird gespeichert und dann wird die Datenbank gelöscht
+    // dann werden die Prüfungen erneut vom Webserver geladen und die Prüfungen mit
+    // den gespeicherten IDs favorisiert
     public void update3(){
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
@@ -267,7 +271,6 @@ public class Optionen extends Fragment {
                         Log.d("Test2",String.valueOf(userdaten.get(i).getValidation()));
                     }
                 }// define an adapter
-
                 database.clearAllTables();
                 Termin = "0";
                 //initialisierung room database
@@ -285,7 +288,8 @@ public class Optionen extends Fragment {
     }
 
 
-
+    //Verbindungsaufbau zum Webserver
+    //Überprüfung ob Webserver erreichbar
     public boolean pingUrl(final String address) {
 
         new Thread(new Runnable() {

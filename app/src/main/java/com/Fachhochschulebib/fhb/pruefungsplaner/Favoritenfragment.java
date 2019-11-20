@@ -15,10 +15,9 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
-import android.content.SharedPreferences;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,10 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
-
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.User;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,19 +34,11 @@ import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.mAdapter;
 
 
 public class Favoritenfragment extends Fragment {
-    SharedPreferences mSharedPreferences;
-    private FragmentTransaction ft;
     private RecyclerView recyclerView;
     private CalendarView calendar;
     private  Button btnsuche;
-    private String date;
-    private String month2;
-    private String day2;
-    private String year2;
 
-
-
-
+    // Datenbank initialisierung
     AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
     List<User>dateneinlesen = roomdaten.userDao().getAll2();
 
@@ -65,6 +54,8 @@ public class Favoritenfragment extends Fragment {
                              Bundle savedInstanceState) {
 
         final View v = inflater.inflate(R.layout.terminefragment, container, false);
+
+        //Komponenten  initialisieren für die Verwendung
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
         recyclerView.setHasFixedSize(true);
         // use a linear layout manager
@@ -80,6 +71,9 @@ public class Favoritenfragment extends Fragment {
         btnsuche.setVisibility(View.INVISIBLE);
         List<User> userdaten = roomdaten.userDao().getAll2();
 
+
+        // Abfrage ob Prüfungen favorisiert wurden
+        // Favorisierte Prüfungen für die Anzeige vorbereiten
         for (int i = 0; i < userdaten.size(); i++) {
             if (userdaten.get(i).getFavorit()) {
 
@@ -90,48 +84,13 @@ public class Favoritenfragment extends Fragment {
                 datum.add(userdaten.get(i).getDatum());
                 pruefungsNr.add(userdaten.get(i).getID());
             }
-        }// define an adapter
+        }
+
+        // define an adapter
+        // übergabe der variablen an den Recyclerview Adapter, für die darstellung
         mAdapter = new MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr);
         recyclerView.setAdapter(mAdapter);
 
-
-
-        btnsuche.setOnClickListener(new View.OnClickListener() {
-            boolean speicher = false ;
-            @Override
-            public void onClick(View v) {
-                if(speicher){
-                    calendar.setVisibility(View.GONE);
-                    //calendar.getLayoutParams().height = 0;
-                    speicher = false;
-                    List<String> studiengang = new ArrayList<>();
-                    List<String> profnamen = new ArrayList<>();
-                    List<String> datum = new ArrayList<>();
-                    List<String> pruefungsNR = new ArrayList<>();
-                    //Creating editor to store values to shared preferences
-                    List<User> userdaten = roomdaten.userDao().getAll2();
-
-                            for (int i = 0; i < userdaten.size(); i++) {
-                                if (userdaten.get(i).getFavorit()) {
-
-
-                                    studiengang.add(userdaten.get(i).getModul()+ " " + userdaten.get(i).getStudiengang());
-                                    profnamen.add(userdaten.get(i).getErstpruefer() + " " + userdaten.get(i).getZweitpruefer() + " " + userdaten.get(i).getSemester().toString());
-                                    datum.add(userdaten.get(i).getDatum());
-                                    pruefungsNR.add(userdaten.get(i).getID());
-                                }
-                            }// define an adapter
-
-                            mAdapter = new MyAdapterfavorits(studiengang, profnamen,datum,pruefungsNR);
-                            recyclerView.setAdapter(mAdapter);
-
-
-                }else {
-                    calendar.setVisibility(View.GONE);
-                    speicher = true;
-                }
-            }
-        });
 
         return v;
     }

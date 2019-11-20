@@ -69,6 +69,8 @@ public class sucheFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.activity_suche, container, false);
         //setContentView(R.layout.hauptfenster);
+
+        //Initialiseren der UI Komponente
         Spinners spinner = new Spinners();
         final Button btnSemester1 = (Button) v.findViewById(R.id.btns1);
         final Button btnSemester2 = (Button) v.findViewById(R.id.btns2);
@@ -77,6 +79,8 @@ public class sucheFragment extends Fragment {
         final Button btnSemester5 = (Button) v.findViewById(R.id.btns5);
         final Button btnSemester6 = (Button) v.findViewById(R.id.btns6);
 
+        //Überprüfung ob ein Semster-Button geklickt wurde
+        //der Wert des Semsters wird gespeichert
         RueckgabeSemester.clear();
         btnSemester1.setOnClickListener(new Button.OnClickListener() {
             boolean geklickt = true;
@@ -277,31 +281,44 @@ public class sucheFragment extends Fragment {
                 }
             }
         });
-        //Spinner aufruf und setzen der Spinner mit werten
-        List<String> spinnerArray = new ArrayList<String>();
-        List<String> spinnerArrayProf = new ArrayList<String>();
 
-        //aufruf spinnerklasse
 
-        spinnerArray = database.userDao().getModul();
-        spinnerArray.add(1,"Alle Module");
-        spinnerArrayProf = database.userDao().getErstpruefer();
+            //Spinner aufruf und setzen der Spinner mit werten füllen
+            List<String> spinnerArray = new ArrayList<String>();
+            List<String> spinnerArrayProf = new ArrayList<String>();
+            //hinzufügen der Module zum Spinneritem
+            for (int i = 0; i < dateneinlesen.size(); i++) {
+                spinnerArray.add(dateneinlesen.get(i).getModul());
+            }
+            //auswahlmöglichkeit Alle Module hinzufügen
+            spinnerArray.add(1, "Alle Module");
 
-        for (int i = 0;i< spinnerArray.size();i++){
-            for (int a = i; a < spinnerArray.size();a++) {
 
-                if (spinnerArray.get(i).equals(spinnerArray.get(a))){
+            // SpinenArray Prüfer mit Werten füllen
+            for (int i = 0; i < dateneinlesen.size(); i++) {
+                spinnerArrayProf.add(dateneinlesen.get(i).getErstpruefer());
 
-                    spinnerArray.remove(a);
+            }
+
+            //doppelte Nameneinträge löschen für Module und Prüfer
+            for (int i = 0; i < spinnerArray.size(); i++) {
+                for (int a = i; a < spinnerArray.size(); a++) {
+
+                    if (spinnerArray.get(i).equals(spinnerArray.get(a))) {
+
+                        spinnerArray.remove(a);
+                    }
                 }
-            }}
-
-        for (int i = 0;i< spinnerArrayProf.size();i++){
-            for (int a = i;a< spinnerArrayProf.size();a++) {
-                if (spinnerArrayProf.get(i).equals(spinnerArrayProf.get(a))) {
-                    spinnerArrayProf.remove(a);
+            }
+            //doppelte Nameneinträge löschen für Module und Prüfer
+            for (int i = 0; i < spinnerArrayProf.size(); i++) {
+                for (int a = i; a < spinnerArrayProf.size(); a++) {
+                    if (spinnerArrayProf.get(i).equals(spinnerArrayProf.get(a))) {
+                        spinnerArrayProf.remove(a);
+                    }
                 }
-            }}
+            }
+
 
 
 
@@ -314,9 +331,14 @@ public class sucheFragment extends Fragment {
         ArrayAdapter<String> adapteracPof = new ArrayAdapter<String>
                 (v.getContext(), android.R.layout.simple_list_item_1, spinnerArrayProf);
 
+
+
         //grafische ausgabe dropdown
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         adapterProf.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+
 
         //grafische ausgabe
         Spinner spStudiengang = (Spinner) v.findViewById(R.id.spStudiengang);

@@ -15,7 +15,10 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -89,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
 
         pingpruefperiode();
 
+
+
         //OK Button, hier wird die neue activity aufgerufen --> aufruf von dem layout "hauptfenster" und der Klasse Tabelle
         Button btngo = (Button) findViewById(R.id.btnGO);
         btngo.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                     Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
-                    finish();
                     startActivity(hauptfenster);
                 }
 
@@ -268,6 +272,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    //darstellen der Studiengänge in der Spinner-Komponente.
     public void update3(){
         MainActivity.this.runOnUiThread(new Runnable() {
             public void run() {
@@ -311,24 +317,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    //Methode zum überprüfen der studiengänge
     public boolean pingUrl(final String address) {
+        //eigenständiger Thread, weil die Abfrage Asynchron ist
         new Thread(new Runnable() {
-            public void run() {
+                public void run() {
+                    // Die studiengänge werden in einer shared preferences Variable gespeichert
                 SharedPreferences.Editor mEditor;
                 SharedPreferences mSharedPreferencesperiode = getApplicationContext().getSharedPreferences("studiengaenge", 0);
                 //Creating editor to store values to shared preferences
 
+                    //Verbindungsaufbau zum Webserver
                 try {
                     StringBuilder result = new StringBuilder();
-
                     final URL url = new URL("http://" + address);
                     final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
                    // urlConn.setRequestProperty("Content-Type", "application/json");
                     //urlConn.setRequestProperty("Accept", "application/json");
                     Log.d("Output Studiengang","test");
-                    urlConn.setConnectTimeout(1000 * 10); // mTimeout is in seconds
+                    urlConn.setConnectTimeout(100 * 10); // mTimeout is in seconds
                     final long startTime = System.currentTimeMillis();
-
                     Log.d("Output Studiengang","test");
                     urlConn.connect();
                     final long endTime = System.currentTimeMillis();
@@ -337,18 +346,17 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("Ping to " + address + " was success");
                         //update3();
                     }
+
+                    //Parsen von den  erhaltene Werte
                     Log.d("Output Studiengang","test2");
-
-
                     InputStream in = new BufferedInputStream(urlConn.getInputStream());
-
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
                     String line;
                     while ((line = reader.readLine()) != null) {
                         result.append(line);
                     }
 
+                    //create JSON
                     Log.d("Output Studiengang","test3");
                     Log.d("Output Studiengang",String.valueOf(result.toString()));
                     JSONObject jsonObj = null;
@@ -371,8 +379,8 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.d("Output Studiengang","test 6");
 
+                    //Werte von JSONARRay in JSONObject konvertieren
                     JSONArray object2 = new JSONArray();
-
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject object = jsonArray.getJSONObject(i);
                         //spinnerArray.add(object.getString("SGName"));  //This will have the value of the studiengang
@@ -385,15 +393,16 @@ public class MainActivity extends AppCompatActivity {
                     String a = object2.toString();
                     String b = a.substring(1,a.length()-1);
 
-                    Log.d("Output exception",b);
+                    Log.d("Output zeile 394",b);
 
                     mainObject = new JSONArray(b);
-
 
                     for(int i= 0 ; i< mainObject.length();i++) {
                         JSONObject json = mainObject.getJSONObject(i);
                         spinnerArray.add(json.get("SGName").toString());
                     }
+
+                    // Werte Speichern für die offline Verwendung
                     Log.d("Output Studiengang",mainObject.get(0).toString());
                     mEditor = mSharedPreferencesperiode.edit();
                     String strJson = mSharedPreferencesperiode.getString("studiengaenge", "0");
@@ -406,6 +415,8 @@ public class MainActivity extends AppCompatActivity {
                         } catch (Exception e) {
 
                         }
+
+
                     update3();
 
 
@@ -442,6 +453,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    //Methode zum Abfragen der Aktuellen Prüfperiode
     public boolean pingpruefperiode() {
 
         new Thread(new Runnable() {
@@ -528,26 +540,28 @@ public class MainActivity extends AppCompatActivity {
                     SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
                     Date inputDate = fmt.parse(arrayPruefperiode[0]);
 
+                    //erhaltenes Datum Parsen als Datum
                     Calendar calendar = new GregorianCalendar();
                     calendar.setTime(inputDate);
                     int year = calendar.get(Calendar.YEAR);
                     //Add one to month {0 - 11}
                     int month = calendar.get(Calendar.MONTH) + 1;
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
-
                     calendar.add(Calendar.DATE, 14);
                     int year2 = calendar.get(Calendar.YEAR);
                     //Add one to month {0 - 11}
                     int month2 = calendar.get(Calendar.MONTH) + 1;
                     int day2 = calendar.get(Calendar.DAY_OF_MONTH);
 
+
+                    //String Prüfperiode zum Anzeigen
                     String pruefperiodedatum;
-                    pruefperiodedatum = "Aktuelle Prüfungsphase: "+String.valueOf(day) +"."+ String.valueOf(month) +"."+ String.valueOf(year) +" bis "+ String.valueOf(day2) +"."+ String.valueOf(month2) +"."+ String.valueOf(year2) ;  // number of days to add;
+                    pruefperiodedatum = "Aktuelle Prüfungsphase: \n " +String.valueOf(day) +"."+ String.valueOf(month) +"."+ String.valueOf(year) +" bis "+ String.valueOf(day2) +"."+ String.valueOf(month2) +"."+ String.valueOf(year2) ;  // number of days to add;
                     //Log.d("Output pruefperiode",pruefperiodedatum);
 
-
+                    // Prüfperiode für die offline Verwendung speichern
                     mEditor = mSharedPreferencesperiode.edit();
-                    String strJson = mSharedPreferencesperiode.getString("pruefperiode", "0");
+                    String strJson = mSharedPreferencesperiode.getString("pruefperiode", " ");
                     //second parameter is necessary ie.,Value to return if this preference does not exist.
                     if (strJson != null) {
                         try {
@@ -579,6 +593,21 @@ public class MainActivity extends AppCompatActivity {
         }).start();
 
         return true;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Beenden")
+                .setMessage("Möchten Sie die App schließen?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                    finish();
+                    }
+                }).create().show();
     }
 }
 

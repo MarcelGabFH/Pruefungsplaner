@@ -81,44 +81,38 @@ public class RetrofitConnect {
                             checkvalidate = true;
                         }}
 
-
+                    //Schleife um jedes erhaltene Prüfungsobjekt in die lokale Datenbank hinzuzufügen
                     for (int i = response.body().size()-1 ; i > 0; --i) {
 
+                        //User ist die modelklasse für die angekommenden Prüfungsobjekte
                         User user = new User();
 
+                        //Festlegen vom Dateformat
                         String date3;
                         String date2 = response.body().get(i).getDatum();
-
                         date3 = date2.replaceFirst("CET", "");
                         date3 = date3.replaceFirst("CEST","");
-
                         String targetdatevalue;
                         targetdatevalue = null;
                         try {
                             DateFormat dateFormat = new SimpleDateFormat(
                                     "EEE MMM dd HH:mm:ss yyyy", Locale.US);
                             Date date4 = dateFormat.parse(date3);
-
-
                             SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             targetdatevalue = targetFormat.format(date4);
-
                             String[] stdate = targetdatevalue.split("-");
-
                             Date c = Calendar.getInstance().getTime();
-
-
                             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             String formattedDate = df.format(c);
                             String[] stdate2 = formattedDate.split("-");
-
                             String st= stdate[1].replace("0", "");
 
+                            //Überprüfung System out
                             System.out.println("Current time => " + stdate2[1]);
                             System.out.println("Current time => " + st);
                             System.out.println("Current time => " + Termine);
 
-
+                            //überprüfung erste Prüfungsphase oder zweite
                             if(Integer.valueOf(st) > Integer.valueOf(stdate2[1]))
                             {
                                 if (Termine.equals("0")) {
@@ -140,6 +134,7 @@ public class RetrofitConnect {
 
                          if(!checkvalidate){
                              System.out.println("aufgerufen222");
+                             //erhaltene Werte zur Datenbank hinzufügen
                             user.setErstpruefer(response.body().get(i).getErstpruefer());
                             user.setZweitpruefer(response.body().get(i).getZweitpruefer());
                             user.setDatum(String.valueOf(targetdatevalue));
@@ -149,6 +144,7 @@ public class RetrofitConnect {
                             user.setSemester(response.body().get(i).getSemester());
                             user.setTermin(response.body().get(i).getTermin());
 
+                            //lokale datenbank initialiseren
                              AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
                              List<User> userdaten2 = database2.userDao().getAll2();
                              Log.d("Test4", String.valueOf(userdaten2.size()));
@@ -168,6 +164,7 @@ public class RetrofitConnect {
 
                              }
 
+                            //Überprüfung von Klausur oder Mündliche Prüfung
                             String Klausur = "K_90";
                             if(Klausur.equals(response.body().get(i).getPruefform())) {
                                 user.setPruefform("Klausur");
@@ -176,13 +173,9 @@ public class RetrofitConnect {
 
                             }
 
-
-
+                            //Schlüssel für die Erkennung bzw unterscheidung Festlegen
                             user.setValidation(Jahr + Studiengang + Pruefungsphase);
                              System.out.println(Jahr + Studiengang + Pruefungsphase);
-
-
-
                              addUser(roomdaten, user);
 
                         }

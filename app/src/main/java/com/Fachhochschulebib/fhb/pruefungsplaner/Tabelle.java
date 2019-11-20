@@ -64,15 +64,7 @@ public class Tabelle extends AppCompatActivity  {
     //aufruf der starteinstelllungen
 
 
-    @Override
-    public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            Intent intent = new Intent(this,MainActivity.class);
-            startActivity(intent);
-        }
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,10 +132,7 @@ public class Tabelle extends AppCompatActivity  {
 
             @Override
             public void onDrawerOpened(View drawerView) {
-
                 //Button Btnlogin = (Button) findViewById(R.id.login);
-
-
                 //Called when a drawer has settled in a completely open state.
                 //The drawer is interactive at this point.
                 // If you have 2 drawers (left and right) you can distinguish
@@ -163,16 +152,18 @@ public class Tabelle extends AppCompatActivity  {
             }
         });
 
+
+        //Bottom Navigation Menü mit den Menüpunkten
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                //Fragmentmanager initialisierung
                 int id = item.getItemId();
                 ft = getSupportFragmentManager().beginTransaction();
-
-
                 switch(id)
                 {
                     case R.id.navigation_calender:
+                        //Menüpunkt Termine
                         txtanzeigemenu.setText("Termine");
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
@@ -184,15 +175,10 @@ public class Tabelle extends AppCompatActivity  {
                         return true;
 
                     case R.id.navigation_medication:
-
+                        //Menüpunkt Suche
                         String validation = Jahr+RueckgabeStudiengang+Pruefphase;
                         AppDatabase roomdaten = AppDatabase.getAppDatabase(getApplicationContext());
-
                         List<User> userdaten = roomdaten.userDao().getAll(validation);
-
-
-
-
                         txtanzeigemenu.setText("Suche");
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
@@ -205,9 +191,6 @@ public class Tabelle extends AppCompatActivity  {
                             ft.replace(R.id.frame_placeholder, new sucheFragment());
                             ft.commit();
                         }
-
-
-
                         return true;
                     case R.id.navigation_diary:
                         txtanzeigemenu.setText("Prüfungen");
@@ -244,10 +227,10 @@ public class Tabelle extends AppCompatActivity  {
 
 
 
+        //Userinterface Komponenten initialisieren
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView4);
-
         recyclerView.setVisibility(View.VISIBLE);
         calendar = (CalendarView) findViewById(R.id.caCalender);
         btnsuche = (Button) findViewById(R.id.btnDatum);
