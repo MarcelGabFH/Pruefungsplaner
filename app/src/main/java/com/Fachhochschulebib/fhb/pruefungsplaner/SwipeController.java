@@ -179,7 +179,9 @@ public class SwipeController extends Callback {
 
         RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), itemView.getTop()+ 1000);
         //p.setColor(Color.DKGRAY);
-        p.setShader(new LinearGradient(0, 0, 0,itemView.getScaleY()*2, Color.DKGRAY, Color.BLACK, Shader.TileMode.MIRROR));
+        String color = "#06ABF9";
+        String color2 = "#43B3F9";
+        p.setShader(new LinearGradient(0, 0, 0,itemView.getScaleY()*2,Color.parseColor(color2), Color.parseColor(color) , Shader.TileMode.MIRROR));
         c.drawRoundRect(rightButton, corners, corners, p);
         drawText(s, c, rightButton, p);
 
@@ -205,7 +207,7 @@ public class SwipeController extends Callback {
         //drawText("EDIT", c, leftButton, p);
 
         RectF leftButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop()-((itemView.getBottom() - itemView.getTop())*2), itemView.getRight(), itemView.getHeight()*1);
-        p.setColor(Color.BLACK);
+        p.setColor(Color.BLUE);
         c.drawRoundRect(leftButton, corners, corners, p);
         drawText("INFOS", c, leftButton, p);
 

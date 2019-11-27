@@ -52,6 +52,7 @@ public class TerminefragmentSuche extends Fragment {
     private String month2;
     private String day2;
     private String year2;
+    private RecyclerView.LayoutManager mLayout;
     SwipeController swipeController = null;
     MyAdapter mAdapter;
     List<Integer> WerteZumAnzeigen= new ArrayList<>();
@@ -97,6 +98,8 @@ public class TerminefragmentSuche extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
 
+        mLayout = recyclerView.getLayoutManager();
+
 
         //Variablen zum speichern der Werte
         List<String> input = new ArrayList<>();
@@ -118,7 +121,7 @@ public class TerminefragmentSuche extends Fragment {
         }
 
         // define an adapter
-        mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
+        mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform,mLayout);
         recyclerView.setAdapter(mAdapter);
 
 
@@ -226,7 +229,7 @@ public class TerminefragmentSuche extends Fragment {
 
                     }
                     // define an adapter
-                    mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
+                    mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform,mLayout);
                     recyclerView.setAdapter(mAdapter);
                     speicher = true;
                 } else {
@@ -270,7 +273,7 @@ public class TerminefragmentSuche extends Fragment {
 
                             // define an adapter
                             //Werte an den Adapter übergeben
-                            mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
+                            mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform,mLayout);
                             //Anzeigen von recyclerview
                             recyclerView.setAdapter(mAdapter);
                         }

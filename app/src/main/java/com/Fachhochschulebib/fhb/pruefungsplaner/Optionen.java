@@ -95,6 +95,8 @@ public class Optionen extends Fragment {
         //layout Komponenten
         Button btnDb = (Button) v.findViewById(R.id.btnDB);
         Button btnFav = (Button) v.findViewById(R.id.btnFav);
+        Button btnGoogleloeschen = (Button) v.findViewById(R.id.btnCalClear);
+        Button btnGoogleupdate = (Button) v.findViewById(R.id.btnGoogleUpdate);
         Switch SWgooglecalender = (Switch) v.findViewById(R.id.switch2);
         txtAdresse = (EditText) v.findViewById(R.id.txtAdresse);
         //holder.zahl1 = position;
@@ -196,6 +198,24 @@ public class Optionen extends Fragment {
                 database2.clearAllTables();
 
                 Toast.makeText(v.getContext(), "Datenbank gelöscht", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        //Google Kalender einträge löschen
+        btnGoogleloeschen.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+               kalenderLöschen();
+                Toast.makeText(v.getContext(), "Google Kalender Einträge gelöscht", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        //Google Kalender einträge löschen
+        btnGoogleupdate.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                kalenderUpdate();
+                Toast.makeText(v.getContext(), "Google Kalender aktualisiert", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -327,6 +347,27 @@ public class Optionen extends Fragment {
 
     }
 
+    public void kalenderLöschen(){
+        CheckGoogleCalendar cal = new CheckGoogleCalendar();
+        cal.setCtx(getContext());
+        cal.clearCal();
+
+        try {
+
+        }catch (Exception e)
+        {}
+
+
+    }
+
+    public void kalenderUpdate(){
+        CheckGoogleCalendar cal = new CheckGoogleCalendar();
+        cal.setCtx(getContext());
+        cal.updateCal();
+
+
+
+    }
 
 
 

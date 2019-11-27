@@ -15,6 +15,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -23,6 +24,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -61,12 +64,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.Fachhochschulebib.fhb.pruefungsplaner.Terminefragment.validation;
 
 
 public class MainActivity extends AppCompatActivity {
     static public RecyclerView.Adapter mAdapter;
-
 
    public static String Jahr = null;
    public static String Pruefphase = null;
@@ -91,6 +94,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.start);
 
         pingpruefperiode();
+
+
+        //Zugriffrechte für den GoogleKalender
+        final int callbackId = 42;
+        checkPermission(callbackId, Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR);
 
 
 
@@ -552,13 +560,10 @@ public class MainActivity extends AppCompatActivity {
                     //Add one to month {0 - 11}
                     int month2 = calendar.get(Calendar.MONTH) + 1;
                     int day2 = calendar.get(Calendar.DAY_OF_MONTH);
-
-
                     //String Prüfperiode zum Anzeigen
                     String pruefperiodedatum;
                     pruefperiodedatum = "Aktuelle Prüfungsphase: \n " +String.valueOf(day) +"."+ String.valueOf(month) +"."+ String.valueOf(year) +" bis "+ String.valueOf(day2) +"."+ String.valueOf(month2) +"."+ String.valueOf(year2) ;  // number of days to add;
                     //Log.d("Output pruefperiode",pruefperiodedatum);
-
                     // Prüfperiode für die offline Verwendung speichern
                     mEditor = mSharedPreferencesperiode.edit();
                     String strJson = mSharedPreferencesperiode.getString("pruefperiode", " ");
@@ -582,13 +587,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 catch (final Exception e)
                 {
-
                     //update2();
                 }
-
-
-
-
             }
         }).start();
 
@@ -609,5 +609,18 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).create().show();
     }
+
+
+    private void checkPermission(int callbackId, String... permissionsId) {
+        boolean permissions = true;
+        for (String p : permissionsId) {
+            permissions = permissions && ContextCompat.checkSelfPermission(this, p) == PERMISSION_GRANTED;
+        }
+
+        if (!permissions)
+            ActivityCompat.requestPermissions(this, permissionsId, callbackId);
+    }
+
+
 }
 

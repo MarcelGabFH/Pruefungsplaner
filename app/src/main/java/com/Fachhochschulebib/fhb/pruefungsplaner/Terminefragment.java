@@ -25,6 +25,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,11 +55,13 @@ public class Terminefragment extends Fragment {
     private String date;
     private String month2;
     private String day2;
+    private String positionspeichern;
     private int position2 = 0;
     private String year2;
     public static String validation;
     SwipeController swipeController = null;
     MyAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayout;
 
     AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
     List<User>dateneinlesen = roomdaten.userDao().getAll(validation);
@@ -126,7 +129,7 @@ public class Terminefragment extends Fragment {
 
            // System.out.println(String.valueOf(userdaten.size()));
 
-            mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
+            mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform,mLayout);
 
             recyclerView.setAdapter(mAdapter);
             // might want to change "executed" for the returned string passed
@@ -162,10 +165,34 @@ public class Terminefragment extends Fragment {
         // in content do not change the layout size
         // of the RecyclerView
         recyclerView.setHasFixedSize(true);
+
         mSharedPreferences = v.getContext().getSharedPreferences("json6", 0);
         // use a linear layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
+        mLayout = recyclerView.getLayoutManager();
+
+
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        // TODO Handle item click
+                        Log.e("@@@@@",""+position);
+                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position2 + 1);
+                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position2 +2);
+                        try {
+                            viewItem.setVisibility(View.VISIBLE);
+                            viewItem2.setVisibility(View.VISIBLE);
+                        }catch (Exception e)
+                        {
+
+                        }
+
+
+                    }
+                })
+        );
 
 
         List<User> userdaten = roomdaten.userDao().getAll(validation);
@@ -190,15 +217,17 @@ public class Terminefragment extends Fragment {
 
         // System.out.println(String.valueOf(userdaten.size()));
 
-        mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
+
+        mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform,mLayout);
 
         recyclerView.setAdapter(mAdapter);
 
 
 
 
+
+
         swipeController = new SwipeController(new SwipeControllerActions() {
-            String positionspeichern;
 
             @Override
             public void onLeftClicked( int position) {
@@ -337,7 +366,7 @@ public class Terminefragment extends Fragment {
 
                    // System.out.println(String.valueOf(userdaten.size()));
                     //Recyclerview Adapter mit Werten füllen
-                    mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
+                    mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform,mLayout);
                     recyclerView.setAdapter(mAdapter);
                     speicher = true;
                 } else {
@@ -390,7 +419,7 @@ public class Terminefragment extends Fragment {
                             }// define an adapter
 
                             //Adapter mit Werten füllen
-                            mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform);
+                            mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform,mLayout);
 
                             //Anzeigen
                             recyclerView.setAdapter(mAdapter);
