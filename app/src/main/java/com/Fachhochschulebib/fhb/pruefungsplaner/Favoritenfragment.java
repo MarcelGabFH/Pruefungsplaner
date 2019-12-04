@@ -26,7 +26,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.User;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,8 +41,6 @@ public class Favoritenfragment extends Fragment {
 
     // Datenbank initialisierung
     AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
-    List<User>dateneinlesen = roomdaten.userDao().getAll2();
-
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,20 +68,20 @@ public class Favoritenfragment extends Fragment {
         List<String> datum = new ArrayList<>();
         List<String> pruefungsNr = new ArrayList<>();
         btnsuche.setVisibility(View.INVISIBLE);
-        List<User> userdaten = roomdaten.userDao().getAll2();
+        List<Pruefplan> pruefplandaten = roomdaten.userDao().getAll2();
 
 
         // Abfrage ob Prüfungen favorisiert wurden
         // Favorisierte Prüfungen für die Anzeige vorbereiten
-        for (int i = 0; i < userdaten.size(); i++) {
-            if (userdaten.get(i).getFavorit()) {
+        for (int i = 0; i < pruefplandaten.size(); i++) {
+            if (pruefplandaten.get(i).getFavorit()) {
 
-                String[] date2 = userdaten.get(i).getDatum().toString().split(" ");
-                studiengang.add(userdaten.get(i).getModul() + " " + userdaten.get(i).getStudiengang());
-                profnamen.add(userdaten.get(i).getErstpruefer() + " " + userdaten.get(i).getZweitpruefer() + " " + userdaten.get(i).getSemester().toString());
-                //input2.add(dateneinlesen.getProfname()[Integer.valueOf(response.get(i).toString())] + " " + dateneinlesen.getSemester()[Integer.valueOf(response.get(i).toString())] + " ");
-                datum.add(userdaten.get(i).getDatum());
-                pruefungsNr.add(userdaten.get(i).getID());
+                String[] date2 = pruefplandaten.get(i).getDatum().toString().split(" ");
+                studiengang.add(pruefplandaten.get(i).getModul() + " " + pruefplandaten.get(i).getStudiengang());
+                profnamen.add(pruefplandaten.get(i).getErstpruefer() + " " + pruefplandaten.get(i).getZweitpruefer() + " " + pruefplandaten.get(i).getSemester().toString());
+                //input2.add(pruefplandaten.getProfname()[Integer.valueOf(response.get(i).toString())] + " " + pruefplandaten.getSemester()[Integer.valueOf(response.get(i).toString())] + " ");
+                datum.add(pruefplandaten.get(i).getDatum());
+                pruefungsNr.add(pruefplandaten.get(i).getID());
             }
         }
 

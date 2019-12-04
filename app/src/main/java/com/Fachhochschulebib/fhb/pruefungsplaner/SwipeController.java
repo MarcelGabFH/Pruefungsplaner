@@ -165,6 +165,37 @@ public class SwipeController extends Callback {
         }
     }
 
+    private void drawButtons2(Canvas c, RecyclerView.ViewHolder viewHolder,String s) {
+        float buttonWidthWithoutPadding = buttonWidth - 20;
+        float corners = 16;
+
+        View itemView = viewHolder.itemView;
+        Paint p = new Paint();
+
+        RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
+        //p.setColor(Color.BLUE);
+        //c.drawRoundRect(leftButton, corners, corners, p);
+        //drawText("EDIT", c, leftButton, p);
+
+        RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getBottom() - 900, itemView.getRight(), itemView.getBottom());
+        //p.setColor(Color.DKGRAY);
+        String color = "#06ABF9";
+        String color2 = "#43B3F9";
+        p.setShader(new LinearGradient(0, 0, 0,itemView.getScaleY()*2,Color.parseColor(color2), Color.parseColor(color) , Shader.TileMode.MIRROR));
+        c.drawRoundRect(rightButton, corners, corners, p);
+        drawText(s, c, rightButton, p);
+
+
+        buttonInstance = null;
+        if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
+            buttonInstance = leftButton;
+        }
+        else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
+            buttonInstance = leftButton;
+        }
+    }
+
+
     private void drawButtons(Canvas c, RecyclerView.ViewHolder viewHolder,String s) {
         float buttonWidthWithoutPadding = buttonWidth - 20;
         float corners = 16;
@@ -194,7 +225,7 @@ public class SwipeController extends Callback {
         }
     }
 
-    private void drawButtonsup(Canvas c, RecyclerView.ViewHolder viewHolder) {
+    private void drawButtonsup(Canvas c, final RecyclerView.ViewHolder viewHolder) {
         float buttonWidthWithoutPadding = buttonWidth - 20;
         float corners = 16;
 
@@ -211,6 +242,13 @@ public class SwipeController extends Callback {
         c.drawRoundRect(leftButton, corners, corners, p);
         drawText("INFOS", c, leftButton, p);
 
+        itemView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                return false;
+            }
+        });
         buttonInstance = null;
         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
             buttonInstance = leftButton;
@@ -250,6 +288,12 @@ public class SwipeController extends Callback {
     public void onDraw(Canvas c,String s) {
         if (currentItemViewHolder != null) {
             drawButtons(c, currentItemViewHolder,s);
+        }
+    }
+
+    public void onDraw2(Canvas c,String s) {
+        if (currentItemViewHolder != null) {
+            drawButtons2(c, currentItemViewHolder,s);
         }
     }
 

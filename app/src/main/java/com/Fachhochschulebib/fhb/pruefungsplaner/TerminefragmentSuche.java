@@ -24,6 +24,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.User;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,15 +43,14 @@ import static com.Fachhochschulebib.fhb.pruefungsplaner.Terminefragment.validati
 
 public class TerminefragmentSuche extends Fragment {
 
-    SharedPreferences mSharedPreferences;
 
-    private FragmentTransaction ft;
     private RecyclerView recyclerView;
     private CalendarView calendar;
     private Button btnsuche;
     private String date;
     private String month2;
     private String day2;
+    private int position2 = 0;
     private String year2;
     private RecyclerView.LayoutManager mLayout;
     SwipeController swipeController = null;
@@ -72,14 +72,14 @@ public class TerminefragmentSuche extends Fragment {
         final View v = inflater.inflate(R.layout.terminefragment, container, false);
 
         //Datenbank initialisieren
-        AppDatabase roomdaten = AppDatabase.getAppDatabase(v.getContext());
-        List<User> userdaten = roomdaten.userDao().getAll(validation);
+        AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
+        List<Pruefplan> pruefplandaten = datenbank.userDao().getAll(validation);
 
 
         //
-        for (int i =0;i<userdaten.size();i++) {
-            System.out.println(userdaten.get(i).getAusgewaehlt());
-            if(userdaten.get(i).getAusgewaehlt()) {
+        for (int i =0;i<pruefplandaten.size();i++) {
+            System.out.println(pruefplandaten.get(i).getAusgewaehlt());
+            if(pruefplandaten.get(i).getAusgewaehlt()) {
                 WerteZumAnzeigen.add(i);
             }
         }
@@ -93,35 +93,34 @@ public class TerminefragmentSuche extends Fragment {
         // in content do not change the layout size
         // of the RecyclerView
         recyclerView.setHasFixedSize(true);
-        mSharedPreferences = v.getContext().getSharedPreferences("json6", 0);
+
         // use a linear layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
-
         mLayout = recyclerView.getLayoutManager();
 
 
         //Variablen zum speichern der Werte
-        List<String> input = new ArrayList<>();
-        List<String> input2 = new ArrayList<>();
-        List<String> input3 = new ArrayList<>();
-        List<String> input4 = new ArrayList<>();
+        List<String> studiengangundmodul = new ArrayList<>();
+        List<String> prueferundsemster = new ArrayList<>();
+        List<String> datum = new ArrayList<>();
+        List<String> id = new ArrayList<>();
         List<String> ID = new ArrayList<>();
         List<String> Pruefform = new ArrayList<>();
 
         //Variablen mit Werten aus der lokalen Datenbank füllen
         for (int i = 0; i < WerteZumAnzeigen.size(); i++) {
-            input.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul() + "\n " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getStudiengang());
-            input2.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getErstpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getZweitpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getSemester() + " ");
-            input3.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getDatum());
-            input4.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul());
-            ID.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getID());
-            Pruefform.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getPruefform());
+            studiengangundmodul.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul() + "\n " + pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getStudiengang());
+            prueferundsemster.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getErstpruefer() + " " + pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getZweitpruefer() + " " + pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getSemester() + " ");
+            datum.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getDatum());
+            id.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul());
+            ID.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getID());
+            Pruefform.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getPruefform());
 
         }
 
         // define an adapter
-        mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform,mLayout);
+        mAdapter = new MyAdapter(studiengangundmodul, prueferundsemster, datum, id,ID,Pruefform,mLayout);
         recyclerView.setAdapter(mAdapter);
 
 
@@ -131,11 +130,24 @@ public class TerminefragmentSuche extends Fragment {
             @Override
             public void onLeftClicked(int position) {
                 position = position + 1;
+                position2 = position;
                 final int position2 = position - 1;
-                if( position < (mAdapter.getItemCount() -1)) {
 
+                if (mAdapter.getItemCount() < 2)
+                {
+                    recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                        @Override
+                        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                            String s = mAdapter.giveString(position2);
+                            swipeController.onDraw(c, s);
+                        }
+                    });
+
+                }
+
+                if( position < (mAdapter.getItemCount() -1)) {
                     try {
-                        positionspeichern = mAdapter.values.get(position);
+                        positionspeichern = mAdapter.uebergebeneModule.get(position);
                         View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
                         View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position + 1);
                         viewItem.setVisibility(View.INVISIBLE);
@@ -149,19 +161,49 @@ public class TerminefragmentSuche extends Fragment {
                             }
                         });
                     } catch (NullPointerException e) {
-
                     }
 
                 }else{
-                    recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-                        @Override
-                        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                            String s = mAdapter.giveString(position2);
-                            swipeController.onDraw(c, s);
+                    try {
+                        if( mAdapter.getItemCount() < 4)
+                        {
+                            try {
+
+                                recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                                    @Override
+                                    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                                        String s = mAdapter.giveString(position2);
+                                        swipeController.onDraw(c, s);
+                                    }
+                                });
+
+                                View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
+                                viewItem.setVisibility(View.INVISIBLE);
+
+                            } catch (NullPointerException e) {
+                            }
+
                         }
-                    });
+                        else {
+                            positionspeichern = mAdapter.uebergebeneModule.get(position - 1);
+                            View viewItem = recyclerView.getLayoutManager().findViewByPosition(position - 2);
+                            View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position - 3);
+                            viewItem.setVisibility(View.INVISIBLE);
+                            viewItem2.setVisibility(View.INVISIBLE);
+
+                            recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                                @Override
+                                public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                                    String s = mAdapter.giveString(position2);
+                                    swipeController.onDraw2(c, s);
+                                }
+                            });
+                        }
+                    } catch (NullPointerException e) {
+
+                    }
                 }
-                // mAdapter.values.remove(position);
+                // mAdapter.uebergebeneModule.remove(position);
                 //    mAdapter.notifyItemRemoved(position);
                 // mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
             }
@@ -173,15 +215,37 @@ public class TerminefragmentSuche extends Fragment {
 
 
                         View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
-                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position + 1);
                         viewItem.setVisibility(View.VISIBLE);
+                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position + 1);
                         viewItem2.setVisibility(View.VISIBLE);
                     }
 
                 } catch (NullPointerException e) {
 
                 }
-                //mAdapter.values.set(position,positionspeichern);
+
+                try {
+
+                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position-2);
+                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position-3);
+                        viewItem.setVisibility(View.VISIBLE);
+                        viewItem2.setVisibility(View.VISIBLE);
+
+                    View viewItem3 = recyclerView.getLayoutManager().findViewByPosition(position);
+                    viewItem3.setVisibility(View.VISIBLE);
+
+                } catch (NullPointerException e) {
+
+                }
+
+                try {
+                    View viewItem3 = recyclerView.getLayoutManager().findViewByPosition(position);
+                    viewItem3.setVisibility(View.VISIBLE);
+
+                } catch (NullPointerException e) {
+
+                }
+                //mAdapter.uebergebeneModule.set(position,positionspeichern);
                 //mAdapter.notifyItemInserted(position);
 
 
@@ -209,27 +273,27 @@ public class TerminefragmentSuche extends Fragment {
                 if (!speicher) {
                     calendar.setVisibility(View.GONE);
                     //calendar.getLayoutParams().height = 0;
-                    List<String> input = new ArrayList<>();
-                    List<String> input2 = new ArrayList<>();
-                    List<String> input3 = new ArrayList<>();
-                    List<String> input4 = new ArrayList<>();
+                    List<String> modulundstudiengang = new ArrayList<>();
+                    List<String> prueferundsemster = new ArrayList<>();
+                    List<String> datum = new ArrayList<>();
+                    List<String> id = new ArrayList<>();
                     List<String> ID = new ArrayList<>();
                     List<String> Pruefform = new ArrayList<>();
                     //Lokale Datenbank initialisieren
                     AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
-                    List<User> userdaten = roomdaten.userDao().getAll(validation);
+                    List<Pruefplan> userdaten = roomdaten.userDao().getAll(validation);
 
                     for (int i = 0; i < WerteZumAnzeigen.size(); i++) {
-                        input.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul() + "\n " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getStudiengang());
-                        input2.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getErstpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getZweitpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getSemester() + " ");
-                        input3.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getDatum());
-                        input4.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul());
+                        modulundstudiengang.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul() + "\n " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getStudiengang());
+                        prueferundsemster.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getErstpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getZweitpruefer() + " " + userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getSemester() + " ");
+                        datum.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getDatum());
+                        id.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul());
                         ID.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getID());
                         Pruefform.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getPruefform());
 
                     }
                     // define an adapter
-                    mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform,mLayout);
+                    mAdapter = new MyAdapter(modulundstudiengang, prueferundsemster, datum, id,ID,Pruefform,mLayout);
                     recyclerView.setAdapter(mAdapter);
                     speicher = true;
                 } else {
@@ -238,15 +302,14 @@ public class TerminefragmentSuche extends Fragment {
                     calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                         public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                             AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
-                            List<User> userdaten = roomdaten.userDao().getAll(validation);
-
-                            List<String> input = new ArrayList<>();
-                            List<String> input2 = new ArrayList<>();
-                            List<String> input3 = new ArrayList<>();
-                            List<String> input4 = new ArrayList<>();
+                            List<Pruefplan> userdaten = roomdaten.userDao().getAll(validation);
+                            List<String> modulundstudiengang = new ArrayList<>();
+                            List<String> prueferundsemester = new ArrayList<>();
+                            List<String> datum = new ArrayList<>();
+                            List<String> modul = new ArrayList<>();
                             List<String> ID = new ArrayList<>();
                             List<String> Pruefform = new ArrayList<>();
-                            //Creating editor to store values to shared preferences
+                            //Creating editor to store uebergebeneModule to shared preferences
                             if (month < 10) {
                                 month2 = "0" + String.valueOf(month + 1);
                             } else {
@@ -262,18 +325,17 @@ public class TerminefragmentSuche extends Fragment {
                             for (int i = 0; i < userdaten.size(); i++) {
                                 String[] date2 = userdaten.get(i).getDatum().split(" ");
                                 if (date2[0].equals(date)) {
-                                    input.add(userdaten.get(i).getModul() + "\n " + userdaten.get(i).getStudiengang());
-                                    input2.add(userdaten.get(i).getErstpruefer() + " " + userdaten.get(i).getZweitpruefer() + " " + userdaten.get(i).getSemester() + " ");
-                                    input3.add(userdaten.get(i).getDatum());
-                                    input4.add(userdaten.get(i).getModul());
+                                    modulundstudiengang.add(userdaten.get(i).getModul() + "\n " + userdaten.get(i).getStudiengang());
+                                    prueferundsemester.add(userdaten.get(i).getErstpruefer() + " " + userdaten.get(i).getZweitpruefer() + " " + userdaten.get(i).getSemester() + " ");
+                                    datum.add(userdaten.get(i).getDatum());
+                                    modul.add(userdaten.get(i).getModul());
                                     ID.add(userdaten.get(i).getID());
                                     Pruefform.add(userdaten.get(i).getPruefform());
                                 }
                             }
-
                             // define an adapter
                             //Werte an den Adapter übergeben
-                            mAdapter = new MyAdapter(input, input2, input3, input4,ID,Pruefform,mLayout);
+                            mAdapter = new MyAdapter(modulundstudiengang, prueferundsemester, datum, modul,ID,Pruefform,mLayout);
                             //Anzeigen von recyclerview
                             recyclerView.setAdapter(mAdapter);
                         }
@@ -282,6 +344,56 @@ public class TerminefragmentSuche extends Fragment {
                 }
             }
         });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                try {
+                    View viewItem3 = recyclerView.getLayoutManager().findViewByPosition(position2 +1);
+                    View viewItem4 = recyclerView.getLayoutManager().findViewByPosition(position2 + 2);
+                    viewItem3.setVisibility(View.VISIBLE);
+                    viewItem4.setVisibility(View.VISIBLE);
+
+
+                } catch (NullPointerException e) {
+                }
+
+                try {
+                    View viewItem = recyclerView.getLayoutManager().findViewByPosition(position2-2);
+                    View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position2-3);
+                    viewItem.setVisibility(View.VISIBLE);
+                    viewItem2.setVisibility(View.VISIBLE);
+
+                } catch (NullPointerException e) {
+                }
+
+            }
+        });
+
+
+
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        // TODO Handle item click
+                        Log.e("@@@@@",""+position2);
+                        try {
+                            View viewItem = recyclerView.getLayoutManager().findViewByPosition(position2-2);
+                            View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position2-3);
+                            View viewItem3 = recyclerView.getLayoutManager().findViewByPosition(position2 +1);
+                            View viewItem4 = recyclerView.getLayoutManager().findViewByPosition(position2 + 2);
+                            viewItem.setVisibility(View.VISIBLE);
+                            viewItem2.setVisibility(View.VISIBLE);
+                            viewItem3.setVisibility(View.VISIBLE);
+                            viewItem4.setVisibility(View.VISIBLE);
+                        }catch (Exception e)
+                        {
+                        }
+                    }
+                })
+        );
         return v;
     }
 }

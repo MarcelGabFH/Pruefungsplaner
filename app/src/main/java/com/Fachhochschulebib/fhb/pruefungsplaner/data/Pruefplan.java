@@ -5,11 +5,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(tableName = "user")
-public class User {
-
-
-
+@Entity(tableName = "pruefplan")
+public class Pruefplan {
 
     @PrimaryKey(autoGenerate = true)
     private int Count;
@@ -48,9 +45,8 @@ public class User {
     @ColumnInfo(name = "Studiengang")
     private String Studiengang;
 
-    @ColumnInfo(name = "Term")
+    @ColumnInfo(name = "Termin")
     private String Termin;
-
 
     public String getErstpruefer() {
         return Erstpruefer;

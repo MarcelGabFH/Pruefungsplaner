@@ -7,9 +7,7 @@ import android.util.Log;
 import com.Fachhochschulebib.fhb.pruefungsplaner.Optionen;
 import com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.User;
-
-import org.json.JSONArray;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,24 +25,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class RetrofitConnect {
-    public  String Jahr = null,Studiengang= null,Pruefungsphase= null,Termin = null,Termine;
+    public String termine;
     public static boolean checkuebertragung = false;
     private boolean checkvalidate = false;
     Context ctx2;
 
-    public void retro(Context ctx, final AppDatabase roomdaten, final String Jahr, final String Studiengang, final String Pruefungsphase, final String Termin){
+    public void retro(Context ctx, final AppDatabase roomdaten, final String jahr, final String studiengang, final String pruefungsphase, final String termin){
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
 
          ctx2 = ctx;
-         Termine = Termin;
-        //Creating editor to store values to shared preferences
-        String URLFHB = mSharedPreferencesAdresse.getString("Server-Adresse2","http://thor.ad.fh-bielefeld.de:8080/");
+         termine = termin;
+        //Creating editor to store uebergebeneModule to shared preferences
+        String urlfhb = mSharedPreferencesAdresse.getString("Server-Adresse2","http://thor.ad.fh-bielefeld.de:8080/");
 
-        Log.d("Output Studiengang",Pruefungsphase.toString());
-        Log.d("Output Studiengang",Termin.toString());
-        Log.d("Output Studiengang",Jahr.toString());
+        Log.d("Output Studiengang",pruefungsphase.toString());
+        Log.d("Output Studiengang",termin.toString());
+        Log.d("Output Studiengang",jahr.toString());
 
 
 
@@ -52,10 +50,10 @@ public class RetrofitConnect {
         //String URLFHB = "http://thor.ad.fh-bielefeld.de:8080/";
         //String URLFHB = "http://192.168.178.39:44631/";
         //uebergabe der parameter an die Adresse
-        //String adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+Termin+"/"+Jahr+"/";
-        String adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+Termin+"/"+Jahr+"/"+Studiengang+"/";
+        //String adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+aktuellerTermin+"/"+jahr+"/";
+        String adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+pruefungsphase+"/"+termin+"/"+jahr+"/"+studiengang+"/";
 
-        String URL = URLFHB+adresse;
+        String URL = urlfhb+adresse;
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -68,10 +66,10 @@ public class RetrofitConnect {
             public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                 response.body();
                 if (response.isSuccessful()) {
-                    List<User> userdaten = roomdaten.userDao().getAll2();
+                    List<Pruefplan> userdaten = roomdaten.userDao().getAll2();
                     //roomdaten.clearAllTables();
 
-                    String validation = Jahr+Studiengang+Pruefungsphase;
+                    String validation = jahr+studiengang+pruefungsphase;
 
                     String checkTermin = "0";
                     for(int j = 0; j < userdaten.size();j++) {
@@ -84,8 +82,8 @@ public class RetrofitConnect {
                     //Schleife um jedes erhaltene Prüfungsobjekt in die lokale Datenbank hinzuzufügen
                     for (int i = response.body().size()-1 ; i > 0; --i) {
 
-                        //User ist die modelklasse für die angekommenden Prüfungsobjekte
-                        User user = new User();
+                        //Pruefplan ist die modelklasse für die angekommenden Prüfungsobjekte
+                        Pruefplan pruefplan = new Pruefplan();
 
                         //Festlegen vom Dateformat
                         String date3;
@@ -110,16 +108,16 @@ public class RetrofitConnect {
                             //Überprüfung System out
                             System.out.println("Current time => " + stdate2[1]);
                             System.out.println("Current time => " + st);
-                            System.out.println("Current time => " + Termine);
+                            System.out.println("Current time => " + termine);
 
                             //überprüfung erste Prüfungsphase oder zweite
                             if(Integer.valueOf(st) > Integer.valueOf(stdate2[1]))
                             {
-                                if (Termine.equals("0")) {
+                                if (termine.equals("0")) {
                                     if(!checkTermin.equals("1")) {
                                         //roomdaten.clearAllTables();
                                     }
-                                    retro(ctx2, roomdaten, Jahr, Studiengang, Pruefungsphase, "1");
+                                    retro(ctx2, roomdaten, jahr, studiengang, pruefungsphase, "1");
                                     System.out.println("aufgerufen");
                                     break;
                                 }
@@ -135,26 +133,26 @@ public class RetrofitConnect {
                          if(!checkvalidate){
                              System.out.println("aufgerufen222");
                              //erhaltene Werte zur Datenbank hinzufügen
-                            user.setErstpruefer(response.body().get(i).getErstpruefer());
-                            user.setZweitpruefer(response.body().get(i).getZweitpruefer());
-                            user.setDatum(String.valueOf(targetdatevalue));
-                            user.setID(response.body().get(i).getID());
-                            user.setStudiengang(response.body().get(i).getStudiengang());
-                            user.setModul(response.body().get(i).getModul());
-                            user.setSemester(response.body().get(i).getSemester());
-                            user.setTermin(response.body().get(i).getTermin());
+                            pruefplan.setErstpruefer(response.body().get(i).getErstpruefer());
+                            pruefplan.setZweitpruefer(response.body().get(i).getZweitpruefer());
+                            pruefplan.setDatum(String.valueOf(targetdatevalue));
+                            pruefplan.setID(response.body().get(i).getID());
+                            pruefplan.setStudiengang(response.body().get(i).getStudiengang());
+                            pruefplan.setModul(response.body().get(i).getModul());
+                            pruefplan.setSemester(response.body().get(i).getSemester());
+                            pruefplan.setTermin(response.body().get(i).getTermin());
 
                             //lokale datenbank initialiseren
                              AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
-                             List<User> userdaten2 = database2.userDao().getAll2();
+                             List<Pruefplan> userdaten2 = database2.userDao().getAll2();
                              Log.d("Test4", String.valueOf(userdaten2.size()));
 
                              try {
                                  for (int b = 0; b < Optionen.ID.size(); b++) {
-                                     if (user.getID().equals(Optionen.ID.get(b))) {
+                                     if (pruefplan.getID().equals(Optionen.ID.get(b))) {
 
                                          Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
-                                         user.setFavorit(true);
+                                         pruefplan.setFavorit(true);
                                      }
                                  }
                              }
@@ -165,18 +163,34 @@ public class RetrofitConnect {
                              }
 
                             //Überprüfung von Klausur oder Mündliche Prüfung
-                            String Klausur = "K_90";
-                            if(Klausur.equals(response.body().get(i).getPruefform())) {
-                                user.setPruefform("Klausur");
-                            }else{
-                                user.setPruefform("Mündliche Prüfung");
+                             String klausur = "K_90";
+                             String klausur60 = "K_60";
+                             String klausur120 = "K_120";
+                             String klausur180 = "K_180";
+
+                             pruefplan.setPruefform("Mündliche Prüfung / Hausarbeit");
+
+                             if(klausur.equals(response.body().get(i).getPruefform())) {
+                                pruefplan.setPruefform("Klausur 90 Minuten");
 
                             }
+                             if(klausur120.equals(response.body().get(i).getPruefform())) {
+                                 pruefplan.setPruefform("Klausur 120 Minuten");
+
+                             }
+                             if(klausur60.equals(response.body().get(i).getPruefform())) {
+                                 pruefplan.setPruefform("Klausur 60 Minuten");
+
+                             }
+                             if(klausur180.equals(response.body().get(i).getPruefform())) {
+                                 pruefplan.setPruefform("Klausur 180 Minuten");
+
+                             }
 
                             //Schlüssel für die Erkennung bzw unterscheidung Festlegen
-                            user.setValidation(Jahr + Studiengang + Pruefungsphase);
-                             System.out.println(Jahr + Studiengang + Pruefungsphase);
-                             addUser(roomdaten, user);
+                            pruefplan.setValidation(jahr + studiengang + pruefungsphase);
+                             System.out.println(jahr + studiengang + pruefungsphase);
+                             addUser(roomdaten, pruefplan);
 
                         }
                     }
@@ -196,11 +210,11 @@ public class RetrofitConnect {
         });
     }
 
-    public static User addUser(final AppDatabase db, User user) {
-        db.userDao().insertAll(user);
-        System.out.println(user.getErstpruefer());
+    public static Pruefplan addUser(final AppDatabase db, Pruefplan pruefplan) {
+        db.userDao().insertAll(pruefplan);
+        System.out.println(pruefplan.getErstpruefer());
         System.out.println("\n");
-        return user;
+        return pruefplan;
     }
 
 

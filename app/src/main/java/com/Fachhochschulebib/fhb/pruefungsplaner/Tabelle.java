@@ -17,7 +17,6 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -37,14 +36,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.User;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
 
 import java.io.IOException;
 import java.util.List;
 
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.Jahr;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.Pruefphase;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.RueckgabeStudiengang;
+import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.pruefJahr;
+import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.aktuellePruefphase;
+import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.rueckgabeStudiengang;
 
 
 //Eigentlich die Hauptklasse wurde noch nicht umgenannt von hier werden die fragmente aufgerufen
@@ -163,8 +162,8 @@ public class Tabelle extends AppCompatActivity  {
                 switch(id)
                 {
                     case R.id.navigation_calender:
-                        //Menüpunkt Termine
-                        txtanzeigemenu.setText("Termine");
+                        //Menüpunkt termine
+                        txtanzeigemenu.setText("termine");
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
@@ -176,9 +175,9 @@ public class Tabelle extends AppCompatActivity  {
 
                     case R.id.navigation_medication:
                         //Menüpunkt Suche
-                        String validation = Jahr+RueckgabeStudiengang+Pruefphase;
+                        String validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
                         AppDatabase roomdaten = AppDatabase.getAppDatabase(getApplicationContext());
-                        List<User> userdaten = roomdaten.userDao().getAll(validation);
+                        List<Pruefplan> userdaten = roomdaten.userDao().getAll(validation);
                         txtanzeigemenu.setText("Suche");
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);

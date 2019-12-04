@@ -13,39 +13,39 @@ import java.util.List;
 public interface UserDao {
 
 
-    @Query("SELECT * FROM user WHERE Validation = :validation")
-    List<User> getAll(String validation);
+    @Query("SELECT * FROM Pruefplan WHERE Validation = :validation")
+    List<Pruefplan> getAll(String validation);
 
-    @Query("SELECT * FROM user")
-    List<User> getAll2();
+    @Query("SELECT * FROM Pruefplan")
+    List<Pruefplan> getAll2();
 
-    @Query("SELECT Studiengang FROM user")
+    @Query("SELECT Studiengang FROM Pruefplan")
     List<String> getStudiengang();
 
-    @Query("SELECT Erstpruefer FROM user")
+    @Query("SELECT Erstpruefer FROM Pruefplan")
     List<String> getErstpruefer();
 
-    @Query("SELECT Modul FROM user")
+    @Query("SELECT Modul FROM Pruefplan")
     List<String> getModul();
 
-    @Query("SELECT COUNT(*) from user")
+    @Query("SELECT COUNT(*) from Pruefplan")
     int countUsers();
 
     @Insert
-    void insertAll(User... users);
+    void insertAll(Pruefplan... pruefplans);
 
-    @Query ("UPDATE User SET Favorit = :favorit WHERE ID = :id")
+    @Query ("UPDATE Pruefplan SET Favorit = :favorit WHERE ID = :id")
     void update(boolean favorit, int id );
 
-    @Query ("UPDATE User SET Ausgewaehlt = :pruefungen WHERE ID = :id")
+    @Query ("UPDATE Pruefplan SET Ausgewaehlt = :pruefungen WHERE ID = :id")
     void update2(boolean pruefungen,int id);
 
-    @Query ("UPDATE User SET Validation  = :nullSetzen WHERE Validation = :validation")
+    @Query ("UPDATE Pruefplan SET Validation  = :nullSetzen WHERE Validation = :validation")
     void updateValidation(String nullSetzen, String validation);
 
-    @Query ("UPDATE User SET Ausgewaehlt = :pruefungen ")
+    @Query ("UPDATE Pruefplan SET Ausgewaehlt = :pruefungen ")
     void suchezuruecksetzen(boolean pruefungen);
 
     @Delete
-    void delete(User user);
+    void delete(Pruefplan pruefplan);
 }

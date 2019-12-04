@@ -5,7 +5,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //
 // autor:
-// inhalt:  auswahl des studiengangs mit dazugehörigen Jahr und Semester
+// inhalt:  auswahl des studiengangs mit dazugehörigen pruefJahr und Semester
 // zugriffsdatum: 02.05.19
 //
 //
@@ -16,7 +16,6 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,16 +32,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.User;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,26 +58,22 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.Terminefragment.validation;
 
 
 public class MainActivity extends AppCompatActivity {
     static public RecyclerView.Adapter mAdapter;
 
-   public static String Jahr = null;
-   public static String Pruefphase = null;
-   public static String RueckgabeStudiengang = null;
-   public static String Termin;
+   public static String pruefJahr = null;
+   public static String aktuellePruefphase = null;
+   public static String rueckgabeStudiengang = null;
+   public static String aktuellerTermin;
     //KlassenVariablen
     private JSONArray mainObject;
     final List<String> spinnerArray = new ArrayList<String>();
     private Spinner spStudiengangMain;
-    private Spinner spPruef;
-    private Spinner spJahr;
-    List<String> ID = new ArrayList<String>();
+    List<String> id = new ArrayList<String>();
 
 
     @Override
@@ -108,28 +100,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (spinnerArray.size() > 1) {
-                    AppDatabase database2 = AppDatabase.getAppDatabase(getBaseContext());
-                    List<User> userdaten2 = database2.userDao().getAll2();
-                    Log.d("Test4", String.valueOf(userdaten2.size()));
+                    AppDatabase databasePruefplan = AppDatabase.getAppDatabase(getBaseContext());
+                    List<Pruefplan> pruefplandaten = databasePruefplan.userDao().getAll2();
+                    Log.d("Test4", String.valueOf(pruefplandaten.size()));
 
-                    for (int i = 0; i < userdaten2.size(); i++) {
-                        for (int j = 0; j < ID.size(); j++) {
-                            if (userdaten2.get(i).getID().equals(ID.get(j))) {
+                    for (int i = 0; i < pruefplandaten.size(); i++) {
+                        for (int j = 0; j < id.size(); j++) {
+                            if (pruefplandaten.get(i).getID().equals(id.get(j))) {
 
-                                Log.d("Test4", String.valueOf(userdaten2.get(i).getID()));
-                                database2.userDao().update(true, Integer.valueOf(userdaten2.get(i).getID()));
+                                Log.d("Test4", String.valueOf(pruefplandaten.get(i).getID()));
+                                databasePruefplan.userDao().update(true, Integer.valueOf(pruefplandaten.get(i).getID()));
                             }
                         }
                     }// define an adapter
 
 
                     //initialisierung room database
-                    AppDatabase roomdaten = AppDatabase.getAppDatabase(getBaseContext());
+                    AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
 
                     //retrofit auruf
                     RetrofitConnect retrofit = new RetrofitConnect();
-                    Termin = "0";
-                    retrofit.retro(getApplicationContext(), roomdaten, Jahr, RueckgabeStudiengang, Pruefphase, Termin);
+                    aktuellerTermin = "0";
+                    retrofit.retro(getApplicationContext(), datenbank, pruefJahr, rueckgabeStudiengang, aktuellePruefphase, aktuellerTermin);
 
 
                     Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
@@ -149,9 +141,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick (View v){
 
-                String validation = Jahr + RueckgabeStudiengang + Pruefphase;
+                String validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
 
-                update(validation);
+                Checkverbindung(validation);
 
             }
         });
@@ -171,40 +163,40 @@ public class MainActivity extends AppCompatActivity {
         //Kalender damit das aktuelle und die letzten 4 jahre auszuwählen
 
         Calendar calendar = Calendar.getInstance();
-        int KalenderMonat = calendar.get(Calendar.MONTH );
-        Log.d("Output Monat",String.valueOf(KalenderMonat));
+        int kalenderMonat = calendar.get(Calendar.MONTH );
+        Log.d("Output Monat",String.valueOf(kalenderMonat));
 
 
-        if (KalenderMonat  <= 3)
+        if (kalenderMonat  <= 3)
         {
-            Pruefphase = "W";
+            aktuellePruefphase = "W";
             List<String> spinnerArray3 = new ArrayList<String>();
             for (int i = 0; i < 1; i++) {
                 int thisYear = calendar.get(Calendar.YEAR);
-                Jahr = String.valueOf(thisYear);
+                pruefJahr = String.valueOf(thisYear);
 
             }
         }
 
 
-        if (KalenderMonat  > 3)
+        if (kalenderMonat  > 3)
         {
-            Pruefphase = "S";
+            aktuellePruefphase = "S";
             List<String> spinnerArray3 = new ArrayList<String>();
             for (int i = 0; i < 1; i++) {
                 int thisYear = calendar.get(Calendar.YEAR);
-                Jahr = String.valueOf(thisYear);
+                pruefJahr = String.valueOf(thisYear);
             }
         }
 
 
-        if (KalenderMonat >= 9) {
+        if (kalenderMonat >= 9) {
 
-            Pruefphase = "W";
+            aktuellePruefphase = "W";
             List<String> spinnerArray3 = new ArrayList<String>();
             for (int i = 0; i < 1; i++) {
                 int thisYear = calendar.get(Calendar.YEAR);
-                Jahr = String.valueOf(thisYear +1);
+                pruefJahr = String.valueOf(thisYear +1);
 
 
             }
@@ -216,10 +208,10 @@ public class MainActivity extends AppCompatActivity {
         //adapter aufruf
 
         try {
-            update("test");
-            SharedPreferences mSharedPreferencesperiode = getApplicationContext().getSharedPreferences("pruefperiode", 0);
-            //Creating editor to store values to shared preferencess
-            String strJson = mSharedPreferencesperiode.getString("pruefperiode", "0");
+            Checkverbindung("test");
+            SharedPreferences pruefperiode = getApplicationContext().getSharedPreferences("pruefperiode", 0);
+            //Creating editor to store uebergebeneModule to shared preferencess
+            String strJson = pruefperiode.getString("pruefperiode", "0");
             TextView txtpruefperiode = (TextView) findViewById(R.id.txtpruefperiode);
             //second parameter is necessary ie.,Value to return if this preference does not exist.
             if (strJson != null) {
@@ -228,10 +220,9 @@ public class MainActivity extends AppCompatActivity {
 
         }
         catch(Exception e) {
-            SharedPreferences.Editor mEditor;
-            SharedPreferences mSharedPreferencesperiode = getApplicationContext().getSharedPreferences("studiengaenge", 0);
-            //Creating editor to store values to shared preferencess
-            String strJson = mSharedPreferencesperiode.getString("studiengaenge", "0");
+            SharedPreferences pruefperiode = getApplicationContext().getSharedPreferences("studiengaenge", 0);
+            //Creating editor to store uebergebeneModule to shared preferencess
+            String strJson = pruefperiode.getString("studiengaenge", "0");
             //second parameter is necessary ie.,Value to return if this preference does not exist.
 
             if (strJson != null) {
@@ -240,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < mainObject.length(); i++) {
                         JSONObject json = mainObject.getJSONObject(i);
                         spinnerArray.add(json.get("SGName").toString());
-                        update3();
+                        uebergabeAnSpinner();
                     }
                 } catch (Exception b) {
 
@@ -248,9 +239,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            mSharedPreferencesperiode = getApplicationContext().getSharedPreferences("pruefperiode", 0);
-            //Creating editor to store values to shared preferencess
-            strJson = mSharedPreferencesperiode.getString("pruefperiode", "0");
+            pruefperiode = getApplicationContext().getSharedPreferences("pruefperiode", 0);
+            //Creating editor to store uebergebeneModule to shared preferencess
+            strJson = pruefperiode.getString("pruefperiode", "0");
             TextView txtpruefperiode = (TextView) findViewById(R.id.txtpruefperiode);
             //second parameter is necessary ie.,Value to return if this preference does not exist.
             if (strJson != null) {
@@ -264,14 +255,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-   public void update(String validation){
+   public void Checkverbindung(String validation){
 
-            boolean a = pingUrl("thor.ad.fh-bielefeld.de:8080/PruefplanApplika/webresources/entities.studiengang");
+            boolean aktuelleurl = pingUrl("thor.ad.fh-bielefeld.de:8080/PruefplanApplika/webresources/entities.studiengang");
 
 
    }
 
-    public void update2(){
+    public void Keineverbindung(){
         new Thread(new Runnable() {
             public void run() {
                 Toast.makeText(getBaseContext(), "Keine Verbindung zum Server möglich", Toast.LENGTH_SHORT).show();
@@ -282,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //darstellen der Studiengänge in der Spinner-Komponente.
-    public void update3(){
+    public void uebergabeAnSpinner(){
         MainActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 //Toast.makeText(getBaseContext(), "Prüfungen wurden aktualisiert", Toast.LENGTH_SHORT).show();
@@ -307,8 +298,8 @@ public class MainActivity extends AppCompatActivity {
                             if (parent.getItemAtPosition(position).toString().equals(spinnerArray.get(i))) {
                                 try{
                                     JSONObject object = mainObject.getJSONObject(i);
-                                    RueckgabeStudiengang = object.get("sgid").toString();
-                                    Log.d("Output Studiengang",RueckgabeStudiengang.toString());
+                                    rueckgabeStudiengang = object.get("sgid").toString();
+                                    Log.d("Output studiengang", rueckgabeStudiengang.toString());
 
                                 }
                                 catch (Exception e)
@@ -332,9 +323,9 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
                 public void run() {
                     // Die studiengänge werden in einer shared preferences Variable gespeichert
-                SharedPreferences.Editor mEditor;
-                SharedPreferences mSharedPreferencesperiode = getApplicationContext().getSharedPreferences("studiengaenge", 0);
-                //Creating editor to store values to shared preferences
+                SharedPreferences.Editor studiengangEditor;
+                SharedPreferences studiengaenge = getApplicationContext().getSharedPreferences("studiengaenge", 0);
+                //Creating editor to store uebergebeneModule to shared preferences
 
                     //Verbindungsaufbau zum Webserver
                 try {
@@ -343,20 +334,20 @@ public class MainActivity extends AppCompatActivity {
                     final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
                    // urlConn.setRequestProperty("Content-Type", "application/json");
                     //urlConn.setRequestProperty("Accept", "application/json");
-                    Log.d("Output Studiengang","test");
+                    Log.d("Output studiengang","test");
                     urlConn.setConnectTimeout(100 * 10); // mTimeout is in seconds
                     final long startTime = System.currentTimeMillis();
-                    Log.d("Output Studiengang","test");
+                    Log.d("Output studiengang","test");
                     urlConn.connect();
                     final long endTime = System.currentTimeMillis();
                     if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         System.out.println("Time (ms) : " + (endTime - startTime));
                         System.out.println("Ping to " + address + " was success");
-                        //update3();
+                        //uebergabeAnSpinner();
                     }
 
                     //Parsen von den  erhaltene Werte
-                    Log.d("Output Studiengang","test2");
+                    Log.d("Output studiengang","test2");
                     InputStream in = new BufferedInputStream(urlConn.getInputStream());
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                     String line;
@@ -365,12 +356,12 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     //create JSON
-                    Log.d("Output Studiengang","test3");
-                    Log.d("Output Studiengang",String.valueOf(result.toString()));
+                    Log.d("Output studiengang","test3");
+                    Log.d("Output studiengang",String.valueOf(result.toString()));
                     JSONObject jsonObj = null;
                     try {
                         jsonObj = XML.toJSONObject(String.valueOf(result));
-                        Log.d("Output Studiengang",jsonObj.toString());
+                        Log.d("Output studiengang",jsonObj.toString());
 
                     } catch (JSONException e) {
                         Log.e("JSON exception", e.getMessage());
@@ -379,13 +370,13 @@ public class MainActivity extends AppCompatActivity {
 
                     Iterator x = jsonObj.keys();
                     JSONArray jsonArray = new JSONArray();
-                    Log.d("Output Studiengang","test5");
+                    Log.d("Output studiengang","test5");
                     while (x.hasNext()){
                         String key = (String) x.next();
                         jsonArray.put(jsonObj.get(key));
                     }
 
-                    Log.d("Output Studiengang","test 6");
+                    Log.d("Output studiengang","test 6");
 
                     //Werte von JSONARRay in JSONObject konvertieren
                     JSONArray object2 = new JSONArray();
@@ -393,9 +384,9 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject object = jsonArray.getJSONObject(i);
                         //spinnerArray.add(object.getString("SGName"));  //This will have the value of the studiengang
                         //String studiengangid = object.getString("sgid");  //This will have the value of the id
-                       Log.d("Output Studiengang",object.get("studiengang").toString());
+                       Log.d("Output studiengang",object.get("studiengang").toString());
                         object2.put(object.get("studiengang"));
-                        Log.d("Output Studiengang",String.valueOf(object2.length()));
+                        Log.d("Output studiengang",String.valueOf(object2.length()));
                     }
 
                     String a = object2.toString();
@@ -411,36 +402,35 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     // Werte Speichern für die offline Verwendung
-                    Log.d("Output Studiengang",mainObject.get(0).toString());
-                    mEditor = mSharedPreferencesperiode.edit();
-                    String strJson = mSharedPreferencesperiode.getString("studiengaenge", "0");
+                    Log.d("Output studiengang",mainObject.get(0).toString());
+                    studiengangEditor = studiengaenge.edit();
                     //second parameter is necessary ie.,Value to return if this preference does not exist.
                         try {
-                                mEditor.clear();
-                                mEditor.apply();
-                                mEditor.putString("studiengaenge", b);
-                                mEditor.apply();
+                                studiengangEditor.clear();
+                                studiengangEditor.apply();
+                                studiengangEditor.putString("studiengaenge", b);
+                                studiengangEditor.apply();
                         } catch (Exception e) {
 
                         }
 
 
-                    update3();
+                    uebergabeAnSpinner();
 
 
             }
                 catch (final Exception e)
                 {
-                    String strJson = mSharedPreferencesperiode.getString("studiengaenge", "0");
+                    String strStudiengang = studiengaenge.getString("studiengaenge", "0");
                     //second parameter is necessary ie.,Value to return if this preference does not exist.
-                    Log.d("Output exception",strJson);
-                    if (strJson != null) {
+                    Log.d("Output exception",strStudiengang);
+                    if (strStudiengang != null) {
                         try{
-                            mainObject = new JSONArray(strJson);
+                            mainObject = new JSONArray(strStudiengang);
                             for(int i= 0 ; i< mainObject.length();i++) {
                                 JSONObject json = mainObject.getJSONObject(i);
                                 spinnerArray.add(json.get("SGName").toString());
-                                update3();
+                                uebergabeAnSpinner();
                             }
                         }catch (Exception b)
                         {
@@ -449,7 +439,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
 
-                    update2();
+                    Keineverbindung();
                 }
 
 
@@ -467,7 +457,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             SharedPreferences.Editor mEditor;
             SharedPreferences mSharedPreferencesperiode = getApplicationContext().getSharedPreferences("pruefperiode", 0);
-            //Creating editor to store values to shared preferencess
+            //Creating editor to store uebergebeneModule to shared preferencess
             public void run() {
 
                 try {
@@ -477,21 +467,21 @@ public class MainActivity extends AppCompatActivity {
                     final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
                     // urlConn.setRequestProperty("Content-Type", "application/json");
                     //urlConn.setRequestProperty("Accept", "application/json");
-                    Log.d("Output Studiengang","test");
+                    Log.d("Output studiengang","test");
                     urlConn.setConnectTimeout(1000 * 10); // mTimeout is in seconds
                     long startTime = System.currentTimeMillis();
 
-                    Log.d("Output Studiengang","test");
+                    Log.d("Output studiengang","test");
                     urlConn.connect();
                     long endTime = System.currentTimeMillis();
                     if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         System.out.println("Time (ms) : " + (endTime - startTime));
                         System.out.println("Ping to " + address + " was success");
-                        //update3();
+                        //uebergabeAnSpinner();
 
 
                     }
-                    Log.d("Output Studiengang","test2");
+                    Log.d("Output studiengang","test2");
 
 
                     InputStream in = new BufferedInputStream(urlConn.getInputStream());
@@ -587,7 +577,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 catch (final Exception e)
                 {
-                    //update2();
+                    //Keineverbindung();
                 }
             }
         }).start();

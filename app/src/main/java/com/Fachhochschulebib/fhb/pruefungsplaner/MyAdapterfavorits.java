@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.User;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
 
 import java.util.List;
 
@@ -34,31 +34,29 @@ import java.util.List;
 
 
 public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.ViewHolder> {
-    private List<String> values;
-    private List<String> studiengang2;
+    private List<String> moduleUndStudiengangList;
+    private List<String> PrueferUndSemesterList;
     private List<String> ppid;
-    private List<String> Datum;
+    private List<String> datum;
     private String studiengang;
     private String name;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapterfavorits(List<String> myDataset, List<String> myDataset2, List<String> myDatasetDatum, List<String> index2) {
-        values = myDataset;
-        Datum = myDatasetDatum;
-        studiengang2 = myDataset2;
-        ppid = index2;
+    public MyAdapterfavorits(List<String> moduleList, List<String> studiengangList, List<String> datumList, List<String> pruefplanidList) {
+        moduleUndStudiengangList = moduleList;
+        datum = datumList;
+        PrueferUndSemesterList = studiengangList;
+        ppid = pruefplanidList;
 
     }
 
     public void add(int position, String item, String studiengang) {
-        values.add(position, item);
-
-
+        moduleUndStudiengangList.add(position, item);
         notifyItemInserted(position);
     }
 
     public void remove(int position) {
-        values.remove(position);
+        moduleUndStudiengangList.remove(position);
         notifyItemRemoved(position);
     }
 
@@ -82,20 +80,19 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        name = values.get(holder.getAdapterPosition());
+        name = moduleUndStudiengangList.get(holder.getAdapterPosition());
         holder.txtHeader.setText(name);
-
         //Prüfitem von der Favoritenliste löschen
         holder.ivicon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppDatabase roomdaten2 =  AppDatabase.getAppDatabase(v.getContext());
-                List<User> userdaten = roomdaten2.userDao().getAll2();
+                AppDatabase datenbank =  AppDatabase.getAppDatabase(v.getContext());
+                List<Pruefplan> pruefplan = datenbank.userDao().getAll2();
                 //second parameter is necessary ie.,Value to return if this preference does not exist.
-                for (int i = 0; i < userdaten.size();i++){
-                    if(userdaten.get(i).getFavorit()){
-                        if(userdaten.get(i).getID().equals(ppid.get(position))){
-                            roomdaten2.userDao().update(false,Integer.valueOf(ppid.get(position)));
+                for (int i = 0; i < pruefplan.size();i++){
+                    if(pruefplan.get(i).getFavorit()){
+                        if(pruefplan.get(i).getID().equals(ppid.get(position))){
+                            datenbank.userDao().update(false,Integer.valueOf(ppid.get(position)));
                             remove(holder.getAdapterPosition());
 
                         }
@@ -104,8 +101,8 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
             }
         });
 
-        holder.txtFooter.setText("Prüfer: " + studiengang2.get(position).toString());
-        name = values.get(position);
+        holder.txtFooter.setText("Prüfer: " + PrueferUndSemesterList.get(position).toString());
+        name = moduleUndStudiengangList.get(position);
         String[] modulname = name.split(" ");
         studiengang = "";
         int b;
@@ -115,11 +112,11 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         }
 
         //darstellen der Informationen für das Prüfitem
-        String[] s = Datum.get(position).split(" ");
-        String[] ss = s[0].split("-");
-        holder.txtthirdline.setText("Uhrzeit: " + s[1].substring(0, 5).toString() + " Datum: " + ss[2].toString() + "." + ss[1].toString() + "." + ss[0].toString());
-        final String[] sa = studiengang2.get(position).split(" ");
-        holder.txtFooter.setText("Prüfer: " + sa[0] + ", " + sa[1] + "  Semester: " + sa[2]);
+        String[] splitDatumUndUhrzeit = datum.get(position).split(" ");
+        String[] splitTagMonatJahr = splitDatumUndUhrzeit[0].split("-");
+        holder.txtthirdline.setText("Uhrzeit: " + splitDatumUndUhrzeit[1].substring(0, 5).toString() + " datum: " + splitTagMonatJahr[2].toString() + "." + splitTagMonatJahr[1].toString() + "." + splitTagMonatJahr[0].toString());
+        final String[] splitPrueferUndSemester = PrueferUndSemesterList.get(position).split(" ");
+        holder.txtFooter.setText("Prüfer: " + splitPrueferUndSemester[0] + ", " + splitPrueferUndSemester[1] + "  Semester: " + splitPrueferUndSemester[2]);
 
 
         //darstellen der Weiteren Informationen
@@ -127,24 +124,22 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
 
             @Override
             public void onClick(View v) {
-                String name = values.get(position);
-                String[] modulname = name.split(" ");
+                String modulUndStudiengang = moduleUndStudiengangList.get(position);
+                String[] modulname = modulUndStudiengang.split(" ");
                 studiengang = "";
                 int b;
                 for (b = 0; b < (modulname.length - 1); b++) {
                     studiengang = (studiengang + " " + modulname[b]);
 
                 }
-                String[] s = Datum.get(position).split(" ");
-                String[] ss = s[0].split("-");
-                holder.txtthirdline.setText("Uhrzeit: " + s[1].substring(0, 5).toString());
-                final String[] sa = studiengang2.get(position).split(" ");
-                String Semester = String.valueOf(holder.txtFooter.getText());
-                String Semester5 = Semester.toString();
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
-                builder1.setMessage("Informationen zur Prüfung \n \n Studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " + ss[2].toString() + "." + ss[1].toString() + "." + ss[0].toString() + " \n Uhrzeit: " + s[1].substring(0, 5).toString() + " \n \n \n \n \n \n ");
-                builder1.setCancelable(true);
-                builder1.setPositiveButton(
+                String[] splittDatumundUhrzeit = datum.get(position).split(" ");
+                String[] splitMonatJahrTag = splittDatumundUhrzeit[0].split("-");
+                holder.txtthirdline.setText("Uhrzeit: " + splittDatumundUhrzeit[1].substring(0, 5).toString());
+                final String[] splittPrueferUndSemster = PrueferUndSemesterList.get(position).split(" ");
+                AlertDialog.Builder alertdialog = new AlertDialog.Builder(v.getContext());
+                alertdialog.setMessage("Informationen zur Prüfung \n \n studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + splittPrueferUndSemster[0] + " \n Zweitprüfer: " + splittPrueferUndSemster[1] + "\n datum: " + splitMonatJahrTag[2].toString() + "." + splitMonatJahrTag[1].toString() + "." + splitMonatJahrTag[0].toString() + " \n Uhrzeit: " + splittDatumundUhrzeit[1].substring(0, 5).toString() + " \n \n \n \n \n \n ");
+                alertdialog.setCancelable(true);
+                alertdialog.setPositiveButton(
                         "Ok",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -152,13 +147,13 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                             }
                         });
 
-                AlertDialog alert11 = builder1.create();
+                AlertDialog alert11 = alertdialog.create();
                 alert11.show();
 
 
-                holder.txtthirdline.setText("Uhrzeit: " + s[1].substring(0, 5).toString() + " Datum: " + ss[2].toString() + "." + ss[1].toString() + "." + ss[0].toString());
+                holder.txtthirdline.setText("Uhrzeit: " + splittDatumundUhrzeit[1].substring(0, 5).toString() + " datum: " + splitMonatJahrTag[2].toString() + "." + splitMonatJahrTag[1].toString() + "." + splitMonatJahrTag[0].toString());
 
-                holder.txtFooter.setText("Prüfer: " + sa[0] + ", " + sa[1] + "  Semester: " + sa[2]);
+                holder.txtFooter.setText("Prüfer: " + splittPrueferUndSemster[0] + ", " + splittPrueferUndSemster[1] + "  Semester: " + splittPrueferUndSemster[2]);
             }
         });
     }
@@ -166,7 +161,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return values.size();
+        return moduleUndStudiengangList.size();
     }
 
     // Provide a reference to the views for each data item

@@ -10,10 +10,9 @@ import android.os.Build;
 import android.provider.CalendarContract;
 import android.util.Log;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.User;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class CheckGoogleCalendar {
         googleID = googleid;
 
 
-        //Creating editor to store values to shared preferences
+        //Creating editor to store uebergebeneModule to shared preferences
         SharedPreferences mSharedPreferences = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
         SharedPreferences.Editor mEditor = mSharedPreferences.edit();
         String stringids = mSharedPreferences.getString("IDs","");
@@ -89,7 +88,7 @@ public class CheckGoogleCalendar {
         //Variablen
         pruefID = pruefid;
 
-        //Creating editor to store values to shared preferences
+        //Creating editor to store uebergebeneModule to shared preferences
         SharedPreferences mSharedPreferences = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
         SharedPreferences.Editor mEditor = mSharedPreferences.edit();
         String stringids = mSharedPreferences.getString("IDs", "");
@@ -130,7 +129,7 @@ public class CheckGoogleCalendar {
     public void clearCal()
     {
 
-        //Creating editor to store values to shared preferences
+        //Creating editor to store uebergebeneModule to shared preferences
         SharedPreferences mSharedPreferences = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
         SharedPreferences.Editor mEditor = mSharedPreferences.edit();
         String stringids = mSharedPreferences.getString("IDs", "");
@@ -177,13 +176,12 @@ public class CheckGoogleCalendar {
         mEditor.apply();
     }
 
-    //Google Kalender update Methode
+    //Google Kalender Checkverbindung Methode
     public void updateCal()
     {
-        //Creating editor to store values to shared preferences
-        SharedPreferences mSharedPreferences = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
-        SharedPreferences.Editor mEditor = mSharedPreferences.edit();
-        String stringids = mSharedPreferences.getString("IDs", "");
+        //Creating editor to store uebergebeneModule to shared preferences
+        SharedPreferences Googleeintrag = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
+        String stringids = Googleeintrag.getString("IDs", "");
 
         // step one : converting comma separate String to array of String
         String[] elements = stringids.split("-");
@@ -197,7 +195,7 @@ public class CheckGoogleCalendar {
 
 
         //step four: Database connect
-        List<User> user = databaseConnect();
+        List<Pruefplan> pruefplan = databaseConnect();
 
         //step fifth: Schleifen zum vergleichen
         Log.i("userID", String.valueOf(listOfString.size()));
@@ -206,11 +204,11 @@ public class CheckGoogleCalendar {
             String[] element = listOfString.get(i).split(",");
             Log.i("userID", element.toString());
             Log.i("elemnt[0}", String.valueOf(element[0]));
-            for (int j = 0; j< user.size();j++) {
-                // wenn id  gleich id vom google Calendar dann get element[1] dieser ID, element[1]
+            for (int j = 0; j< pruefplan.size(); j++) {
+                // wenn id  gleich id vom google Calendar dann get element[1] dieser id, element[1]
                 // ist die GoogleCalendar Id für den gespeicherten eintrag
-                Log.i("userID2", user.get(j).getID());
-                if(user.get(j).getID().equals(element[0])) {
+                Log.i("userID2", pruefplan.get(j).getID());
+                if(pruefplan.get(j).getID().equals(element[0])) {
                     //output tag
                     String DEBUG_TAG = "MyActivity";
                     //eventID ist die Google calendar Id
@@ -223,7 +221,7 @@ public class CheckGoogleCalendar {
                     // Sieht so aus wie 22-01-2019 10:00 Uhr
                     // es wird nach dem Leerzeichen getrennt
                     //trennen von datum und Uhrzeit
-                    String[] s = user.get(j).getDatum().split(" ");
+                    String[] s = pruefplan.get(j).getDatum().split(" ");
                     //print Datum
                     System.out.println(s[0]);
                     //aufteilen von tag, monat und jahr.
@@ -233,7 +231,7 @@ public class CheckGoogleCalendar {
                     int uhrzeit1 = Integer.valueOf(s[1].substring(0, 2));
                     int uhrzeit2 = Integer.valueOf(s[1].substring(4, 5));
                     // The new title for the updatet event
-                    values.put(CalendarContract.Events.TITLE, user.get(j).getModul());
+                    values.put(CalendarContract.Events.TITLE, pruefplan.get(j).getModul());
                     values.put(CalendarContract.Events.EVENT_LOCATION, "Fachhochschule BielefeldUpdate");
                     values.put(CalendarContract.Events.DESCRIPTION, "");
                     //umwandeln von Datum und uhrzeit in GregorianCalender für eine leichtere weiterverarbeitung
@@ -241,8 +239,8 @@ public class CheckGoogleCalendar {
                     values.put(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
                     values.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
                     values.put(CalendarContract.Events.DTEND, calDate.getTimeInMillis() + (90 * 60000));
-                    //values.put(CalendarContract.Events.);
-                    //update Eintrag
+                    //uebergebeneModule.put(CalendarContract.Events.);
+                    //Checkverbindung Eintrag
                     Uri baseUri;
                     if (Build.VERSION.SDK_INT >= 8) {
                         baseUri = Uri.parse("content://com.android.calendar/events");
@@ -262,9 +260,9 @@ public class CheckGoogleCalendar {
         }
     }
 
-    public List<User> databaseConnect(){
+    public List<Pruefplan> databaseConnect(){
         AppDatabase database2 = AppDatabase.getAppDatabase(context);
-        List<User> userdaten2 = database2.userDao().getAll2();
+        List<Pruefplan> userdaten2 = database2.userDao().getAll2();
      return(userdaten2);
     }
 

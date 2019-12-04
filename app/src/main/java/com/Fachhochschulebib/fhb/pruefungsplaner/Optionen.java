@@ -33,7 +33,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.User;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import org.json.JSONArray;
@@ -44,14 +44,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.Jahr;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.Pruefphase;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.RueckgabeStudiengang;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.Termin;
+import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.pruefJahr;
+import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.aktuellePruefphase;
+import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.rueckgabeStudiengang;
+import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.aktuellerTermin;
 
 public class Optionen extends Fragment {
     private boolean speicher;
-    private SharedPreferences.Editor mEditor;
+    private SharedPreferences.Editor mEditorGoogleKalender;
     private SharedPreferences.Editor mEditorAdresse;
     private JSONArray response;
     static EditText txtAdresse;
@@ -80,9 +80,9 @@ public class Optionen extends Fragment {
             @Override
             public void onClick(View v) {
 
-                String validation = Jahr + RueckgabeStudiengang +  Pruefphase;
+                String validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
 
-                update(validation);
+                updatePruefplan(validation);
 
             }
 
@@ -102,21 +102,21 @@ public class Optionen extends Fragment {
         //holder.zahl1 = position;
 
 
-        SharedPreferences mSharedPreferences = v.getContext().getSharedPreferences("json8", 0);
-        //Creating editor to store values to shared preferences
-        mEditor = mSharedPreferences.edit();
+        SharedPreferences serverAdresse = v.getContext().getSharedPreferences("json8", 0);
+        //Creating editor to store uebergebeneModule to shared preferences
+        mEditorGoogleKalender = serverAdresse.edit();
         SharedPreferences mSharedPreferencesAdresse = v.getContext().getSharedPreferences("Server-Adresse", 0);
-        //Creating editor to store values to shared preferences
+        //Creating editor to store uebergebeneModule to shared preferences
         mEditorAdresse = mSharedPreferencesAdresse.edit();
         txtAdresse.setText(mSharedPreferencesAdresse.getString("Server-Adresse2","http://thor.ad.fh-bielefeld.de:8080/"));
 
 
         response = new JSONArray();
-        String strJson = mSharedPreferences.getString("jsondata2", "0");
+        String strServerAdresse = serverAdresse.getString("jsondata2", "0");
         //second parameter is necessary ie.,Value to return if this preference does not exist.
-        if (strJson != null) {
+        if (strServerAdresse != null) {
             try {
-                response = new JSONArray(strJson);
+                response = new JSONArray(strServerAdresse);
             } catch (JSONException e) {
 
             }
@@ -146,17 +146,17 @@ public class Optionen extends Fragment {
                 // do something, the isChecked will be
                 // true if the switch is in the On position
                 if (isChecked) {
-                    mEditor.clear();
-                    mEditor.apply();
+                    mEditorGoogleKalender.clear();
+                    mEditorGoogleKalender.apply();
                     response.put("1");
-                    mEditor.putString("jsondata2", response.toString());
-                    mEditor.apply();
+                    mEditorGoogleKalender.putString("jsondata2", response.toString());
+                    mEditorGoogleKalender.apply();
                     Toast.makeText(v.getContext(), "Prüfungen werden jetzt zum Kalender hinzugefügt", Toast.LENGTH_SHORT).show();
                 }
 
                 if (!isChecked) {
-                    mEditor.clear().apply();
-                    mEditor.remove("jsondata2").apply();
+                    mEditorGoogleKalender.clear().apply();
+                    mEditorGoogleKalender.remove("jsondata2").apply();
                 }
 
             }
@@ -193,9 +193,9 @@ public class Optionen extends Fragment {
         //interne DB löschen
         btnDb.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                AppDatabase database2 = AppDatabase.getAppDatabase(v.getContext());
+                AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
                 Log.d("Test", "interne Db löschen");
-                database2.clearAllTables();
+                datenbank.clearAllTables();
 
                 Toast.makeText(v.getContext(), "Datenbank gelöscht", Toast.LENGTH_SHORT).show();
 
@@ -223,13 +223,13 @@ public class Optionen extends Fragment {
         //Favoriten Löschen
         btnFav.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                AppDatabase database2 = AppDatabase.getAppDatabase(v.getContext());
-                List<User> userdaten2 = database2.userDao().getAll2();
-                for (int i = 0; i < userdaten2.size(); i++) {
-                        if (userdaten2.get(i).getFavorit()) {
+                AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
+                List<Pruefplan> pruefplandaten = datenbank.userDao().getAll2();
+                for (int i = 0; i < pruefplandaten.size(); i++) {
+                        if (pruefplandaten.get(i).getFavorit()) {
 
-                            Log.d("Test favoriten löschen", String.valueOf(userdaten2.get(i).getID()));
-                            database2.userDao().update(false,Integer.valueOf(userdaten2.get(i).getID()));
+                            Log.d("Test favoriten löschen", String.valueOf(pruefplandaten.get(i).getID()));
+                            datenbank.userDao().update(false,Integer.valueOf(pruefplandaten.get(i).getID()));
                             Toast.makeText(v.getContext(), "Favorisierte Prüfungen gelöscht", Toast.LENGTH_SHORT).show();
 
                         }
@@ -247,7 +247,7 @@ public class Optionen extends Fragment {
 
     }
 
-    public void update(String validation){
+    public void updatePruefplan(String validation){
 
         boolean a = pingUrl("thor.ad.fh-bielefeld.de:8080/");
         //boolean a = pingUrl("192.168.178.39:44631/PruefplanApplika/");
@@ -256,7 +256,7 @@ public class Optionen extends Fragment {
     }
 
     //Methode zum Anzeigen das keine Verbindungs zum Server möglich ist
-    public void update2(){
+    public void keineVerbindung(){
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 Toast.makeText(getContext(), "Keine Verbindung zum Server möglich", Toast.LENGTH_SHORT).show();
@@ -266,40 +266,40 @@ public class Optionen extends Fragment {
     }
 
     //Methode zum aktualiseren der Prüfungen
-    //ID der gespeicherten Prüfungen wird gespeichert und dann wird die Datenbank gelöscht
+    //id der gespeicherten Prüfungen wird gespeichert und dann wird die Datenbank gelöscht
     // dann werden die Prüfungen erneut vom Webserver geladen und die Prüfungen mit
     // den gespeicherten IDs favorisiert
-    public void update3(){
+    public void pruefplanAktualisieren(){
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 Toast.makeText(getContext(), "Prüfungen wurden aktualisiert", Toast.LENGTH_SHORT).show();
                 AppDatabase database = AppDatabase.getAppDatabase(getContext());
 
-                List<User> userdaten = database.userDao().getAll2();
+                List<Pruefplan> pruefplanDaten = database.userDao().getAll2();
                 List<String> validation = new ArrayList<String>();
 
                 validation.add("0");
 
-                Log.d("Test",String.valueOf(userdaten.size()));
+                Log.d("Test",String.valueOf(pruefplanDaten.size()));
 
 
-                for (int i = 0; i < userdaten.size(); i++) {
-                    Log.d("Test",String.valueOf(userdaten.get(i).getFavorit()));
-                    if (userdaten.get(i).getFavorit()) {
-                        ID.add(userdaten.get(i).getID().toString());
-                        validation.add(userdaten.get(i).getValidation().toString());
-                        Log.d("Test2",String.valueOf(userdaten.get(i).getValidation()));
+                for (int i = 0; i < pruefplanDaten.size(); i++) {
+                    Log.d("Test",String.valueOf(pruefplanDaten.get(i).getFavorit()));
+                    if (pruefplanDaten.get(i).getFavorit()) {
+                        ID.add(pruefplanDaten.get(i).getID().toString());
+                        validation.add(pruefplanDaten.get(i).getValidation().toString());
+                        Log.d("Test2",String.valueOf(pruefplanDaten.get(i).getValidation()));
                     }
                 }// define an adapter
                 database.clearAllTables();
-                Termin = "0";
+                aktuellerTermin = "0";
                 //initialisierung room database
                 AppDatabase roomdaten =  AppDatabase.getAppDatabase(getContext());
                 //retrofit auruf
                 for( int a = 1; a < validation.size();a++ ) {
                     String[] stringaufteilung = validation.get(a).split("");
                     RetrofitConnect retrofit = new RetrofitConnect();
-                    retrofit.retro(getContext(),roomdaten, Jahr, stringaufteilung[5], Pruefphase, Termin);
+                    retrofit.retro(getContext(),roomdaten, pruefJahr, stringaufteilung[5], aktuellePruefphase, aktuellerTermin);
                     Log.d("Test3",String.valueOf(stringaufteilung[5]));
                 }
             }
@@ -324,14 +324,14 @@ public class Optionen extends Fragment {
                     if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         System.out.println("Time (ms) : " + (endTime - startTime));
                         System.out.println("Ping to " + address + " was success");
-                        update3();
+                        pruefplanAktualisieren();
 
 
                     }
                 }
                 catch (final Exception e)
                 {
-                    update2();
+                    keineVerbindung();
                 }
 
             }
