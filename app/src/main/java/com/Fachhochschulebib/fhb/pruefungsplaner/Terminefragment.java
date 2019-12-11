@@ -7,7 +7,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 // autor:
 // inhalt:  Prüfungen aus der Klasse Prüfplaneintrag werden abgefragt und zur darstelllung an den Recycleview adapter übergeben
-// zugriffsdatum: 07.09.19
+// zugriffsdatum: 11.12.19
 //
 //
 //

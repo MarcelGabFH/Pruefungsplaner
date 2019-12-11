@@ -7,7 +7,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 // autor:
 // inhalt:  unterteilung von allen Prüfungen in einzelne tabellen und darstellung
-// zugriffsdatum: 02.05.19
+// zugriffsdatum: 11.12.19
 //
 //
 //

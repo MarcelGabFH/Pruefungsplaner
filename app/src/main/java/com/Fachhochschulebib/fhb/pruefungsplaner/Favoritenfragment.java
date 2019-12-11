@@ -6,7 +6,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 // autor:
 // inhalt:  stelllt die favorisierten prüfungen bereit.
-// zugriffsdatum: 02.05.19
+// zugriffsdatum: 11.12.19
 //
 //
 //

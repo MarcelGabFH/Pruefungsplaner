@@ -1,3 +1,19 @@
+//////////////////////////////
+// RecycleritemClickListener
+//
+//
+//
+// autor:
+// inhalt: Überprüfung ob im recyclerview Elemente geklickt wurden
+// zugriffsdatum: 11.12.19
+//
+//
+//
+//
+//
+//
+//////////////////////////////
+
 package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 import android.content.Context;

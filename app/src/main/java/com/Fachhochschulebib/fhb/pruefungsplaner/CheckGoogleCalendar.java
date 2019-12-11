@@ -1,3 +1,21 @@
+//////////////////////////////
+// CheckGoogleCalendar
+//
+//
+//
+// autor:
+// inhalt: Hinzufügen, Löschen, Aktualisieren von Prüfobjekten in den Google Calendar
+// zugriffsdatum: 11.12.19
+//
+//
+//
+//
+//
+//
+//////////////////////////////
+
+
+
 package com.Fachhochschulebib.fhb.pruefungsplaner;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;

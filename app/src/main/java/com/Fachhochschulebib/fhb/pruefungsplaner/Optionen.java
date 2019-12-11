@@ -7,8 +7,8 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //
 // autor:
-// inhalt:  Abfragen ob prüfungen zum Kalender hinzugefügt werden sollen und login
-// zugriffsdatum: 02.05.19
+// inhalt:  Abfragen ob prüfungen zum Kalender hinzugefügt werden sollen  und Methoden zum löschen, aktualisieren der Datenbank
+// zugriffsdatum: 11.12.19
 //
 //
 //

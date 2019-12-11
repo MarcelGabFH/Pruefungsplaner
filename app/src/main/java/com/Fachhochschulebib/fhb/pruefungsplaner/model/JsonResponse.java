@@ -1,3 +1,19 @@
+//////////////////////////////
+// JSONResponse
+//
+//
+//
+// autor:
+// inhalt: parsen von den erhaltenen Retrofit Daten
+// zugriffsdatum: 11.12.19
+//
+//
+//
+//
+//
+//
+//////////////////////////////
+
 package com.Fachhochschulebib.fhb.pruefungsplaner.model;
 
 import com.google.gson.annotations.Expose;

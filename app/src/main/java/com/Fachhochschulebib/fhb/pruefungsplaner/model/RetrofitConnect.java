@@ -1,3 +1,21 @@
+//////////////////////////////
+// RetrofitConnect
+//
+//
+//
+// autor:
+// inhalt: Verbindungsaufbau zum Webserver
+// zugriffsdatum: 11.12.19
+//
+//
+//
+//
+//
+//
+//////////////////////////////
+
+
+
 package com.Fachhochschulebib.fhb.pruefungsplaner.model;
 
 import android.content.Context;

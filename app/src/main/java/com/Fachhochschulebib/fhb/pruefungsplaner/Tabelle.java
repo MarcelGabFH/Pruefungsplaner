@@ -7,7 +7,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 // autor:
 // inhalt:  Verwaltung aufrufen der fragmente, hier ist der navigation bar hinterlegt
-// zugriffsdatum: 02.05.19
+// zugriffsdatum: 11.12.19
 //
 //
 //

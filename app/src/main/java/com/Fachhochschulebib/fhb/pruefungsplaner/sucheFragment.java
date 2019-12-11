@@ -7,7 +7,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 // autor:
 // inhalt:  auswählen und suchen von professoren,modulen,semestern, prüfungsphase
-// zugriffsdatum: 05.07.19
+// zugriffsdatum: 11.12.19
 //
 //
 //

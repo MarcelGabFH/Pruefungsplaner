@@ -23,7 +23,7 @@ import java.util.List;
 //
 // autor:
 // inhalt:Anzeigen der favorisierten prüfungen in einzelnen tabellen.
-// zugriffsdatum: 02.05.19
+// zugriffsdatum: 11.12.19
 //
 //
 //
