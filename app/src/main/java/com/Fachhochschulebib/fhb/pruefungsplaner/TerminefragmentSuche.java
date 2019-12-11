@@ -292,7 +292,7 @@ public class TerminefragmentSuche extends Fragment {
                         Pruefform.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getPruefform());
 
                     }
-                    // define an adapter
+                    // definiere den adapter
                     mAdapter = new MyAdapter(modulundstudiengang, prueferundsemster, datum, id,ID,Pruefform,mLayout);
                     recyclerView.setAdapter(mAdapter);
                     speicher = true;

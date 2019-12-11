@@ -52,6 +52,8 @@ public class Favoritenfragment extends Fragment {
 
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class Favoritenfragment extends Fragment {
         //Komponenten  initialisieren für die Verwendung
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
         recyclerView.setHasFixedSize(true);
-        // use a linear layout manager
+        //linear layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
         calendar = (CalendarView) v.findViewById(R.id.caCalender);
@@ -89,7 +91,7 @@ public class Favoritenfragment extends Fragment {
             }
         }
 
-        // define an adapter
+        // definiere adapter
         // übergabe der variablen an den Recyclerview Adapter, für die darstellung
         mAdapter = new MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr);
 
@@ -99,15 +101,17 @@ public class Favoritenfragment extends Fragment {
                 new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick( final View view, final  int position) {
-                        //LinearLayout layout1 =( LinearLayout) view.findViewById(R.id.linearLayout);
+
+                        //einblenden vom Textview für die weiteren Informationen
                         final TextView txtSecondScreen = (TextView) view.findViewById(R.id.txtSecondscreen);
                         View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
-                        LinearLayout layout1 =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
+                        LinearLayout layoutinformationen =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
 
-                        layout1.setOnClickListener(new  View.OnClickListener() {
+
+                        //überprüfung ob das linear layout geklickt wurde
+                        layoutinformationen.setOnClickListener(new  View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Log.e("@@@@@", "" + position);
                                 if (txtSecondScreen.getVisibility() == v.VISIBLE) {
                                     txtSecondScreen.setVisibility(v.GONE);
 
@@ -120,7 +124,6 @@ public class Favoritenfragment extends Fragment {
                     }
                 })
         );
-
         recyclerView.setAdapter(mAdapter);
         return v;
     }

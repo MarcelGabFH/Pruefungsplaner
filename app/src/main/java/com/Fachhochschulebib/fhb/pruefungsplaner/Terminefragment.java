@@ -336,20 +336,6 @@ public class Terminefragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                TextView txtSecondScreen = (TextView) recyclerView.findViewById(R.id.txtSecondscreen);
-                //txtSecondScreen.setVisibility(View.INVISIBLE);
-                    try {
-                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition -1);
-                        View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition -2);
-                        View viewItem3 = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition +1);
-                        View viewItem4 = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition + 2);
-                        viewItem.setVisibility(View.VISIBLE);
-                        viewItem2.setVisibility(View.VISIBLE);
-                        viewItem3.setVisibility(View.VISIBLE);
-                        viewItem4.setVisibility(View.VISIBLE);
-                    } catch (NullPointerException e) {
-
-                    }
 
             }
         });
@@ -357,8 +343,8 @@ public class Terminefragment extends Fragment {
 
 
         //Tocuhhelper für die Recyclerview-Komponente, zum überprüfen ob gescrollt wurde
-//        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-  //      itemTouchhelper.attachToRecyclerView(recyclerView);
+        //ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        //itemTouchhelper.attachToRecyclerView(recyclerView);
 
         //initialisieren der UI-Komponenten
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
@@ -477,26 +463,6 @@ public class Terminefragment extends Fragment {
     }
 
 
-    private View.OnTouchListener handleTouch = new View.OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            try {
-                View viewItem = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition -1);
-                View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition -2);
-                View viewItem3 = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition +1);
-                View viewItem4 = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition + 2);
-                viewItem.setVisibility(View.VISIBLE);
-                viewItem2.setVisibility(View.VISIBLE);
-                viewItem3.setVisibility(View.VISIBLE);
-                viewItem4.setVisibility(View.VISIBLE);
-            } catch (NullPointerException e) {
-            }
-
-            return true;
-        }
-    };
 
 
 

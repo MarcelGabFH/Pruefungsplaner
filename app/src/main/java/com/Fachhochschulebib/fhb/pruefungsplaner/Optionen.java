@@ -169,12 +169,12 @@ public class Optionen extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if (validate) {
+
                     mEditorAdresse.clear();
                     mEditorAdresse.apply();
                     mEditorAdresse.putString("Server-Adresse2", txtAdresse.getText().toString());
                     mEditorAdresse.apply();
-                }
+
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start,
@@ -183,10 +183,7 @@ public class Optionen extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-               if(s.subSequence(0,3).equals("http")){
-                   validate = true;
 
-               }
             }
         });
 
@@ -249,10 +246,14 @@ public class Optionen extends Fragment {
 
     public void updatePruefplan(String validation){
 
-        boolean a = pingUrl("thor.ad.fh-bielefeld.de:8080/");
-        //boolean a = pingUrl("192.168.178.39:44631/PruefplanApplika/");
-       // http://localhost:44631/PruefplanApplika/
+        SharedPreferences mSharedPreferencesAdresse = getContext().getSharedPreferences("Server-Adresse", 0);
+        //Creating editor to store uebergebeneModule to shared preferences
+        mEditorAdresse = mSharedPreferencesAdresse.edit();
+        String serveradresse = mSharedPreferencesAdresse.getString("Server-Adresse2","http://thor.ad.fh-bielefeld.de:8080/");
 
+        boolean a = pingUrl(serveradresse);
+        //boolean a = pingUrl("192.168.178.39:44631/PruefplanApplika/");
+        //http://localhost:44631/PruefplanApplika/
     }
 
     //Methode zum Anzeigen das keine Verbindungs zum Server möglich ist
@@ -269,6 +270,7 @@ public class Optionen extends Fragment {
     //id der gespeicherten Prüfungen wird gespeichert und dann wird die Datenbank gelöscht
     // dann werden die Prüfungen erneut vom Webserver geladen und die Prüfungen mit
     // den gespeicherten IDs favorisiert
+
     public void pruefplanAktualisieren(){
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
@@ -288,7 +290,7 @@ public class Optionen extends Fragment {
                     if (pruefplanDaten.get(i).getFavorit()) {
                         ID.add(pruefplanDaten.get(i).getID().toString());
                         validation.add(pruefplanDaten.get(i).getValidation().toString());
-                        Log.d("Test2",String.valueOf(pruefplanDaten.get(i).getValidation()));
+                        //Log.d("Test2",String.valueOf(pruefplanDaten.get(i).getValidation()));
                     }
                 }// define an adapter
                 database.clearAllTables();
@@ -300,7 +302,7 @@ public class Optionen extends Fragment {
                     String[] stringaufteilung = validation.get(a).split("");
                     RetrofitConnect retrofit = new RetrofitConnect();
                     retrofit.retro(getContext(),roomdaten, pruefJahr, stringaufteilung[5], aktuellePruefphase, aktuellerTermin);
-                    Log.d("Test3",String.valueOf(stringaufteilung[5]));
+                   // Log.d("Test3",String.valueOf(stringaufteilung[5]));
                 }
             }
         });
@@ -315,7 +317,7 @@ public class Optionen extends Fragment {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    final URL url = new URL("http://" + address);
+                    final URL url = new URL(address);
                     final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
                     urlConn.setConnectTimeout(1000 * 10); // mTimeout is in seconds
                     final long startTime = System.currentTimeMillis();

@@ -17,10 +17,14 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.Placeholder;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -41,6 +45,8 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
 import java.io.IOException;
 import java.util.List;
 
+
+import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.mAdapter;
 import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.pruefJahr;
 import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.aktuellePruefphase;
 import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.rueckgabeStudiengang;
@@ -61,6 +67,8 @@ public class Tabelle extends AppCompatActivity  {
     SwipeController swipeController = null;
     Loginhandler login = new Loginhandler();
     //aufruf der starteinstelllungen
+
+
 
 
 
@@ -183,7 +191,6 @@ public class Tabelle extends AppCompatActivity  {
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
                         dl.closeDrawer(Gravity.START);
-                        //dl.setVisibility(View.GONE);
                         if (userdaten.size() < 2) {
 
                         }else{
@@ -197,7 +204,6 @@ public class Tabelle extends AppCompatActivity  {
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
                         dl.closeDrawer(Gravity.START);
-                        //dl.setVisibility(View.GONE);
                         ft.replace(R.id.frame_placeholder, new Favoritenfragment());
                         ft.commit();
 
@@ -209,16 +215,12 @@ public class Tabelle extends AppCompatActivity  {
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
                         dl.closeDrawer(Gravity.START);
-                       // dl.setVisibility(View.GONE);
-                       // dl.setVisibility(View.GONE);
                         ft.replace(R.id.frame_placeholder, new Optionen());
                         ft.commit();
 
                         return true;
                     default:
-                       // dl.setVisibility(View.GONE);
                         return true;
-
                 }
 
             }
@@ -263,7 +265,7 @@ public class Tabelle extends AppCompatActivity  {
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
                     ft.replace(R.id.frame_placeholder, new Terminefragment());
-                    ft.addToBackStack(null);
+                    //ft.addToBackStack(null);
                     ft.commit();
                     return true;
 
@@ -274,7 +276,7 @@ public class Tabelle extends AppCompatActivity  {
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
                     ft.replace(R.id.frame_placeholder, new sucheFragment());
-                    ft.addToBackStack(null);
+                    //ft.addToBackStack("suche");
                     ft.commit();
                     return true;
 
@@ -285,7 +287,7 @@ public class Tabelle extends AppCompatActivity  {
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
                     ft.replace(R.id.frame_placeholder, new Favoritenfragment());
-                    ft.addToBackStack(null);
+                    //ft.addToBackStack(null);
                     ft.commit();
                     return true;
 
@@ -296,11 +298,24 @@ public class Tabelle extends AppCompatActivity  {
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
                     ft.replace(R.id.frame_placeholder, new Optionen());
-                    ft.addToBackStack(null);
+                    //ft.addToBackStack(null);
                     ft.commit();
                     return true;
             }
             return false;
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+
+            getFragmentManager().popBackStack();
+
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
 }

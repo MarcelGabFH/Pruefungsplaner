@@ -92,7 +92,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         View v =
                 inflater.inflate(R.layout.termine, parent, false);
         context = v.getContext();
-        // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
 
         return vh;
@@ -101,8 +100,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
         String name = uebergebeneModule.get(position);
         String[] modulname = name.split(" ");
         studiengang = "";
@@ -120,9 +117,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 favcheck = false;
-                //holder.zahl1 = position;
-                AppDatabase datenbank =  AppDatabase.getAppDatabase(context);
 
+                //Datenbank und Pruefplan laden
+                AppDatabase datenbank =  AppDatabase.getAppDatabase(context);
                 List<Pruefplan> pruefplandaten = datenbank.userDao().getAll2();
 
                 //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
@@ -157,8 +154,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                     //Überprüfung des Wertes, wenn strJson2 "true" ist dann ist der Google Kalender aktiviert
                     boolean speicher2 = false;
-
-
 
                     for (int zaehler = 0; zaehler < checkGooglecalender.length(); zaehler++) {
                          String ss1 = String.valueOf(checkGooglecalender.charAt(zaehler));
@@ -208,30 +203,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                             //funktion im Google Kalender um PrüfID und calenderID zu speichern
                             checkeintrag.insertCal(Integer.valueOf(pruefplanid.get(position)), calendarid);
 
-
-//voher genutzte Kalenderfunktion
-/*
-                            calIntent = new Intent(Intent.ACTION_INSERT);
-                            calIntent.setType("vnd.android.cursor.item/event");
-                            //ContentResolver cr = context.getContentResolver();
-                            //ContentValues calIntent = new ContentValues();
-                            int uhrzeit1 = Integer.valueOf(s[1].substring(0, 2));
-                            int uhrzeit2 = Integer.valueOf(s[1].substring(4, 5));
-                            calIntent.putExtra(CalendarContract.Events.TITLE, studiengang);
-                            calIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Fachhochschule Bielefeld");
-                            calIntent.putExtra(CalendarContract.Events.DESCRIPTION, "");
-                            calDate = new GregorianCalendar(Integer.valueOf(ss[0]), (Integer.valueOf(ss[1]) - 1), Integer.valueOf(ss[2]), uhrzeit1, uhrzeit2);
-                            calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
-                            calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                                    calDate.getTimeInMillis());
-                            calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
-                                    (calDate.getTimeInMillis() + (90 * 60000)));
-                            //v.getContext().startActivity(calIntent);
-                            //Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, calIntent);
-                            //String eventID = uri.getLastPathSegment();
-                            //checkeintrag.insertCal(Integer.valueOf(pruefplanid.get(position)), 22);
-*/
-                            //calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
                         }
                     }
                         Toast.makeText(v.getContext(), "Hinzugefügt", Toast.LENGTH_SHORT).show();
@@ -282,8 +253,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         String[] aufteilung2 = aufteilung1[0].split("-");
         //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
         final String[] sa = prueferUSemster.get(position).split(" ");
-        //AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
-        String s = ("Informationen zur Prüfung \n \n studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " + aufteilung2[2].toString() + "." + aufteilung2[1].toString() + "." + aufteilung2[0].toString() + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() +"Uhr" + " \n Raum: Unbekannt " +"\n Prüfungsform: "+ pruefform.get(position
+
+        //String mit dem inhalt für weitere Informationen
+        String s = ("Informationen zur Prüfung \n \n Studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " + aufteilung2[2].toString() + "." + aufteilung2[1].toString() + "." + aufteilung2[0].toString() + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() +"Uhr" + " \n Raum: Unbekannt " +"\n Prüfungsform: "+ pruefform.get(position
         ) + "\n \n \n \n \n \n ");
 
         return (s);
@@ -293,7 +265,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return ("0");
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+    //Item anzahl
     @Override
     public int getItemCount() {
         return uebergebeneModule.size();

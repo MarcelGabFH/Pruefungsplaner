@@ -60,6 +60,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         notifyItemRemoved(position);
     }
 
+
     // Create new views (invoked by the layout manager)
     @Override
     public MyAdapterfavorits.ViewHolder onCreateViewHolder(ViewGroup parent,
@@ -124,13 +125,11 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
     }
 
 
-
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return moduleUndStudiengangList.size();
     }
-
 
     public String giveString(int position) {
 
@@ -157,6 +156,9 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         }
         return ("0");
     }
+
+
+
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
