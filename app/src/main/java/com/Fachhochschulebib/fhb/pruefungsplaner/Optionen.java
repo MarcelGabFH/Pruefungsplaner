@@ -17,8 +17,13 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.content.ContentValues;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -42,7 +47,10 @@ import org.json.JSONException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.pruefJahr;
 import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.aktuellePruefphase;
@@ -54,6 +62,8 @@ public class Optionen extends Fragment {
     private SharedPreferences.Editor mEditorGoogleKalender;
     private SharedPreferences.Editor mEditorAdresse;
     private JSONArray response;
+    private GregorianCalendar calDate =new GregorianCalendar();
+    private String studiengang;
     static EditText txtAdresse;
     public static List<String> ID = new ArrayList<String>();
 
@@ -151,6 +161,54 @@ public class Optionen extends Fragment {
                     response.put("1");
                     mEditorGoogleKalender.putString("jsondata2", response.toString());
                     mEditorGoogleKalender.apply();
+
+
+                    AppDatabase datenbank =  AppDatabase.getAppDatabase(getContext());
+                    List<Pruefplan> pruefplandaten = datenbank.userDao().getAll2();
+
+
+                    CheckGoogleCalendar googlecal = new CheckGoogleCalendar();
+                    googlecal.setCtx(getContext());
+
+                    for(int i = 0; i <pruefplandaten.size(); i++)
+                    {
+                        if (pruefplandaten.get(i).getFavorit()) {
+                            String id = pruefplandaten.get(i).getID();
+
+                            if(googlecal.checkCal(Integer.valueOf(id)))
+                            {
+                                //ermitteln von benötigten Variablen
+                                String[] splitDatumUndUhrzeit = pruefplandaten.get(i).getDatum().split(" ");
+                                System.out.println(splitDatumUndUhrzeit[0]);
+                                String[] splitTagMonatJahr = splitDatumUndUhrzeit[0].split("-");
+                                System.out.println(splitDatumUndUhrzeit[0]);
+                               // holder.txtthirdline.setText("Uhrzeit: " + splitDatumUndUhrzeit[1].substring(0, 5).toString());
+                               // holder.button.setText(splitTagMonatJahr[2].toString() + "." + splitTagMonatJahr[1].toString() + "." + splitTagMonatJahr[0].toString());
+
+                                studiengang = pruefplandaten.get(i).getStudiengang();
+                                studiengang = studiengang + " " + pruefplandaten.get(i).getModul();
+                                int uhrzeitStart = Integer.valueOf(splitDatumUndUhrzeit[1].substring(0, 2));
+                                int uhrzeitEnde = Integer.valueOf(splitDatumUndUhrzeit[1].substring(4, 5));
+                                calDate = new GregorianCalendar(Integer.valueOf(splitTagMonatJahr[0]), (Integer.valueOf(splitTagMonatJahr[1]) - 1), Integer.valueOf(splitTagMonatJahr[2]), uhrzeitStart, uhrzeitEnde);
+
+
+                                //Methode zum speichern im Kalender
+                                int calendarid = calendarID(studiengang);
+
+
+                                //funktion im Google Kalender um PrüfID und calenderID zu speichern
+                                googlecal.insertCal(Integer.valueOf(id), calendarid);
+
+                            }
+
+                        }
+
+
+                    }
+
+
+
+
                     Toast.makeText(v.getContext(), "Prüfungen werden jetzt zum Kalender hinzugefügt", Toast.LENGTH_SHORT).show();
                 }
 
@@ -208,7 +266,7 @@ public class Optionen extends Fragment {
             }
         });
 
-        //Google Kalender einträge löschen
+        //Google Kalender einträge updaten
         btnGoogleupdate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 kalenderUpdate();
@@ -282,11 +340,11 @@ public class Optionen extends Fragment {
 
                 validation.add("0");
 
-                Log.d("Test",String.valueOf(pruefplanDaten.size()));
+                //Log.d("Test",String.valueOf(pruefplanDaten.size()));
 
 
                 for (int i = 0; i < pruefplanDaten.size(); i++) {
-                    Log.d("Test",String.valueOf(pruefplanDaten.get(i).getFavorit()));
+                    //Log.d("Test",String.valueOf(pruefplanDaten.get(i).getFavorit()));
                     if (pruefplanDaten.get(i).getFavorit()) {
                         ID.add(pruefplanDaten.get(i).getID().toString());
                         validation.add(pruefplanDaten.get(i).getValidation().toString());
@@ -370,6 +428,60 @@ public class Optionen extends Fragment {
 
 
     }
+
+
+
+    public int calendarID(String eventtitle){
+
+        final ContentValues event = new ContentValues();
+        event.put(CalendarContract.Events.CALENDAR_ID, 2);
+        event.put(CalendarContract.Events.TITLE, studiengang);
+        event.put(CalendarContract.Events.DESCRIPTION, "Fachhochschule Bielefeld");
+        event.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
+        event.put(CalendarContract.Events.DTEND, calDate.getTimeInMillis() + (90 * 60000));
+        event.put(CalendarContract.Events.ALL_DAY, 0);   // 0 for false, 1 for true
+        event.put(CalendarContract.Events.HAS_ALARM, 0); // 0 for false, 1 for true
+        String timeZone = TimeZone.getDefault().getID();
+        event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone);
+        Uri baseUri;
+
+        if (Build.VERSION.SDK_INT >= 8) {
+            baseUri = Uri.parse("content://com.android.calendar/events");
+
+        } else {
+            baseUri = Uri.parse("content://calendar/events");
+        }
+
+        getContext().getContentResolver().insert(baseUri, event);
+
+
+        int result = 0;
+        String projection[] = { "_id", "title" };
+        Cursor cursor = getContext().getContentResolver().query(baseUri, null, null, null,
+                null);
+
+        if (cursor.moveToFirst()) {
+
+            String calName;
+            String calID;
+
+            int nameCol = cursor.getColumnIndex(projection[1]);
+            int idCol = cursor.getColumnIndex(projection[0]);
+            do {
+                calName = cursor.getString(nameCol);
+                calID = cursor.getString(idCol);
+
+                if (calName != null && calName.contains(eventtitle)) {
+                    result = Integer.parseInt(calID);
+                }
+
+            } while (cursor.moveToNext());
+            cursor.close();
+
+        }
+        return (result);
+    }
+
 
 
 

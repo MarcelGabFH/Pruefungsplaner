@@ -76,7 +76,7 @@ public class CheckGoogleCalendar {
         // step two : convert String array to list of String
         List<String> fixedLenghtList = Arrays.asList(elements);
 
-        Log.i("test", String.valueOf(elements.length));
+       // Log.i("test", String.valueOf(elements.length));
 
         // step three : copy fixed list to an ArrayList
         ArrayList<String> listOfString = new ArrayList<String>(fixedLenghtList);
@@ -91,7 +91,7 @@ public class CheckGoogleCalendar {
             idsTOstring = idsTOstring + listOfString.get(i);
         }
 
-        Log.i("test", String.valueOf(idsTOstring));
+        //Log.i("test", String.valueOf(idsTOstring));
 
 
 
