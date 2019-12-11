@@ -50,6 +50,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private List<String> pruefform;
     private boolean speicher;
     private String studiengang;
+    private TextView txtSecondScreen;
+    static boolean favcheck = true;
     private Context context;
     private Intent calIntent;
     private RecyclerView.LayoutManager aktuelleslayout;
@@ -105,21 +107,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         String[] modulname = name.split(" ");
         studiengang = "";
 
+
         int b;
         for (b = 0; b < (modulname.length - 1); b++) {
             studiengang = (studiengang + " " + modulname[b]);
 
         }
 
+
         holder.txtHeader.setText(name);
         holder.ivicon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                favcheck = false;
                 //holder.zahl1 = position;
                 AppDatabase datenbank =  AppDatabase.getAppDatabase(context);
 
                 List<Pruefplan> pruefplandaten = datenbank.userDao().getAll2();
-
 
                 //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
                 int i;
@@ -154,6 +158,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     //Überprüfung des Wertes, wenn strJson2 "true" ist dann ist der Google Kalender aktiviert
                     boolean speicher2 = false;
 
+
+
                     for (int zaehler = 0; zaehler < checkGooglecalender.length(); zaehler++) {
                          String ss1 = String.valueOf(checkGooglecalender.charAt(zaehler));
                         if (ss1.equals(String.valueOf(1))) {
@@ -165,6 +171,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     //Hinzufügen der Prüfungen zum Google Kalender
                     CheckGoogleCalendar checkeintrag = new CheckGoogleCalendar();
                     checkeintrag.setCtx(context);
+
+
 
 
                     //Abrage vom geklickten Item
@@ -269,9 +277,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 studiengang = (studiengang + " " + modulname[b]);
 
             }
-            AppDatabase roomdaten2 = AppDatabase.getAppDatabase(context);
-            List<Pruefplan> userdaten = roomdaten2.userDao().getAll2();
-
 
         String[] aufteilung1 = Datum.get(position).split(" ");
         String[] aufteilung2 = aufteilung1[0].split("-");
@@ -324,13 +329,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             ivicon = (ImageView) v.findViewById(R.id.icon);
             txtHeader = (TextView) v.findViewById(R.id.firstLine);
             txtFooter = (TextView) v.findViewById(R.id.secondLine);
+            txtSecondScreen = (TextView) v.findViewById(R.id.txtSecondscreen);
+
             txtthirdline = (TextView) v.findViewById(R.id.thirdLine);
             button = (Button) v.findViewById(R.id.button7);
+
+
             //button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             layout = (LinearLayout) v.findViewById(R.id.linearLayout);
 
         }
     }
+
+
 
     public int calendarID(String eventtitle){
 

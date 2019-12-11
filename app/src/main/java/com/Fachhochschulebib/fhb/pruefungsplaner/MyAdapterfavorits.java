@@ -119,44 +119,11 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         holder.txtFooter.setText("Prüfer: " + splitPrueferUndSemester[0] + ", " + splitPrueferUndSemester[1] + "  Semester: " + splitPrueferUndSemester[2]);
 
 
-        //darstellen der Weiteren Informationen
-        holder.layout2.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                String modulUndStudiengang = moduleUndStudiengangList.get(position);
-                String[] modulname = modulUndStudiengang.split(" ");
-                studiengang = "";
-                int b;
-                for (b = 0; b < (modulname.length - 1); b++) {
-                    studiengang = (studiengang + " " + modulname[b]);
-
-                }
-                String[] splittDatumundUhrzeit = datum.get(position).split(" ");
-                String[] splitMonatJahrTag = splittDatumundUhrzeit[0].split("-");
-                holder.txtthirdline.setText("Uhrzeit: " + splittDatumundUhrzeit[1].substring(0, 5).toString());
-                final String[] splittPrueferUndSemster = PrueferUndSemesterList.get(position).split(" ");
-                AlertDialog.Builder alertdialog = new AlertDialog.Builder(v.getContext());
-                alertdialog.setMessage("Informationen zur Prüfung \n \n studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + splittPrueferUndSemster[0] + " \n Zweitprüfer: " + splittPrueferUndSemster[1] + "\n datum: " + splitMonatJahrTag[2].toString() + "." + splitMonatJahrTag[1].toString() + "." + splitMonatJahrTag[0].toString() + " \n Uhrzeit: " + splittDatumundUhrzeit[1].substring(0, 5).toString() + " \n \n \n \n \n \n ");
-                alertdialog.setCancelable(true);
-                alertdialog.setPositiveButton(
-                        "Ok",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alert11 = alertdialog.create();
-                alert11.show();
 
 
-                holder.txtthirdline.setText("Uhrzeit: " + splittDatumundUhrzeit[1].substring(0, 5).toString() + " datum: " + splitMonatJahrTag[2].toString() + "." + splitMonatJahrTag[1].toString() + "." + splitMonatJahrTag[0].toString());
-
-                holder.txtFooter.setText("Prüfer: " + splittPrueferUndSemster[0] + ", " + splittPrueferUndSemster[1] + "  Semester: " + splittPrueferUndSemster[2]);
-            }
-        });
     }
+
+
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
@@ -164,6 +131,32 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         return moduleUndStudiengangList.size();
     }
 
+
+    public String giveString(int position) {
+
+        try {
+            String name = moduleUndStudiengangList.get(position);
+            String[] modulname = name.split(" ");
+            studiengang = "";
+            int b;
+            for (b = 0; b < (modulname.length - 1); b++) {
+                studiengang = (studiengang + " " + modulname[b]);
+
+            }
+
+            String[] aufteilung1 = datum.get(position).split(" ");
+            String[] aufteilung2 = aufteilung1[0].split("-");
+            //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
+            final String[] sa = PrueferUndSemesterList.get(position).split(" ");
+            //AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
+            String s = ("Informationen zur Prüfung \n \n Studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " + aufteilung2[2].toString() + "." + aufteilung2[1].toString() + "." + aufteilung2[0].toString() + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() +" Uhr" + " \n Raum: Unbekannt " +"\n "+ "\n \n \n \n \n \n ");
+
+            return (s);
+        }catch(Exception e){
+
+        }
+        return ("0");
+    }
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -186,7 +179,14 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
             txtthirdline = (TextView) v.findViewById(R.id.thirdLine);
             layout2 = (LinearLayout) v.findViewById(R.id.linearLayout);
             //button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+
+
         }
+
+
     }
+
+
 
 }

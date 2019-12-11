@@ -44,7 +44,7 @@ public class JsonResponse {
 
 
 
-        @SerializedName("aktuellerTermin")
+        @SerializedName("Termin")
         @Expose
         private String Termin;
 

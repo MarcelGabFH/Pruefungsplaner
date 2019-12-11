@@ -30,6 +30,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
@@ -125,6 +127,7 @@ public class TerminefragmentSuche extends Fragment {
 
 
         //überprüfung ob das Prüfitem geswippt wurde
+        /*
         swipeController = new SwipeController(new SwipeControllerActions() {
             String positionspeichern;
             @Override
@@ -247,14 +250,11 @@ public class TerminefragmentSuche extends Fragment {
                 }
                 //mAdapter.uebergebeneModule.set(position,positionspeichern);
                 //mAdapter.notifyItemInserted(position);
-
-
             }
-
         });
-
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
         itemTouchhelper.attachToRecyclerView(recyclerView);
+        */
 
 
         //Userinterface Komponenten Initialiseren
@@ -345,6 +345,8 @@ public class TerminefragmentSuche extends Fragment {
             }
         });
 
+
+        /*
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -354,8 +356,6 @@ public class TerminefragmentSuche extends Fragment {
                     View viewItem4 = recyclerView.getLayoutManager().findViewByPosition(position2 + 2);
                     viewItem3.setVisibility(View.VISIBLE);
                     viewItem4.setVisibility(View.VISIBLE);
-
-
                 } catch (NullPointerException e) {
                 }
 
@@ -367,30 +367,33 @@ public class TerminefragmentSuche extends Fragment {
 
                 } catch (NullPointerException e) {
                 }
-
             }
         });
 
-
+*/
 
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
                     @Override
-                    public void onItemClick(View view, int position) {
-                        // TODO Handle item click
-                        Log.e("@@@@@",""+position2);
-                        try {
-                            View viewItem = recyclerView.getLayoutManager().findViewByPosition(position2-2);
-                            View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position2-3);
-                            View viewItem3 = recyclerView.getLayoutManager().findViewByPosition(position2 +1);
-                            View viewItem4 = recyclerView.getLayoutManager().findViewByPosition(position2 + 2);
-                            viewItem.setVisibility(View.VISIBLE);
-                            viewItem2.setVisibility(View.VISIBLE);
-                            viewItem3.setVisibility(View.VISIBLE);
-                            viewItem4.setVisibility(View.VISIBLE);
-                        }catch (Exception e)
-                        {
-                        }
+                    public void onItemClick(View view, final int position) {
+                        final TextView txtSecondScreen = (TextView) view.findViewById(R.id.txtSecondscreen);
+                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
+                        LinearLayout layout1 =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
+
+                        layout1.setOnClickListener(new  View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.e("@@@@@", "" + position);
+                                if (txtSecondScreen.getVisibility() == v.VISIBLE) {
+                                    txtSecondScreen.setVisibility(v.GONE);
+
+                                } else {
+
+                                    txtSecondScreen.setVisibility(v.VISIBLE);
+                                    txtSecondScreen.setText(mAdapter.giveString(position));
+                                }
+                            }
+                        });
                     }
                 })
         );

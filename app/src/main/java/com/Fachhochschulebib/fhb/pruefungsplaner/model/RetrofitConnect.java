@@ -66,17 +66,18 @@ public class RetrofitConnect {
             public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                 response.body();
                 if (response.isSuccessful()) {
-                    List<Pruefplan> userdaten = roomdaten.userDao().getAll2();
+                    List<Pruefplan> database = roomdaten.userDao().getAll2();
                     //roomdaten.clearAllTables();
 
                     String validation = jahr+studiengang+pruefungsphase;
 
                     String checkTermin = "0";
-                    for(int j = 0; j < userdaten.size();j++) {
-                        if (userdaten.get(j).getValidation().equals(validation)){
+                    for(int j = 0; j < database.size();j++) {
+                        if (database.get(j).getValidation().equals(validation)){
                             System.out.println("aufgerufen2223");
-                            checkTermin = userdaten.get(j).getTermin().toString();
+                            checkTermin = database.get(j).getTermin();
                             checkvalidate = true;
+
                         }}
 
                     //Schleife um jedes erhaltene Prüfungsobjekt in die lokale Datenbank hinzuzufügen

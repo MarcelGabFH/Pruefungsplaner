@@ -20,11 +20,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
 
@@ -88,9 +92,40 @@ public class Favoritenfragment extends Fragment {
         // define an adapter
         // übergabe der variablen an den Recyclerview Adapter, für die darstellung
         mAdapter = new MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr);
+
+
+
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick( final View view, final  int position) {
+                        //LinearLayout layout1 =( LinearLayout) view.findViewById(R.id.linearLayout);
+                        final TextView txtSecondScreen = (TextView) view.findViewById(R.id.txtSecondscreen);
+                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
+                        LinearLayout layout1 =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
+
+                        layout1.setOnClickListener(new  View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.e("@@@@@", "" + position);
+                                if (txtSecondScreen.getVisibility() == v.VISIBLE) {
+                                    txtSecondScreen.setVisibility(v.GONE);
+
+                                } else {
+                                    txtSecondScreen.setVisibility(v.VISIBLE);
+                                    txtSecondScreen.setText(((MyAdapterfavorits) mAdapter).giveString(position));
+                                }
+                            }
+                        });
+                    }
+                })
+        );
+
         recyclerView.setAdapter(mAdapter);
-
-
         return v;
     }
+
+
+
+
 }

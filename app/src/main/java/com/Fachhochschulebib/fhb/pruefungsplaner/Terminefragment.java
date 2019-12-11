@@ -18,6 +18,8 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
+import android.graphics.drawable.Icon;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,17 +34,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.pruefJahr;
 import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.aktuellePruefphase;
 import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.rueckgabeStudiengang;
+import static com.Fachhochschulebib.fhb.pruefungsplaner.MyAdapter.favcheck;
 
 
 public class Terminefragment extends Fragment {
@@ -53,6 +61,7 @@ public class Terminefragment extends Fragment {
     private RecyclerView recyclerView;
     private CalendarView calendar;
     private Button btnsuche;
+    boolean checkclick;
     private String date;
     private String month2;
     private String day2;
@@ -108,7 +117,7 @@ public class Terminefragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
 
-            List<Pruefplan> userdaten = datenbank.userDao().getAll(validation);
+            List<Pruefplan> datenbank = Terminefragment.this.datenbank.userDao().getAll(validation);
 
             List<String> studiengangUndModul = new ArrayList<>();
             List<String> prueferundModul = new ArrayList<>();
@@ -118,13 +127,13 @@ public class Terminefragment extends Fragment {
             List<String> pruefform = new ArrayList<>();
 
 
-            for (int i = 0; i < userdaten.size(); i++) {
-                studiengangUndModul.add(userdaten.get(i).getModul() + "\n " + userdaten.get(i).getStudiengang());
-                prueferundModul.add(userdaten.get(i).getErstpruefer() + " " + userdaten.get(i).getZweitpruefer() + " " + userdaten.get(i).getSemester() + " ");
-                datum.add(userdaten.get(i).getDatum());
-                id.add(userdaten.get(i).getID());
-                ID.add(userdaten.get(i).getID());
-                pruefform.add(userdaten.get(i).getPruefform());
+            for (int i = 0; i < datenbank.size(); i++) {
+                studiengangUndModul.add(datenbank.get(i).getModul() + "\n " + datenbank.get(i).getStudiengang());
+                prueferundModul.add(datenbank.get(i).getErstpruefer() + " " + datenbank.get(i).getZweitpruefer() + " " + datenbank.get(i).getSemester() + " ");
+                datum.add(datenbank.get(i).getDatum());
+                id.add(datenbank.get(i).getID());
+                ID.add(datenbank.get(i).getID());
+                pruefform.add(datenbank.get(i).getPruefform());
             }// define an adapter
 
 
@@ -158,6 +167,8 @@ public class Terminefragment extends Fragment {
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
 
         recyclerView.setVisibility(View.VISIBLE);
+
+
         // use this setting to
         // improve performance if you know that changes
         // in content do not change the layout size
@@ -170,31 +181,6 @@ public class Terminefragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         mLayout = recyclerView.getLayoutManager();
 
-
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        // TODO Handle item click
-                        Log.e("@@@@@",""+ aktuellePosition);
-                        try {
-                            View viewItem = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition -1);
-                            View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition -2);
-                            View viewItem3 = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition +1);
-                            View viewItem4 = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition + 2);
-                            viewItem.setVisibility(View.VISIBLE);
-                            viewItem2.setVisibility(View.VISIBLE);
-                            viewItem3.setVisibility(View.VISIBLE);
-                            viewItem4.setVisibility(View.VISIBLE);
-                        }catch (Exception e)
-                        {
-
-                        }
-
-
-                    }
-                })
-        );
 
 
         List<Pruefplan> pruefplandaten = datenbank.userDao().getAll(validation);
@@ -219,24 +205,57 @@ public class Terminefragment extends Fragment {
 
         // System.out.println(String.valueOf(userdaten.size()));
 
+        checkclick = true;
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick( final View view, final  int position) {
+                        //LinearLayout layout1 =( LinearLayout) view.findViewById(R.id.linearLayout);
+                        final TextView txtSecondScreen = (TextView) view.findViewById(R.id.txtSecondscreen);
+                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
+                        LinearLayout layout1 =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
 
-        mAdapter = new MyAdapter(modulundstudiengang, prueferundsemester, datum, id,ID,Pruefform,mLayout);
+                        layout1.setOnClickListener(new  View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.e("@@@@@", "" + position);
+                                if (txtSecondScreen.getVisibility() == v.VISIBLE) {
+                                    txtSecondScreen.setVisibility(v.GONE);
 
-        recyclerView.setAdapter(mAdapter);
+                                } else {
+                                    txtSecondScreen.setVisibility(v.VISIBLE);
+                                    txtSecondScreen.setText(mAdapter.giveString(position));
+                                }
+                            }
+                        });
+
+
+                        // TODO Handle item click
+                        Log.e("@@@@@",""+ aktuellePosition);
+/*
+                        try {
+                            View viewItem = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition -1);
+                            View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition -2);
+                            View viewItem3 = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition +1);
+                            View viewItem4 = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition + 2);
+                            viewItem.setVisibility(View.VISIBLE);
+                            viewItem2.setVisibility(View.VISIBLE);
+                            viewItem3.setVisibility(View.VISIBLE);
+                            viewItem4.setVisibility(View.VISIBLE);
+                        }catch (Exception e)
+                        { }
+*/
+                    }
+                })
+        );
 
 
 
 
-
-
+/*
         swipeController = new SwipeController(new SwipeControllerActions() {
-
-
             @Override
-
             public void onLeftClicked( int position) {
-
-
                 aktuellePosition = position;
                 Log.e("@@",""+position);
 
@@ -265,7 +284,6 @@ public class Terminefragment extends Fragment {
                 else{
                     final int aktuellepos = position - 1;
                     positionspeichern = mAdapter.uebergebeneModule.get(position);
-
                     View viewItem = recyclerView.getLayoutManager().findViewByPosition(position -1);
                     View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position - 2);
                     viewItem.setVisibility(View.INVISIBLE);
@@ -276,8 +294,6 @@ public class Terminefragment extends Fragment {
                             swipeController.onDraw2(c, s);
                         }
                     });
-
-
                 }
                     // mAdapter.uebergebeneModule.remove(position);
                     //    mAdapter.notifyItemRemoved(position);
@@ -286,15 +302,12 @@ public class Terminefragment extends Fragment {
 
 
             public void onRightClicked(int position) {
-
                 position = position + 1;
                     try {
-
                         View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
                         View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(position + 1);
                         viewItem.setVisibility(View.VISIBLE);
                         viewItem2.setVisibility(View.VISIBLE);
-
                     } catch (NullPointerException e) {
 
                     }
@@ -313,11 +326,18 @@ public class Terminefragment extends Fragment {
             }
         });
 
+*/
+
+        mAdapter = new MyAdapter(modulundstudiengang, prueferundsemester, datum, id,ID,Pruefform,mLayout);
+        recyclerView.setAdapter(mAdapter);
+
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                TextView txtSecondScreen = (TextView) recyclerView.findViewById(R.id.txtSecondscreen);
+                //txtSecondScreen.setVisibility(View.INVISIBLE);
                     try {
                         View viewItem = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition -1);
                         View viewItem2 = recyclerView.getLayoutManager().findViewByPosition(aktuellePosition -2);
@@ -328,6 +348,7 @@ public class Terminefragment extends Fragment {
                         viewItem3.setVisibility(View.VISIBLE);
                         viewItem4.setVisibility(View.VISIBLE);
                     } catch (NullPointerException e) {
+
                     }
 
             }
@@ -336,8 +357,8 @@ public class Terminefragment extends Fragment {
 
 
         //Tocuhhelper für die Recyclerview-Komponente, zum überprüfen ob gescrollt wurde
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-        itemTouchhelper.attachToRecyclerView(recyclerView);
+//        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+  //      itemTouchhelper.attachToRecyclerView(recyclerView);
 
         //initialisieren der UI-Komponenten
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
@@ -346,13 +367,10 @@ public class Terminefragment extends Fragment {
         btnsuche = (Button) v.findViewById(R.id.btnDatum);
         calendar.setVisibility(View.GONE);
 
-
-
         //Clicklistener für den Kalender,
         //Es wird überprüft welches Datum ausgewählt wurde
         btnsuche.setOnClickListener(new View.OnClickListener() {
             boolean speicher = true;
-
             @Override
             public void onClick(View v) {
                 if (!speicher) {
@@ -390,8 +408,6 @@ public class Terminefragment extends Fragment {
                         for (int i = 0; i < Terminefragment.this.pruefplandaten.size(); i++){
                             id.add(userdaten.get(i).getID());
                         }}
-
-
                    // System.out.println(String.valueOf(userdaten.size()));
                     //Recyclerview Adapter mit Werten füllen
                     mAdapter = new MyAdapter(studiengangundmodul, prueferundsemester, datum, id,ID,pruefform,mLayout);
