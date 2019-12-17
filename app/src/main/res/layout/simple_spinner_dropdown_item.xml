@@ -4,7 +4,7 @@
     android:singleLine="true"
     android:ellipsize="marquee"
     android:layout_width="match_parent"
-    android:background="#222222"
+    android:background="#06ABF9"
     android:textColor="#eeeeee"
     android:textSize="20sp"
     android:layout_height="wrap_content" />

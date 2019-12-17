@@ -60,7 +60,6 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         notifyItemRemoved(position);
     }
 
-
     // Create new views (invoked by the layout manager)
     @Override
     public MyAdapterfavorits.ViewHolder onCreateViewHolder(ViewGroup parent,

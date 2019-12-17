@@ -424,9 +424,6 @@ public class Optionen extends Fragment {
         CheckGoogleCalendar cal = new CheckGoogleCalendar();
         cal.setCtx(getContext());
         cal.updateCal();
-
-
-
     }
 
 

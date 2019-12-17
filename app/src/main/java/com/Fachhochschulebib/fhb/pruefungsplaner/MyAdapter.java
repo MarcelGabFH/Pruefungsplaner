@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
@@ -94,6 +95,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         context = v.getContext();
         ViewHolder vh = new ViewHolder(v);
 
+
+
         return vh;
     }
 
@@ -110,6 +113,24 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             studiengang = (studiengang + " " + modulname[b]);
 
         }
+
+
+        //Datenbank und Pruefplan laden
+        AppDatabase datenbank =  AppDatabase.getAppDatabase(context);
+        List<Pruefplan> pruefplandaten = datenbank.userDao().getAll2();
+
+        //Überprüfung ob Prüfitem Favorisiert wurde
+        int i;
+        //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()), Toast.LENGTH_SHORT).show();
+        speicher = false;
+        int pruefid = Integer.valueOf(pruefplanid.get(position));
+        for (i = 0; i < pruefplandaten.size(); i++) {
+            if (Integer.valueOf(pruefplandaten.get(i).getID()).equals(pruefid))
+            {
+            if (pruefplandaten.get(i).getFavorit() ) {
+                holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
+                // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
+            }}}
 
 
         holder.txtHeader.setText(name);
@@ -131,6 +152,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                 speicher = true;
                                // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
                             } }
+
+                int pruefid = Integer.valueOf(pruefplanid.get(position));
+                for (i = 0; i < pruefplandaten.size(); i++) {
+                    if (Integer.valueOf(pruefplandaten.get(i).getID()).equals(pruefid))
+                    {
+
+                            holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
+                            // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
+                        }}
+
 
                 //Speichern des Prüfitem als Favorit
                 if (!speicher) {

@@ -20,7 +20,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -66,12 +69,14 @@ public class MainActivity extends AppCompatActivity {
    public static String pruefJahr = null;
    public static String aktuellePruefphase = null;
    public static String rueckgabeStudiengang = null;
+   private Boolean checkReturn = true;
    public static String aktuellerTermin;
     //KlassenVariablen
     private JSONArray jsonArrayStudiengaenge;
     final List<String> spinnerArray = new ArrayList<String>();
     private Spinner spStudiengangMain;
     List<String> id = new ArrayList<String>();
+    private Message msg = new Message();
 
 
     @Override
@@ -100,13 +105,13 @@ public class MainActivity extends AppCompatActivity {
                 if (spinnerArray.size() > 1) {
                     AppDatabase databasePruefplan = AppDatabase.getAppDatabase(getBaseContext());
                     List<Pruefplan> pruefplandaten = databasePruefplan.userDao().getAll2();
-                    Log.d("Test4", String.valueOf(pruefplandaten.size()));
+                    //Log.d("Test4", String.valueOf(pruefplandaten.size()));
 
                     for (int i = 0; i < pruefplandaten.size(); i++) {
                         for (int j = 0; j < id.size(); j++) {
                             if (pruefplandaten.get(i).getID().equals(id.get(j))) {
 
-                                Log.d("Test4", String.valueOf(pruefplandaten.get(i).getID()));
+                                //Log.d("Test4", String.valueOf(pruefplandaten.get(i).getID()));
                                 databasePruefplan.userDao().update(true, Integer.valueOf(pruefplandaten.get(i).getID()));
                             }
                         }
@@ -209,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
             Checkverbindung("test");
             SharedPreferences pruefperiode = getApplicationContext().getSharedPreferences("pruefperiode", 0);
             //Creating editor to store uebergebeneModule to shared preferencess
-            String strJson = pruefperiode.getString("pruefperiode", "0");
+            String strJson = pruefperiode.getString("pruefperiode", " ");
             TextView txtpruefperiode = (TextView) findViewById(R.id.txtpruefperiode);
             //second parameter is necessary ie.,Value to return if this preference does not exist.
             if (strJson != null) {
@@ -218,9 +223,9 @@ public class MainActivity extends AppCompatActivity {
 
         }
         catch(Exception e) {
-            SharedPreferences pruefperiode = getApplicationContext().getSharedPreferences("studiengaenge", 0);
+            SharedPreferences pruefperiode = getApplicationContext().getSharedPreferences("pruefperiode", 0);
             //Creating editor to store uebergebeneModule to shared preferencess
-            String strJson = pruefperiode.getString("studiengaenge", "0");
+            String strJson = pruefperiode.getString("pruefperiode", "0");
             //second parameter is necessary ie.,Value to return if this preference does not exist.
 
             if (strJson != null) {
@@ -259,16 +264,18 @@ public class MainActivity extends AppCompatActivity {
       //uebergebene Serveradresse
        SharedPreferences.Editor mEditorAdresse = mSharedPreferencesAdresse.edit();
        String serveradresse = mSharedPreferencesAdresse.getString("Server-Adresse2","http://thor.ad.fh-bielefeld.de:8080/");
-
        boolean aktuelleurl = pingUrl(serveradresse + "PruefplanApplika/webresources/entities.studiengang");
-
+       if (!aktuelleurl) {
+           Toast.makeText(getApplicationContext(), "Keine Verbindung zum Server möglich", Toast.LENGTH_SHORT).show();
+       }
 
    }
 
     public void Keineverbindung(){
+        //Toast.makeText(getApplicationContext(), "Keine Verbindung zum Server möglich", Toast.LENGTH_SHORT).show();
         new Thread(new Runnable() {
             public void run() {
-                Toast.makeText(getBaseContext(), "Keine Verbindung zum Server möglich", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Keine Verbindung zum Server möglich", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -294,6 +301,12 @@ public class MainActivity extends AppCompatActivity {
                 //spinner auswahl für den studiengang
                 spStudiengangMain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
+                        //((TextView) parent.getChildAt(0)).setBackgroundColor(Color.BLUE);
+                        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+
+                        //((TextView) parent.getChildAt(0)).setTextSize(5);
 
                         Studiengang.add(parent.getItemAtPosition(position).toString()); //this is your selected item
                         for (int i = 0 ; i < spinnerArray.size(); i++)
@@ -333,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
                     //Verbindungsaufbau zum Webserver
                 try {
                     StringBuilder result = new StringBuilder();
-                    final URL url = new URL("http://" + address);
+                    final URL url = new URL(address);
                     final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
                     //Log.d("Output studiengang","test");
                     urlConn.setConnectTimeout(100 * 10); // mTimeout is in seconds
@@ -348,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     //Parsen von den  erhaltene Werte
-                    Log.d("Output studiengang","test2");
+                    //Log.d("Output studiengang","test2");
                     InputStream in = new BufferedInputStream(urlConn.getInputStream());
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                     String line;
@@ -362,10 +375,10 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObj = null;
                     try {
                         jsonObj = XML.toJSONObject(String.valueOf(result));
-                        Log.d("Output studiengang",jsonObj.toString());
+                        //Log.d("Output studiengang",jsonObj.toString());
 
                     } catch (JSONException e) {
-                        Log.e("JSON exception", e.getMessage());
+                       // Log.e("JSON exception", e.getMessage());
                         e.printStackTrace();
                     }
 
@@ -416,6 +429,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     uebergabeAnSpinner();
+                    Log.d("Output checkstudiengang","abgeschlossen");
 
 
             }
@@ -423,7 +437,7 @@ public class MainActivity extends AppCompatActivity {
                 catch (final Exception e)
                 {
                     String strStudiengang = studiengaenge.getString("studiengaenge", "0");
-                    //Log.d("Output exception",strStudiengang);
+                    //Log.d("Output 426",strStudiengang);
                     if (strStudiengang != null) {
                         try{
                             jsonArrayStudiengaenge = new JSONArray(strStudiengang);
@@ -434,20 +448,12 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }catch (Exception b)
                         {
-
                         }
-
                     }
-
                     Keineverbindung();
                 }
-
-
-
-
             }
         }).start();
-
         return true;
     }
 
@@ -470,25 +476,26 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences.Editor mEditorAdresse = mSharedPreferencesAdresse.edit();
                     String serveradresse = mSharedPreferencesAdresse.getString("Server-Adresse2","http://thor.ad.fh-bielefeld.de:8080/");
                     String address = serveradresse + "PruefplanApplika/webresources/entities.pruefperioden";
+                    final URL url = new URL(address);
 
-                    final URL url = new URL("http://" + address);
                     final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-                    //Log.d("Output studiengang","test");
                     urlConn.setConnectTimeout(1000 * 10); // mTimeout is in seconds
                     long startTime = System.currentTimeMillis();
                    //Log.d("Output studiengang","test");
-                    urlConn.connect();
-                    long endTime = System.currentTimeMillis();
-                    if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        System.out.println("Time (ms) : " + (endTime - startTime));
-                        System.out.println("Ping to " + address + " was success");
-                        //uebergabeAnSpinner();
 
+                    try {
+                        urlConn.connect();
+                    }catch (Exception e)
+                    {
+                        Log.d("Output exception",e.toString());
+                        msg.arg1=1;
+                        handler.sendMessage(msg);
 
                     }
+
+
+
                    // Log.d("Output studiengang","test2");
-
-
                     //Variablen zum lesen der erhaltenen werte
                     InputStream in = new BufferedInputStream(urlConn.getInputStream());
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -508,6 +515,7 @@ public class MainActivity extends AppCompatActivity {
 
                     } catch (JSONException e) {
                         //Log.e("JSON exception", e.getMessage());
+
                         e.printStackTrace();
                     }
 
@@ -554,12 +562,9 @@ public class MainActivity extends AppCompatActivity {
                     pruefperiodedatum = "Aktuelle Prüfungsphase: \n " +String.valueOf(day) +"."+ String.valueOf(month) +"."+ String.valueOf(year) +" bis "+ String.valueOf(day2) +"."+ String.valueOf(month2) +"."+ String.valueOf(year2) ;  // number of days to add;
                     //Log.d("Output pruefperiode",pruefperiodedatum);
 
-
                     //Prüfperiode für die offline Verwendung speichern
                     mEditor = mSharedPreferencesperiode.edit();
                     String strJson = mSharedPreferencesperiode.getString("pruefperiode", " ");
-
-
                     if (strJson != null) {
                         try {
                             if (strJson.equals(pruefperiodedatum))
@@ -573,29 +578,48 @@ public class MainActivity extends AppCompatActivity {
                                 mEditor.apply();
                             }
 
+
                         } catch (Exception e) {
+
                         }
                     }
+                    Log.d("Output pruefperiode","abgeschlossen");
                 }
+
+
                 catch (final Exception e)
                 {
+                    checkReturn = false;
                     //Keineverbindung();
                 }
             }
         }).start();
 
-        return true;
+        if (checkReturn) {
+            return true;
+
+        }else{
+
+            return false;
+        }
     }
 
+    Handler handler = new Handler(new Handler.Callback() {
 
-
-
+        @Override
+        public boolean handleMessage(Message msg) {
+            if(msg.arg1==1)
+            {
+                Toast.makeText(getApplicationContext(), "Keine Verbindung zum Server möglich", Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        }
+    });
     private void checkPermission(int callbackId, String... permissionsId) {
         boolean permissions = true;
         for (String p : permissionsId) {
             permissions = permissions && ContextCompat.checkSelfPermission(this, p) == PERMISSION_GRANTED;
         }
-
         if (!permissions)
             ActivityCompat.requestPermissions(this, permissionsId, callbackId);
     }

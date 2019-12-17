@@ -47,6 +47,7 @@ public class TerminefragmentSuche extends Fragment {
     private CalendarView calendar;
     private Button btnsuche;
     private String date;
+    List<Boolean> check = new ArrayList<>();
     private String month2;
     private String day2;
     private int position2 = 0;
@@ -115,6 +116,7 @@ public class TerminefragmentSuche extends Fragment {
             id.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul());
             ID.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getID());
             Pruefform.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getPruefform());
+            check.add(true);
 
         }
 
@@ -375,7 +377,9 @@ public class TerminefragmentSuche extends Fragment {
                     public void onItemClick(View view, final int position) {
                         final TextView txtSecondScreen = (TextView) view.findViewById(R.id.txtSecondscreen);
                         View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
+
                         LinearLayout layout1 =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
+
 
                         layout1.setOnClickListener(new  View.OnClickListener() {
                             @Override
@@ -383,14 +387,20 @@ public class TerminefragmentSuche extends Fragment {
                                 Log.e("@@@@@", "" + position);
                                 if (txtSecondScreen.getVisibility() == v.VISIBLE) {
                                     txtSecondScreen.setVisibility(v.GONE);
+                                    check.set(position,false);
+
 
                                 } else {
-
                                     txtSecondScreen.setVisibility(v.VISIBLE);
                                     txtSecondScreen.setText(mAdapter.giveString(position));
                                 }
                             }
                         });
+
+                        if(check.get(position)) {
+                            txtSecondScreen.setVisibility(v.VISIBLE);
+                            txtSecondScreen.setText(mAdapter.giveString(position));
+                        }
                     }
                 })
         );

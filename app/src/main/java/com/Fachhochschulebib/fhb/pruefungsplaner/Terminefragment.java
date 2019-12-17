@@ -65,9 +65,11 @@ public class Terminefragment extends Fragment {
     private String date;
     private String month2;
     private String day2;
+    private int positionZuvor = 0;
     private String positionspeichern;
     private int aktuellePosition = 0;
     private String year2;
+    List<Boolean> check = new ArrayList<>();
     public static String validation;
     SwipeController swipeController = null;
     MyAdapter mAdapter;
@@ -118,14 +120,12 @@ public class Terminefragment extends Fragment {
         protected void onPostExecute(String result) {
 
             List<Pruefplan> datenbank = Terminefragment.this.datenbank.userDao().getAll(validation);
-
             List<String> studiengangUndModul = new ArrayList<>();
             List<String> prueferundModul = new ArrayList<>();
             List<String> datum = new ArrayList<>();
             List<String> id = new ArrayList<>();
             List<String> ID = new ArrayList<>();
             List<String> pruefform = new ArrayList<>();
-
 
             for (int i = 0; i < datenbank.size(); i++) {
                 studiengangUndModul.add(datenbank.get(i).getModul() + "\n " + datenbank.get(i).getStudiengang());
@@ -134,13 +134,11 @@ public class Terminefragment extends Fragment {
                 id.add(datenbank.get(i).getID());
                 ID.add(datenbank.get(i).getID());
                 pruefform.add(datenbank.get(i).getPruefform());
+                check.add(true);
             }// define an adapter
 
-
            // System.out.println(String.valueOf(userdaten.size()));
-
             mAdapter = new MyAdapter(studiengangUndModul, prueferundModul, datum, id,ID,pruefform,mLayout);
-
             recyclerView.setAdapter(mAdapter);
             // might want to change "executed" for the returned string passed
             // into onPostExecute() but that is upto you
@@ -193,6 +191,7 @@ public class Terminefragment extends Fragment {
         List<String> Pruefform = new ArrayList<>();
 
 
+
         for (int i = 0; i < pruefplandaten.size(); i++) {
             modulundstudiengang.add(pruefplandaten.get(i).getModul() + "\n " + pruefplandaten.get(i).getStudiengang());
             prueferundsemester.add(pruefplandaten.get(i).getErstpruefer() + " " + pruefplandaten.get(i).getZweitpruefer() + " " + pruefplandaten.get(i).getSemester() + " ");
@@ -200,20 +199,25 @@ public class Terminefragment extends Fragment {
             id.add(pruefplandaten.get(i).getID());
             ID.add(pruefplandaten.get(i).getID());
             Pruefform.add(pruefplandaten.get(i).getPruefform());
+            check.add(true);
         }// define an adapter
 
 
         // System.out.println(String.valueOf(userdaten.size()));
 
-        checkclick = true;
+
+
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick( final View view, final  int position) {
                         //LinearLayout layout1 =( LinearLayout) view.findViewById(R.id.linearLayout);
                         final TextView txtSecondScreen = (TextView) view.findViewById(R.id.txtSecondscreen);
+
                         View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
+
                         LinearLayout layout1 =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
+
 
                         layout1.setOnClickListener(new  View.OnClickListener() {
                             @Override
@@ -221,14 +225,24 @@ public class Terminefragment extends Fragment {
                                 Log.e("@@@@@", "" + position);
                                 if (txtSecondScreen.getVisibility() == v.VISIBLE) {
                                     txtSecondScreen.setVisibility(v.GONE);
+                                    check.set(position,false);
 
                                 } else {
                                     txtSecondScreen.setVisibility(v.VISIBLE);
+
                                     txtSecondScreen.setText(mAdapter.giveString(position));
                                 }
                             }
                         });
 
+                        try{
+                        if(check.get(position)) {
+                            txtSecondScreen.setVisibility(v.VISIBLE);
+                            txtSecondScreen.setText(mAdapter.giveString(position));
+                        }}
+                        catch(Exception e){
+
+                        }
 
                         // TODO Handle item click
                         Log.e("@@@@@",""+ aktuellePosition);
@@ -444,7 +458,7 @@ public class Terminefragment extends Fragment {
                                     datum.add(userdaten.get(i).getDatum());
                                     id.add(userdaten.get(i).getModul());
                                     ID.add(userdaten.get(i).getID());
-                                    Pruefform.add(userdaten.get(i).getID());
+                                    Pruefform.add(userdaten.get(i).getPruefform());
                                 }
                             }// define an adapter
 
