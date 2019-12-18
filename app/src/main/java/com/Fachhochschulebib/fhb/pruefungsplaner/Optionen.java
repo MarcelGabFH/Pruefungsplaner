@@ -341,26 +341,28 @@ public class Optionen extends Fragment {
                 validation.add("0");
 
                 //Log.d("Test",String.valueOf(pruefplanDaten.size()));
+                if (pruefplanDaten.size() > 1) {
+                    validation.add(pruefplanDaten.get(0).getValidation().toString());
+                    for (int i = 0; i < pruefplanDaten.size(); i++) {
+                        //Log.d("Test",String.valueOf(pruefplanDaten.get(i).getFavorit()));
+                        if (pruefplanDaten.get(i).getFavorit()) {
+                            ID.add(pruefplanDaten.get(i).getID().toString());
+                            validation.add(pruefplanDaten.get(i).getValidation().toString());
+                            //Log.d("Test2",String.valueOf(pruefplanDaten.get(i).getValidation()));
+                        }
+                    }// define an adapter
+                    database.clearAllTables();
+                    aktuellerTermin = "0";
 
-
-                for (int i = 0; i < pruefplanDaten.size(); i++) {
-                    //Log.d("Test",String.valueOf(pruefplanDaten.get(i).getFavorit()));
-                    if (pruefplanDaten.get(i).getFavorit()) {
-                        ID.add(pruefplanDaten.get(i).getID().toString());
-                        validation.add(pruefplanDaten.get(i).getValidation().toString());
-                        //Log.d("Test2",String.valueOf(pruefplanDaten.get(i).getValidation()));
+                    //initialisierung room database
+                    AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
+                    //retrofit auruf
+                    for (int a = 1; a < validation.size(); a++) {
+                        String[] stringaufteilung = validation.get(a).split("");
+                        RetrofitConnect retrofit = new RetrofitConnect();
+                        retrofit.retro(getContext(), roomdaten, pruefJahr, stringaufteilung[5], aktuellePruefphase, aktuellerTermin);
+                        // Log.d("Test3",String.valueOf(stringaufteilung[5]));
                     }
-                }// define an adapter
-                database.clearAllTables();
-                aktuellerTermin = "0";
-                //initialisierung room database
-                AppDatabase roomdaten =  AppDatabase.getAppDatabase(getContext());
-                //retrofit auruf
-                for( int a = 1; a < validation.size();a++ ) {
-                    String[] stringaufteilung = validation.get(a).split("");
-                    RetrofitConnect retrofit = new RetrofitConnect();
-                    retrofit.retro(getContext(),roomdaten, pruefJahr, stringaufteilung[5], aktuellePruefphase, aktuellerTermin);
-                   // Log.d("Test3",String.valueOf(stringaufteilung[5]));
                 }
             }
         });

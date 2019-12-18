@@ -42,6 +42,7 @@ public class Favoritenfragment extends Fragment {
     private RecyclerView recyclerView;
     private CalendarView calendar;
     private  Button btnsuche;
+    List<Boolean> check = new ArrayList<>();
 
     // Datenbank initialisierung
     AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
@@ -68,6 +69,7 @@ public class Favoritenfragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         calendar = (CalendarView) v.findViewById(R.id.caCalender);
         btnsuche = (Button) v.findViewById(R.id.btnDatum);
+
         calendar.setVisibility(View.GONE);
         List<String> studiengang = new ArrayList<>();
         List<String> profnamen = new ArrayList<>();
@@ -88,6 +90,7 @@ public class Favoritenfragment extends Fragment {
                 //input2.add(pruefplandaten.getProfname()[Integer.valueOf(response.get(i).toString())] + " " + pruefplandaten.getSemester()[Integer.valueOf(response.get(i).toString())] + " ");
                 datum.add(pruefplandaten.get(i).getDatum());
                 pruefungsNr.add(pruefplandaten.get(i).getID());
+                check.add(true);
             }
         }
 
@@ -114,6 +117,7 @@ public class Favoritenfragment extends Fragment {
                             public void onClick(View v) {
                                 if (txtSecondScreen.getVisibility() == v.VISIBLE) {
                                     txtSecondScreen.setVisibility(v.GONE);
+                                    check.set(position,false);
 
                                 } else {
                                     txtSecondScreen.setVisibility(v.VISIBLE);
@@ -121,6 +125,15 @@ public class Favoritenfragment extends Fragment {
                                 }
                             }
                         });
+
+                        try{
+                            if(check.get(position)) {
+                                txtSecondScreen.setVisibility(v.VISIBLE);
+                                txtSecondScreen.setText(((MyAdapterfavorits) mAdapter).giveString(position));
+                            }}
+                        catch(Exception e){
+
+                        }
                     }
                 })
         );

@@ -160,6 +160,7 @@ public class RetrofitConnect {
                             pruefplan.setModul(response.body().get(i).getModul());
                             pruefplan.setSemester(response.body().get(i).getSemester());
                             pruefplan.setTermin(response.body().get(i).getTermin());
+                            pruefplan.setRaum(response.body().get(i).getRaum());
 
                             //lokale datenbank initialiseren
                              AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);

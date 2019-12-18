@@ -70,6 +70,10 @@ public class JsonResponse {
         @Expose
         private String ID;
 
+    @SerializedName("Raum")
+    @Expose
+    private String Raum;
+
 
 
         public String getErstpruefer() {
@@ -80,7 +84,16 @@ public class JsonResponse {
             this.Erstpruefer = erstpruefer;
         }
 
-        public String getDatum() {
+    public String getRaum() {
+        return Raum;
+    }
+
+    public void setRaum(String raum) {
+        this.Raum = raum;
+    }
+
+
+    public String getDatum() {
             return Datum;
         }
 

@@ -107,6 +107,7 @@ public class TerminefragmentSuche extends Fragment {
         List<String> id = new ArrayList<>();
         List<String> ID = new ArrayList<>();
         List<String> Pruefform = new ArrayList<>();
+        List<String> raum = new ArrayList<>();
 
         //Variablen mit Werten aus der lokalen Datenbank füllen
         for (int i = 0; i < WerteZumAnzeigen.size(); i++) {
@@ -116,12 +117,13 @@ public class TerminefragmentSuche extends Fragment {
             id.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul());
             ID.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getID());
             Pruefform.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getPruefform());
+            raum.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getRaum());
             check.add(true);
 
         }
 
         // define an adapter
-        mAdapter = new MyAdapter(studiengangundmodul, prueferundsemster, datum, id,ID,Pruefform,mLayout);
+        mAdapter = new MyAdapter(studiengangundmodul, prueferundsemster, datum, id,ID,Pruefform,mLayout,raum);
         recyclerView.setAdapter(mAdapter);
 
 
@@ -278,6 +280,8 @@ public class TerminefragmentSuche extends Fragment {
                     List<String> id = new ArrayList<>();
                     List<String> ID = new ArrayList<>();
                     List<String> Pruefform = new ArrayList<>();
+                    List<String> raum = new ArrayList<>();
+
                     //Lokale Datenbank initialisieren
                     AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
                     List<Pruefplan> userdaten = roomdaten.userDao().getAll(validation);
@@ -289,10 +293,11 @@ public class TerminefragmentSuche extends Fragment {
                         id.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul());
                         ID.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getID());
                         Pruefform.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getPruefform());
+                        raum.add(userdaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getRaum());
 
                     }
                     // definiere den adapter
-                    mAdapter = new MyAdapter(modulundstudiengang, prueferundsemster, datum, id,ID,Pruefform,mLayout);
+                    mAdapter = new MyAdapter(modulundstudiengang, prueferundsemster, datum, id,ID,Pruefform,mLayout,raum);
                     recyclerView.setAdapter(mAdapter);
                     speicher = true;
                 } else {
@@ -308,6 +313,8 @@ public class TerminefragmentSuche extends Fragment {
                             List<String> modul = new ArrayList<>();
                             List<String> ID = new ArrayList<>();
                             List<String> Pruefform = new ArrayList<>();
+                            List<String> raum = new ArrayList<>();
+
                             //Creating editor to store uebergebeneModule to shared preferences
                             if (month < 10) {
                                 month2 = "0" + String.valueOf(month + 1);
@@ -330,11 +337,12 @@ public class TerminefragmentSuche extends Fragment {
                                     modul.add(userdaten.get(i).getModul());
                                     ID.add(userdaten.get(i).getID());
                                     Pruefform.add(userdaten.get(i).getPruefform());
+                                    raum.add(userdaten.get(i).getRaum());
                                 }
                             }
                             // define an adapter
                             //Werte an den Adapter übergeben
-                            mAdapter = new MyAdapter(modulundstudiengang, prueferundsemester, datum, modul,ID,Pruefform,mLayout);
+                            mAdapter = new MyAdapter(modulundstudiengang, prueferundsemester, datum, modul,ID,Pruefform,mLayout,raum);
                             //Anzeigen von recyclerview
                             recyclerView.setAdapter(mAdapter);
                         }

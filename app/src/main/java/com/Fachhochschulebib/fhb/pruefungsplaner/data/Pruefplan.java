@@ -48,12 +48,23 @@ public class Pruefplan {
     @ColumnInfo(name = "Termin")
     private String Termin;
 
+    @ColumnInfo(name = "Raum")
+    private String Raum;
+
     public String getErstpruefer() {
         return Erstpruefer;
     }
 
     public void setErstpruefer(String erstpruefer) {
         this.Erstpruefer = erstpruefer;
+    }
+
+    public String getRaum() {
+        return Raum;
+    }
+
+    public void setRaum(String raum) {
+        this.Raum = raum;
     }
 
     public String getDatum() {

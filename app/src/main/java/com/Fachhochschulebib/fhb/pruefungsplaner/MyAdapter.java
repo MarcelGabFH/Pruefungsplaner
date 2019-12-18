@@ -48,6 +48,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private List<String> prueferUSemster;
     private List<String> index;
     private List<String> Datum;
+    private List<String> raumAdapter;
     private List<String> pruefform;
     private boolean speicher;
     private String studiengang;
@@ -60,12 +61,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
    private GregorianCalendar calDate =new GregorianCalendar();
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(List<String> module, List<String> prueferUndSemester, List<String> daatum, List<String> index2,List<String> ppid,List<String> pruefformList,RecyclerView.LayoutManager mLayout) {
+    public MyAdapter(List<String> module, List<String> prueferUndSemester, List<String> daatum, List<String> index2,List<String> ppid,List<String> pruefformList,RecyclerView.LayoutManager mLayout,List<String>  raum) {
         uebergebeneModule = module;
         Datum = daatum;
         prueferUSemster = prueferUndSemester;
         index = index2;
         pruefplanid = ppid;
+        raumAdapter = raum;
         pruefform = pruefformList;
         aktuelleslayout = mLayout;
 
@@ -279,14 +281,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 studiengang = (studiengang + " " + modulname[b]);
 
             }
-
+        String raum2 = raumAdapter.get(position);
         String[] aufteilung1 = Datum.get(position).split(" ");
         String[] aufteilung2 = aufteilung1[0].split("-");
         //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
         final String[] sa = prueferUSemster.get(position).split(" ");
 
         //String mit dem inhalt für weitere Informationen
-        String s = ("Informationen zur Prüfung \n \n Studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " + aufteilung2[2].toString() + "." + aufteilung2[1].toString() + "." + aufteilung2[0].toString() + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() +"Uhr" + " \n Raum: Unbekannt " +"\n Prüfungsform: "+ pruefform.get(position
+        String s = ("Informationen zur Prüfung \n \n Studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " + aufteilung2[2].toString() + "." + aufteilung2[1].toString() + "." + aufteilung2[0].toString() + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() +" Uhr" + " \n Raum: "+ raum2 +"\n Prüfungsform: "+ pruefform.get(position
         ) + "\n \n \n \n \n \n ");
 
         return (s);

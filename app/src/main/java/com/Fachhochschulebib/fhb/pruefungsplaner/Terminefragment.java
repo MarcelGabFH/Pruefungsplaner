@@ -65,8 +65,7 @@ public class Terminefragment extends Fragment {
     private String date;
     private String month2;
     private String day2;
-    private int positionZuvor = 0;
-    private String positionspeichern;
+    int positionAlt = 0;
     private int aktuellePosition = 0;
     private String year2;
     List<Boolean> check = new ArrayList<>();
@@ -98,22 +97,23 @@ public class Terminefragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            for (int c = 0; c < 1000; c++) {
-                try {
-                    Thread.sleep(3000);
-                    if (RetrofitConnect.checkuebertragung)
-                    {
+            List<Pruefplan> datenbank = Terminefragment.this.datenbank.userDao().getAll(validation);
+            if(datenbank.size() < 1) {
+                for (int c = 0; c < 1000; c++) {
+                    try {
+                        Thread.sleep(3000);
+                        if (RetrofitConnect.checkuebertragung) {
+                            return "Executed";
+                        }
 
-                        return "Executed";
+                    } catch (InterruptedException e) {
+                        Thread.interrupted();
+
                     }
-
-                } catch (InterruptedException e) {
-                    Thread.interrupted();
-                    return"Executed";
                 }
             }
 
-            return "Executed";
+            return "null";
         }
 
         @Override
@@ -126,6 +126,7 @@ public class Terminefragment extends Fragment {
             List<String> id = new ArrayList<>();
             List<String> ID = new ArrayList<>();
             List<String> pruefform = new ArrayList<>();
+            List<String> raum = new ArrayList<>();
 
             for (int i = 0; i < datenbank.size(); i++) {
                 studiengangUndModul.add(datenbank.get(i).getModul() + "\n " + datenbank.get(i).getStudiengang());
@@ -134,11 +135,13 @@ public class Terminefragment extends Fragment {
                 id.add(datenbank.get(i).getID());
                 ID.add(datenbank.get(i).getID());
                 pruefform.add(datenbank.get(i).getPruefform());
+                raum.add(datenbank.get(i).getRaum());
                 check.add(true);
             }// define an adapter
 
            // System.out.println(String.valueOf(userdaten.size()));
-            mAdapter = new MyAdapter(studiengangUndModul, prueferundModul, datum, id,ID,pruefform,mLayout);
+            mAdapter = new MyAdapter(studiengangUndModul, prueferundModul, datum, id,ID,pruefform,mLayout,raum);
+
             recyclerView.setAdapter(mAdapter);
             // might want to change "executed" for the returned string passed
             // into onPostExecute() but that is upto you
@@ -181,7 +184,7 @@ public class Terminefragment extends Fragment {
 
 
 
-        List<Pruefplan> pruefplandaten = datenbank.userDao().getAll(validation);
+        final List<Pruefplan> pruefplandaten = datenbank.userDao().getAll(validation);
 
         List<String> modulundstudiengang = new ArrayList<>();
         List<String> prueferundsemester = new ArrayList<>();
@@ -189,6 +192,7 @@ public class Terminefragment extends Fragment {
         List<String> id = new ArrayList<>();
         List<String> ID = new ArrayList<>();
         List<String> Pruefform = new ArrayList<>();
+        List<String> raum = new ArrayList<>();
 
 
 
@@ -199,6 +203,7 @@ public class Terminefragment extends Fragment {
             id.add(pruefplandaten.get(i).getID());
             ID.add(pruefplandaten.get(i).getID());
             Pruefform.add(pruefplandaten.get(i).getPruefform());
+            raum.add(pruefplandaten.get(i).getRaum());
             check.add(true);
         }// define an adapter
 
@@ -259,6 +264,7 @@ public class Terminefragment extends Fragment {
                         }catch (Exception e)
                         { }
 */
+                    positionAlt = position;
                     }
                 })
         );
@@ -342,7 +348,7 @@ public class Terminefragment extends Fragment {
 
 */
 
-        mAdapter = new MyAdapter(modulundstudiengang, prueferundsemester, datum, id,ID,Pruefform,mLayout);
+        mAdapter = new MyAdapter(modulundstudiengang, prueferundsemester, datum, id,ID,Pruefform,mLayout,raum);
         recyclerView.setAdapter(mAdapter);
 
 
@@ -379,6 +385,8 @@ public class Terminefragment extends Fragment {
                     //Datenbankaufruf
                     List<Pruefplan> userdaten = datenbank.userDao().getAll(validation);
 
+
+
                     //variablen für die Datenbankwerte
                     List<String> studiengangundmodul = new ArrayList<>();
                     List<String> prueferundsemester = new ArrayList<>();
@@ -386,6 +394,7 @@ public class Terminefragment extends Fragment {
                     List<String> id = new ArrayList<>();
                     List<String> ID = new ArrayList<>();
                     List<String> pruefform = new ArrayList<>();
+                    List<String> raum = new ArrayList<>();
 
 
                     //hinzufügen der Datenbank werte zu den Variablen
@@ -396,6 +405,7 @@ public class Terminefragment extends Fragment {
                         id.add(userdaten.get(i).getID());
                         ID.add(userdaten.get(i).getID());
                         pruefform.add(userdaten.get(i).getPruefform());
+                        raum.add(userdaten.get(i).getRaum());
                     }// define an adapter
 
 
@@ -410,7 +420,7 @@ public class Terminefragment extends Fragment {
                         }}
                    // System.out.println(String.valueOf(userdaten.size()));
                     //Recyclerview Adapter mit Werten füllen
-                    mAdapter = new MyAdapter(studiengangundmodul, prueferundsemester, datum, id,ID,pruefform,mLayout);
+                    mAdapter = new MyAdapter(studiengangundmodul, prueferundsemester, datum, id,ID,pruefform,mLayout,raum);
                     recyclerView.setAdapter(mAdapter);
                     speicher = true;
                 } else {
@@ -431,6 +441,7 @@ public class Terminefragment extends Fragment {
                             List<String> id = new ArrayList<>();
                             List<String> ID = new ArrayList<>();
                             List<String> Pruefform = new ArrayList<>();
+                            List<String> raum = new ArrayList<>();
 
                             //unnötige Werte entfernen
                             if (month < 9) {
@@ -459,11 +470,13 @@ public class Terminefragment extends Fragment {
                                     id.add(userdaten.get(i).getModul());
                                     ID.add(userdaten.get(i).getID());
                                     Pruefform.add(userdaten.get(i).getPruefform());
+                                    raum.add(userdaten.get(i).getRaum());
+
                                 }
                             }// define an adapter
 
                             //Adapter mit Werten füllen
-                            mAdapter = new MyAdapter(studiengangundmodul, prueferundsemester, datum, id,ID,Pruefform,mLayout);
+                            mAdapter = new MyAdapter(studiengangundmodul, prueferundsemester, datum, id,ID,Pruefform,mLayout,raum);
 
                             //Anzeigen
                             recyclerView.setAdapter(mAdapter);
