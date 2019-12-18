@@ -181,7 +181,7 @@ public class Optionen extends Fragment {
                                 String[] splitDatumUndUhrzeit = pruefplandaten.get(i).getDatum().split(" ");
                                 System.out.println(splitDatumUndUhrzeit[0]);
                                 String[] splitTagMonatJahr = splitDatumUndUhrzeit[0].split("-");
-                                System.out.println(splitDatumUndUhrzeit[0]);
+                                //System.out.println(splitDatumUndUhrzeit[0]);
                                // holder.txtthirdline.setText("Uhrzeit: " + splitDatumUndUhrzeit[1].substring(0, 5).toString());
                                // holder.button.setText(splitTagMonatJahr[2].toString() + "." + splitTagMonatJahr[1].toString() + "." + splitTagMonatJahr[0].toString());
 
@@ -228,10 +228,20 @@ public class Optionen extends Fragment {
             public void afterTextChanged(Editable s) {
 
 
-                    mEditorAdresse.clear();
-                    mEditorAdresse.apply();
-                    mEditorAdresse.putString("Server-Adresse2", txtAdresse.getText().toString());
-                    mEditorAdresse.apply();
+                    String splitAdresse = txtAdresse.getText().subSequence(0,7).toString();
+                    String splitAdresseEnde = String.valueOf(txtAdresse.getText().charAt(txtAdresse.getText().length()-1));
+
+                    //System.out.println(splitAdresseEnde);
+
+                    if(splitAdresse.equals("http://")) {
+                        if(splitAdresseEnde.equals("/")) {
+                            if(android.util.Patterns.WEB_URL.matcher(txtAdresse.getText().toString()).matches()){
+                                mEditorAdresse.clear();
+                                mEditorAdresse.apply();
+                                mEditorAdresse.putString("Server-Adresse2", txtAdresse.getText().toString());
+                                mEditorAdresse.apply();
+                            }
+                    }}
 
             }
             @Override
@@ -394,6 +404,7 @@ public class Optionen extends Fragment {
                 catch (final Exception e)
                 {
                     keineVerbindung();
+
                 }
 
             }
