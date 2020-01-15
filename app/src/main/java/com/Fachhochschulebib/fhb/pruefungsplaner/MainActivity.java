@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Output Monat",String.valueOf(kalenderMonat));
 
 
-        if (kalenderMonat  <= 3)
+        if (kalenderMonat  <= 4)
         {
             aktuellePruefphase = "W";
             List<String> spinnerArray3 = new ArrayList<String>();
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        if (kalenderMonat  > 3)
+        if (kalenderMonat  > 4)
         {
             aktuellePruefphase = "S";
             List<String> spinnerArray3 = new ArrayList<String>();
@@ -204,6 +204,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+
+        Log.d("Output thisyear",String.valueOf(aktuellePruefphase));
+        //Log.d("Output thisyear",String.valueOf(aktuellePruefphase));
+
 
 
 

@@ -124,13 +124,16 @@ public class RetrofitConnect {
                             String[] stdate2 = formattedDate.split("-");
                             String st= stdate[1].replace("0", "");
 
+                            String st2= stdate2[1].replace("0", "");
+
+
                             //Überprüfung System out
                             System.out.println("Current time => " + stdate2[1]);
                             System.out.println("Current time => " + st);
                             System.out.println("Current time => " + termine);
 
                             //überprüfung erste Prüfungsphase oder zweite
-                            if(Integer.valueOf(st) > Integer.valueOf(stdate2[1]))
+                            if(Integer.valueOf(st) > (Integer.valueOf(stdate2[1] + 2) ))
                             {
                                 if (termine.equals("0")) {
                                     if(!checkTermin.equals("1")) {
