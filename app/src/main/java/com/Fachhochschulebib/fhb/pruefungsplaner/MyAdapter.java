@@ -46,7 +46,7 @@ import java.util.TimeZone;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public List<String> uebergebeneModule;
     private List<String> prueferUSemster;
-    private List<String> index;
+    private List<String> moduleList;
     private List<String> Datum;
     private List<String> raumAdapter;
     private List<String> pruefform;
@@ -61,11 +61,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
    private GregorianCalendar calDate =new GregorianCalendar();
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(List<String> module, List<String> prueferUndSemester, List<String> daatum, List<String> index2,List<String> ppid,List<String> pruefformList,RecyclerView.LayoutManager mLayout,List<String>  raum) {
+    public MyAdapter(List<String> module, List<String> prueferUndSemester, List<String> daatum, List<String> modul,List<String> ppid,List<String> pruefformList,RecyclerView.LayoutManager mLayout,List<String>  raum) {
         uebergebeneModule = module;
         Datum = daatum;
         prueferUSemster = prueferUndSemester;
-        index = index2;
+        moduleList = modul;
         pruefplanid = ppid;
         raumAdapter = raum;
         pruefform = pruefformList;

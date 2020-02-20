@@ -92,7 +92,7 @@ public class RetrofitConnect {
                     String checkTermin = "0";
                     for(int j = 0; j < database.size();j++) {
                         if (database.get(j).getValidation().equals(validation)){
-                            System.out.println("aufgerufen2223");
+                            //System.out.println("aufgerufen2223");
                             checkTermin = database.get(j).getTermin();
                             checkvalidate = true;
 
@@ -105,59 +105,57 @@ public class RetrofitConnect {
                         Pruefplan pruefplan = new Pruefplan();
 
                         //Festlegen vom Dateformat
-                        String date3;
-                        String date2 = response.body().get(i).getDatum();
-                        date3 = date2.replaceFirst("CET", "");
-                        date3 = date3.replaceFirst("CEST","");
-                        String targetdatevalue;
-                        targetdatevalue = null;
+                        String datumZeitzone;
+                        String datumDerPrüfung = response.body().get(i).getDatum();
+                        datumZeitzone = datumDerPrüfung.replaceFirst("CET", "");
+                        datumZeitzone = datumZeitzone.replaceFirst("CEST","");
+                        String datumLetzePruefungFormatiert;
+                        datumLetzePruefungFormatiert = null;
                         try {
                             DateFormat dateFormat = new SimpleDateFormat(
                                     "EEE MMM dd HH:mm:ss yyyy", Locale.US);
-                            Date date4 = dateFormat.parse(date3);
+                            Date datumLetztePrüfung = dateFormat.parse(datumZeitzone);
                             SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            targetdatevalue = targetFormat.format(date4);
-                            String[] stdate = targetdatevalue.split("-");
-                            Date c = Calendar.getInstance().getTime();
+                            datumLetzePruefungFormatiert = targetFormat.format(datumLetztePrüfung);
+                            Date datumAktuell = Calendar.getInstance().getTime();
                             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String formattedDate = df.format(c);
-                            String[] stdate2 = formattedDate.split("-");
-                            String st= stdate[1].replace("0", "");
-
-                            String st2= stdate2[1].replace("0", "");
+                            String datumAktuellFormatiert = df.format(datumAktuell);
 
 
-                            //Überprüfung System out
-                            System.out.println("Current time => " + stdate2[1]);
-                            System.out.println("Current time => " + st);
-                            System.out.println("Current time => " + termine);
+                            Log.d("datum letzte prüfung",datumLetzePruefungFormatiert);
+                            Log.d("datum aktuell",datumAktuellFormatiert);
 
-                            //überprüfung erste Prüfungsphase oder zweite
-                            if(Integer.valueOf(st) > (Integer.valueOf(stdate2[1] + 2) ))
+
+                            //auskommentiert weil noch keine neuen Pürungstermine hochgeladen wurden.
+
+                            /*
+                            //Vergleich aktuelles Datum und datum der letzen Prüfung.
+                            //wenn true dann datenbank löschen und die neuen Prüfungen laden
+                            if(datumAktuell.getTime() > datumLetztePrüfung.getTime())
                             {
                                 if (termine.equals("0")) {
-                                    if(!checkTermin.equals("1")) {
-                                        //roomdaten.clearAllTables();
+                                    if(!termine.equals("1")) {
+                                        roomdaten.clearAllTables();
                                     }
+                                    //überprüfung zweiter termin aktuelle prüfperiode
                                     retro(ctx2, roomdaten, jahr, studiengang, pruefungsphase, "1");
                                     System.out.println("aufgerufen");
                                     break;
                                 }
                             }
 
+                             */
+
                         } catch (ParseException e) {
                             e.printStackTrace();
-
                         }
-                        //Toast.makeText(this, date3.toString(), Toast.LENGTH_LONG).show();
-
 
                          if(!checkvalidate){
                              System.out.println("aufgerufen222");
                              //erhaltene Werte zur Datenbank hinzufügen
                             pruefplan.setErstpruefer(response.body().get(i).getErstpruefer());
                             pruefplan.setZweitpruefer(response.body().get(i).getZweitpruefer());
-                            pruefplan.setDatum(String.valueOf(targetdatevalue));
+                            pruefplan.setDatum(String.valueOf(datumLetzePruefungFormatiert));
                             pruefplan.setID(response.body().get(i).getID());
                             pruefplan.setStudiengang(response.body().get(i).getStudiengang());
                             pruefplan.setModul(response.body().get(i).getModul());
@@ -168,20 +166,19 @@ public class RetrofitConnect {
                             //lokale datenbank initialiseren
                              AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
                              List<Pruefplan> userdaten2 = database2.userDao().getAll2();
-                             Log.d("Test4", String.valueOf(userdaten2.size()));
+                             //Log.d("Test4", String.valueOf(userdaten2.size()));
 
                              try {
                                  for (int b = 0; b < Optionen.ID.size(); b++) {
                                      if (pruefplan.getID().equals(Optionen.ID.get(b))) {
-
-                                         Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
+                                         //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
                                          pruefplan.setFavorit(true);
                                      }
                                  }
                              }
                              catch (Exception e)
                              {
-
+                                Log.d("Fehler RetrofitConnect","Fehler beim ermitteln der favorisierten Prüfungen");
 
                              }
 

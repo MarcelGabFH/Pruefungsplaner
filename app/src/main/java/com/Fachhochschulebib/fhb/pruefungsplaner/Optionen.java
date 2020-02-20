@@ -8,7 +8,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 // autor:
 // inhalt:  Abfragen ob prüfungen zum Kalender hinzugefügt werden sollen  und Methoden zum löschen, aktualisieren der Datenbank
-// zugriffsdatum: 11.12.19
+// zugriffsdatum: 20.2.20
 //
 //
 //
@@ -65,6 +65,8 @@ public class Optionen extends Fragment {
     private GregorianCalendar calDate =new GregorianCalendar();
     private String studiengang;
     static EditText txtAdresse;
+
+
     public static List<String> ID = new ArrayList<String>();
 
 
@@ -128,7 +130,7 @@ public class Optionen extends Fragment {
             try {
                 response = new JSONArray(strServerAdresse);
             } catch (JSONException e) {
-
+                Log.d("Fehler Optionen", "Serveradresse Fehler");
             }
         }
 
@@ -142,13 +144,11 @@ public class Optionen extends Fragment {
                         speicher = true;
                     }
                 } catch (JSONException e) {
+                    Log.d("Fehler Optionen", "Google Kalender aktivierung");
 
                 }
             }
         }
-        if (!speicher) {
-        }
-
 
         //Abfrage ob der Google kalender Ein/Ausgeschaltet ist
         SWgooglecalender.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -164,29 +164,27 @@ public class Optionen extends Fragment {
 
 
                     AppDatabase datenbank =  AppDatabase.getAppDatabase(getContext());
-                    List<Pruefplan> pruefplandaten = datenbank.userDao().getAll2();
+                    List<Pruefplan> pruefPlanDaten = datenbank.userDao().getAll2();
 
 
                     CheckGoogleCalendar googlecal = new CheckGoogleCalendar();
                     googlecal.setCtx(getContext());
 
-                    for(int i = 0; i <pruefplandaten.size(); i++)
+                    for(int i = 0; i <pruefPlanDaten.size(); i++)
                     {
-                        if (pruefplandaten.get(i).getFavorit()) {
-                            String id = pruefplandaten.get(i).getID();
+                        //überprüfung von favorisierten Prüfungen
+                        if (pruefPlanDaten.get(i).getFavorit()) {
+                            String id = pruefPlanDaten.get(i).getID();
 
+                            //überprüfung von ein/aus Google Kalender
                             if(googlecal.checkCal(Integer.valueOf(id)))
                             {
                                 //ermitteln von benötigten Variablen
-                                String[] splitDatumUndUhrzeit = pruefplandaten.get(i).getDatum().split(" ");
+                                String[] splitDatumUndUhrzeit = pruefPlanDaten.get(i).getDatum().split(" ");
                                 System.out.println(splitDatumUndUhrzeit[0]);
                                 String[] splitTagMonatJahr = splitDatumUndUhrzeit[0].split("-");
-                                //System.out.println(splitDatumUndUhrzeit[0]);
-                               // holder.txtthirdline.setText("Uhrzeit: " + splitDatumUndUhrzeit[1].substring(0, 5).toString());
-                               // holder.button.setText(splitTagMonatJahr[2].toString() + "." + splitTagMonatJahr[1].toString() + "." + splitTagMonatJahr[0].toString());
-
-                                studiengang = pruefplandaten.get(i).getStudiengang();
-                                studiengang = studiengang + " " + pruefplandaten.get(i).getModul();
+                                studiengang = pruefPlanDaten.get(i).getStudiengang();
+                                studiengang = studiengang + " " + pruefPlanDaten.get(i).getModul();
                                 int uhrzeitStart = Integer.valueOf(splitDatumUndUhrzeit[1].substring(0, 2));
                                 int uhrzeitEnde = Integer.valueOf(splitDatumUndUhrzeit[1].substring(4, 5));
                                 calDate = new GregorianCalendar(Integer.valueOf(splitTagMonatJahr[0]), (Integer.valueOf(splitTagMonatJahr[1]) - 1), Integer.valueOf(splitTagMonatJahr[2]), uhrzeitStart, uhrzeitEnde);
@@ -320,8 +318,6 @@ public class Optionen extends Fragment {
         String serveradresse = mSharedPreferencesAdresse.getString("Server-Adresse2","http://thor.ad.fh-bielefeld.de:8080/");
 
         boolean a = pingUrl(serveradresse);
-        //boolean a = pingUrl("192.168.178.39:44631/PruefplanApplika/");
-        //http://localhost:44631/PruefplanApplika/
     }
 
     //Methode zum Anzeigen das keine Verbindungs zum Server möglich ist
@@ -415,24 +411,15 @@ public class Optionen extends Fragment {
 
 
 
-    public void insertfav() {
-
-
-    }
-
+    //Google Kalender einträge löschen
     public void kalenderLöschen(){
         CheckGoogleCalendar cal = new CheckGoogleCalendar();
         cal.setCtx(getContext());
         cal.clearCal();
 
-        try {
-
-        }catch (Exception e)
-        {}
-
-
     }
 
+    //Google Kalender aktualisieren
     public void kalenderUpdate(){
         CheckGoogleCalendar cal = new CheckGoogleCalendar();
         cal.setCtx(getContext());

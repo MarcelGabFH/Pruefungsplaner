@@ -75,6 +75,7 @@ public class Favoritenfragment extends Fragment {
         List<String> profnamen = new ArrayList<>();
         List<String> datum = new ArrayList<>();
         List<String> pruefungsNr = new ArrayList<>();
+        List<String> raum = new ArrayList<>();
         btnsuche.setVisibility(View.INVISIBLE);
         List<Pruefplan> pruefplandaten = roomdaten.userDao().getAll2();
 
@@ -83,20 +84,18 @@ public class Favoritenfragment extends Fragment {
         // Favorisierte Prüfungen für die Anzeige vorbereiten
         for (int i = 0; i < pruefplandaten.size(); i++) {
             if (pruefplandaten.get(i).getFavorit()) {
-
-                String[] date2 = pruefplandaten.get(i).getDatum().toString().split(" ");
                 studiengang.add(pruefplandaten.get(i).getModul() + " " + pruefplandaten.get(i).getStudiengang());
                 profnamen.add(pruefplandaten.get(i).getErstpruefer() + " " + pruefplandaten.get(i).getZweitpruefer() + " " + pruefplandaten.get(i).getSemester().toString());
-                //input2.add(pruefplandaten.getProfname()[Integer.valueOf(response.get(i).toString())] + " " + pruefplandaten.getSemester()[Integer.valueOf(response.get(i).toString())] + " ");
                 datum.add(pruefplandaten.get(i).getDatum());
                 pruefungsNr.add(pruefplandaten.get(i).getID());
+                raum.add(pruefplandaten.get(i).getRaum());
                 check.add(true);
             }
         }
 
         // definiere adapter
         // übergabe der variablen an den Recyclerview Adapter, für die darstellung
-        mAdapter = new MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr);
+        mAdapter = new MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr,raum);
 
 
 

@@ -71,7 +71,7 @@ public class CheckGoogleCalendar {
         try {
             elements = stringids.split("/");
         }catch (Exception e){
-
+            Log.d("Fehler CheckGoogleCal","Fehler beim aufteilen der String elemente");
         }
         // step two : convert String array to list of String
         List<String> fixedLenghtList = Arrays.asList(elements);

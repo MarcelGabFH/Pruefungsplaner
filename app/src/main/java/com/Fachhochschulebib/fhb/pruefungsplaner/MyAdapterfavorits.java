@@ -1,8 +1,7 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,29 +33,34 @@ import java.util.List;
 
 
 public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.ViewHolder> {
-    private List<String> moduleUndStudiengangList;
-    private List<String> PrueferUndSemesterList;
+    private List<String> moduleUndStudiengang;
+    private List<String> PrueferUndSemester;
     private List<String> ppid;
     private List<String> datum;
+    private List<String> raum2;
     private String studiengang;
     private String name;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapterfavorits(List<String> moduleList, List<String> studiengangList, List<String> datumList, List<String> pruefplanidList) {
-        moduleUndStudiengangList = moduleList;
+    public MyAdapterfavorits(List<String> moduleList, List<String> studiengangList, List<String> datumList, List<String> pruefplanidList,List<String> raum) {
+        moduleUndStudiengang = moduleList;
         datum = datumList;
-        PrueferUndSemesterList = studiengangList;
+        PrueferUndSemester = studiengangList;
         ppid = pruefplanidList;
+        raum2 = raum;
+
+
+
 
     }
 
     public void add(int position, String item, String studiengang) {
-        moduleUndStudiengangList.add(position, item);
+        moduleUndStudiengang.add(position, item);
         notifyItemInserted(position);
     }
 
     public void remove(int position) {
-        moduleUndStudiengangList.remove(position);
+        moduleUndStudiengang.remove(position);
         notifyItemRemoved(position);
     }
 
@@ -80,7 +84,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        name = moduleUndStudiengangList.get(holder.getAdapterPosition());
+        name = moduleUndStudiengang.get(holder.getAdapterPosition());
         holder.txtHeader.setText(name);
         //Prüfitem von der Favoritenliste löschen
         holder.ivicon.setOnClickListener(new OnClickListener() {
@@ -101,8 +105,8 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
             }
         });
 
-        holder.txtFooter.setText("Prüfer: " + PrueferUndSemesterList.get(position).toString());
-        name = moduleUndStudiengangList.get(position);
+        holder.txtFooter.setText("Prüfer: " + PrueferUndSemester.get(position).toString());
+        name = moduleUndStudiengang.get(position);
         String[] modulname = name.split(" ");
         studiengang = "";
         int b;
@@ -115,7 +119,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         String[] splitDatumUndUhrzeit = datum.get(position).split(" ");
         String[] splitTagMonatJahr = splitDatumUndUhrzeit[0].split("-");
         holder.txtthirdline.setText("Uhrzeit: " + splitDatumUndUhrzeit[1].substring(0, 5).toString() + " datum: " + splitTagMonatJahr[2].toString() + "." + splitTagMonatJahr[1].toString() + "." + splitTagMonatJahr[0].toString());
-        final String[] splitPrueferUndSemester = PrueferUndSemesterList.get(position).split(" ");
+        final String[] splitPrueferUndSemester = PrueferUndSemester.get(position).split(" ");
         holder.txtFooter.setText("Prüfer: " + splitPrueferUndSemester[0] + ", " + splitPrueferUndSemester[1] + "  Semester: " + splitPrueferUndSemester[2]);
 
 
@@ -127,13 +131,13 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return moduleUndStudiengangList.size();
+        return moduleUndStudiengang.size();
     }
 
     public String giveString(int position) {
 
         try {
-            String name = moduleUndStudiengangList.get(position);
+            String name = moduleUndStudiengang.get(position);
             String[] modulname = name.split(" ");
             studiengang = "";
             int b;
@@ -145,12 +149,13 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
             String[] aufteilung1 = datum.get(position).split(" ");
             String[] aufteilung2 = aufteilung1[0].split("-");
             //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
-            final String[] sa = PrueferUndSemesterList.get(position).split(" ");
+            final String[] sa = PrueferUndSemester.get(position).split(" ");
             //AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
-            String s = ("Informationen zur Prüfung \n \n Studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " + aufteilung2[2].toString() + "." + aufteilung2[1].toString() + "." + aufteilung2[0].toString() + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() +" Uhr" + " \n Raum: Unbekannt " +"\n "+ "\n \n \n \n \n \n ");
+            String s = ("Informationen zur Prüfung \n \n Studiengang: " + modulname[modulname.length - 1] + "\n Modul: " + studiengang + "\n Erstprüfer: " + sa[0] + " \n Zweitprüfer: " + sa[1] + "\n Datum: " + aufteilung2[2].toString() + "." + aufteilung2[1].toString() + "." + aufteilung2[0].toString() + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() +" Uhr" + " \n Raum: "+ raum2.get(position) +"\n "+ "\n \n \n \n \n \n ");
 
             return (s);
         }catch(Exception e){
+            Log.d("Fehler Adapterfavorits","Fehler bei ermittlung der weiteren Informationen");
 
         }
         return ("0");

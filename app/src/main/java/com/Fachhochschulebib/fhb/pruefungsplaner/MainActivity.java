@@ -92,10 +92,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Zugriffrechte für den GoogleKalender
+
+        //Id für den Google Kalender
         final int callbackId = 42;
+
+
+        //Wert1: ID Google Kalender, Wert2: Rechte fürs Lesen, Wert3: Rechte fürs schreiben)
         checkPermission(callbackId, Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR);
-
-
 
         //OK Button, hier wird die neue activity aufgerufen --> aufruf von dem layout "hauptfenster" und der Klasse Tabelle
         Button btngo = (Button) findViewById(R.id.btnGO);
@@ -103,30 +106,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (spinnerArray.size() > 1) {
-                    AppDatabase databasePruefplan = AppDatabase.getAppDatabase(getBaseContext());
-                    List<Pruefplan> pruefplandaten = databasePruefplan.userDao().getAll2();
-                    //Log.d("Test4", String.valueOf(pruefplandaten.size()));
-
-                    for (int i = 0; i < pruefplandaten.size(); i++) {
-                        for (int j = 0; j < id.size(); j++) {
-                            if (pruefplandaten.get(i).getID().equals(id.get(j))) {
-
-                                //Log.d("Test4", String.valueOf(pruefplandaten.get(i).getID()));
-                                databasePruefplan.userDao().update(true, Integer.valueOf(pruefplandaten.get(i).getID()));
-                            }
-                        }
-                    }// define an adapter
-
-
-                    //initialisierung room database
-                    AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
-
-                    //retrofit auruf
-                    RetrofitConnect retrofit = new RetrofitConnect();
-                    aktuellerTermin = "0";
-                    retrofit.retro(getApplicationContext(), datenbank, pruefJahr, rueckgabeStudiengang, aktuellePruefphase, aktuellerTermin);
-
-
+                    //auslagern von Retrofit in einen Thread
+                    retroThread();
                     Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
                     startActivity(hauptfenster);
                 }
@@ -134,21 +115,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-        });
-
-
-        Button btngo2 = (Button) findViewById(R.id.btnGO2);
-        btngo2.setOnClickListener(new View.OnClickListener()
-
-            {
-                @Override
-                public void onClick (View v){
-
-                String validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
-
-                Checkverbindung(validation);
-
-            }
         });
 
         //definieren des Arrays jahreszeit
@@ -163,8 +129,7 @@ public class MainActivity extends AppCompatActivity {
         studiengang.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
 
 
-        //Kalender damit das aktuelle und die letzten 4 jahre auszuwählen
-
+        //Kalender damit für das aktuelle Jahr
         Calendar calendar = Calendar.getInstance();
         int kalenderMonat = calendar.get(Calendar.MONTH );
         Log.d("Output Monat",String.valueOf(kalenderMonat));
@@ -205,20 +170,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Log.d("Output thisyear",String.valueOf(aktuellePruefphase));
         //Log.d("Output thisyear",String.valueOf(aktuellePruefphase));
-
-
-
 
         //anzahl der elemente
         //adapter aufruf
-
+        SharedPreferences pruefperiode = getApplicationContext().getSharedPreferences("pruefperiode", 0);
+        String strJson = pruefperiode.getString("pruefperiode", "0");
         try {
             Checkverbindung("test");
-            SharedPreferences pruefperiode = getApplicationContext().getSharedPreferences("pruefperiode", 0);
             //Creating editor to store uebergebeneModule to shared preferencess
-            String strJson = pruefperiode.getString("pruefperiode", " ");
             TextView txtpruefperiode = (TextView) findViewById(R.id.txtpruefperiode);
             //second parameter is necessary ie.,Value to return if this preference does not exist.
             if (strJson != null) {
@@ -226,12 +186,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-        catch(Exception e) {
-            SharedPreferences pruefperiode = getApplicationContext().getSharedPreferences("pruefperiode", 0);
-            //Creating editor to store uebergebeneModule to shared preferencess
-            String strJson = pruefperiode.getString("pruefperiode", "0");
-            //second parameter is necessary ie.,Value to return if this preference does not exist.
 
+        //Wenn Verbindung zum Server nicht möglich dann Daten aus der Datenbank nehmen
+        catch(Exception e) {
             if (strJson != null) {
                 try {
                     jsonArrayStudiengaenge = new JSONArray(strJson);
@@ -241,14 +198,10 @@ public class MainActivity extends AppCompatActivity {
                         uebergabeAnSpinner();
                     }
                 } catch (Exception b) {
-
+                    Log.d("Datenbankfehler","Keine Daten aus der Datenbank vorhanden");
                 }
 
             }
-
-            pruefperiode = getApplicationContext().getSharedPreferences("pruefperiode", 0);
-            //Creating editor to store uebergebeneModule to shared preferencess
-            strJson = pruefperiode.getString("pruefperiode", "0");
             TextView txtpruefperiode = (TextView) findViewById(R.id.txtpruefperiode);
             //second parameter is necessary ie.,Value to return if this preference does not exist.
             if (strJson != null) {
@@ -270,9 +223,8 @@ public class MainActivity extends AppCompatActivity {
        String serveradresse = mSharedPreferencesAdresse.getString("Server-Adresse2","http://thor.ad.fh-bielefeld.de:8080/");
        boolean aktuelleurl = pingUrl(serveradresse + "PruefplanApplika/webresources/entities.studiengang");
        if (!aktuelleurl) {
-           Toast.makeText(getApplicationContext(), "Keine Verbindung zum Server möglich", Toast.LENGTH_SHORT).show();
+           Keineverbindung();
        }
-
    }
 
     public void Keineverbindung(){
@@ -282,7 +234,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Keine Verbindung zum Server möglich", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
 
@@ -292,8 +243,6 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 //Toast.makeText(getBaseContext(), "Prüfungen wurden aktualisiert", Toast.LENGTH_SHORT).show();
                 //spinnerarray für die studiengänge
-
-
                 //adapter aufruf
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                         getBaseContext(), R.layout.simple_spinner_item, spinnerArray);
@@ -305,13 +254,9 @@ public class MainActivity extends AppCompatActivity {
                 //spinner auswahl für den studiengang
                 spStudiengangMain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-
                         //((TextView) parent.getChildAt(0)).setBackgroundColor(Color.BLUE);
                         ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
-
                         //((TextView) parent.getChildAt(0)).setTextSize(5);
-
                         Studiengang.add(parent.getItemAtPosition(position).toString()); //this is your selected item
                         for (int i = 0 ; i < spinnerArray.size(); i++)
                         {
@@ -324,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 catch (Exception e)
                                 {
-
+                                    Log.d("uebergabeAnSpinner","Fehler parsen von uebergabeAnSpinner");
                                 }
                             }
                         }
@@ -343,9 +288,9 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
                 public void run() {
                     // Die studiengänge werden in einer shared preferences Variable gespeichert
-                SharedPreferences.Editor studiengangEditor;
-                SharedPreferences studiengaenge = getApplicationContext().getSharedPreferences("studiengaenge", 0);
-                //Creating editor to store uebergebeneModule to shared preferences
+                    //Creating editor to store uebergebeneModule to shared preferences
+                    SharedPreferences.Editor studiengangEditor;
+                    SharedPreferences studiengaenge = getApplicationContext().getSharedPreferences("studiengaenge", 0);
 
                     //Verbindungsaufbau zum Webserver
                 try {
@@ -407,9 +352,6 @@ public class MainActivity extends AppCompatActivity {
 
                     String konvertiertZuString = erhalteneStudiengaenge.toString();
                     String klammernEntfernen = konvertiertZuString.substring(1,konvertiertZuString.length()-1);
-
-                    //Log.d("Output zeile 397",b);
-
                     //konvertieren zu JSONArray
                     jsonArrayStudiengaenge = new JSONArray(klammernEntfernen);
 
@@ -421,16 +363,14 @@ public class MainActivity extends AppCompatActivity {
                     // Werte Speichern für die offline Verwendung
                     //Log.d("Output studiengang", jsonArrayStudiengaenge.get(0).toString());
                     studiengangEditor = studiengaenge.edit();
-                    //second parameter is necessary ie.,Value to return if this preference does not exist.
                         try {
                                 studiengangEditor.clear();
                                 studiengangEditor.apply();
                                 studiengangEditor.putString("studiengaenge", klammernEntfernen);
                                 studiengangEditor.apply();
                         } catch (Exception e) {
-
+                            Log.d("Output checkstudiengang","Fehler parsen von Studiengang");
                         }
-
 
                     uebergabeAnSpinner();
                     Log.d("Output checkstudiengang","abgeschlossen");
@@ -452,10 +392,31 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }catch (Exception b)
                         {
+                            Log.d("uebergabeAnSpinner","Fehler beim parsen des Studiengangsnamen");
                         }
                     }
                     Keineverbindung();
                 }
+            }
+        }).start();
+        return true;
+    }
+
+
+
+    public boolean retroThread() {
+        //eigenständiger Thread, weil die Abfrage Asynchron ist
+        new Thread(new Runnable() {
+            public void run() {
+
+                //initialisierung room database
+                AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
+
+                //retrofit auruf
+                RetrofitConnect retrofit = new RetrofitConnect();
+                aktuellerTermin = "0";
+                retrofit.retro(getApplicationContext(), datenbank, pruefJahr, rueckgabeStudiengang, aktuellePruefphase, aktuellerTermin);
+
             }
         }).start();
         return true;

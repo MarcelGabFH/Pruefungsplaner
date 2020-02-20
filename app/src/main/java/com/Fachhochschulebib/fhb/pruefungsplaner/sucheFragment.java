@@ -18,6 +18,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,12 +49,9 @@ public class sucheFragment extends Fragment {
     final List<Integer> rueckgabeSemester = new ArrayList();
     final List<String> fertigsortiert = new ArrayList();
     private AppDatabase database = AppDatabase.getAppDatabase(getContext());
-    public sucheFragment()
-    {
 
-    }
-    AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
-    List<Pruefplan> dateneinlesen = roomdaten.userDao().getAll(validation);
+    AppDatabase roomDaten = AppDatabase.getAppDatabase(getContext());
+    List<Pruefplan> datenEinlesen = roomDaten.userDao().getAll(validation);
 
 
     @Override
@@ -84,13 +82,13 @@ public class sucheFragment extends Fragment {
             public void onClick(View v) {
                 if (geklickt) {
                     if (rueckgabeSemester.size() <= 0) {
-                        for (int i = 0; i < (dateneinlesen.size()); i++) {
+                        for (int i = 0; i < (datenEinlesen.size()); i++) {
                             rueckgabeSemester.add(99999);
                         }
                     }
 
-                    for (int i = 0; i < dateneinlesen.size(); i++) {
-                        if (String.valueOf(1).equals(dateneinlesen.get(i).getSemester())) {
+                    for (int i = 0; i < datenEinlesen.size(); i++) {
+                        if (String.valueOf(1).equals(datenEinlesen.get(i).getSemester())) {
                             btnSemester1.setBackgroundResource(R.drawable.button_rounded_corners);
                             rueckgabeSemester.set(i, i);
 
@@ -101,8 +99,8 @@ public class sucheFragment extends Fragment {
 
                     btnSemester1.setBackgroundResource(R.drawable.button_rounded_corners2);
 
-                    for (int i = 0; i < dateneinlesen.size(); i++) {
-                        if (String.valueOf(1).equals(dateneinlesen.get(i).getSemester())) {
+                    for (int i = 0; i < datenEinlesen.size(); i++) {
+                        if (String.valueOf(1).equals(datenEinlesen.get(i).getSemester())) {
                             rueckgabeSemester.set(i, 99999);
                         }
                     }
@@ -119,13 +117,13 @@ public class sucheFragment extends Fragment {
             public void onClick(View v) {
                 if (geklickt) {
                     if (rueckgabeSemester.size() <= 0) {
-                        for (int i = 0; i < (dateneinlesen.size()); i++) {
+                        for (int i = 0; i < (datenEinlesen.size()); i++) {
                             rueckgabeSemester.add(99999);
                         }
                     }
 
-                    for (int i = 0; i < dateneinlesen.size(); i++) {
-                        if (String.valueOf(2).equals(dateneinlesen.get(i).getSemester())) {
+                    for (int i = 0; i < datenEinlesen.size(); i++) {
+                        if (String.valueOf(2).equals(datenEinlesen.get(i).getSemester())) {
                             btnSemester2.setBackgroundResource(R.drawable.button_rounded_corners);
                             rueckgabeSemester.set(i, i);
 
@@ -136,8 +134,8 @@ public class sucheFragment extends Fragment {
 
                     btnSemester2.setBackgroundResource(R.drawable.button_rounded_corners2);
 
-                    for (int i = 0; i < dateneinlesen.size(); i++) {
-                        if (String.valueOf(2).equals(dateneinlesen.get(i).getSemester())) {
+                    for (int i = 0; i < datenEinlesen.size(); i++) {
+                        if (String.valueOf(2).equals(datenEinlesen.get(i).getSemester())) {
                             rueckgabeSemester.set(i, 99999);
                         }
                     }
@@ -153,13 +151,13 @@ public class sucheFragment extends Fragment {
             public void onClick(View v) {
                 if (geklickt) {
                     if (rueckgabeSemester.size() <= 0) {
-                        for (int i = 0; i < (dateneinlesen.size()); i++) {
+                        for (int i = 0; i < (datenEinlesen.size()); i++) {
                             rueckgabeSemester.add(99999);
                         }
                     }
 
-                    for (int i = 0; i < dateneinlesen.size(); i++) {
-                        if (String.valueOf(3).equals(dateneinlesen.get(i).getSemester().toString())) {
+                    for (int i = 0; i < datenEinlesen.size(); i++) {
+                        if (String.valueOf(3).equals(datenEinlesen.get(i).getSemester().toString())) {
                             btnSemester3.setBackgroundResource(R.drawable.button_rounded_corners);
                             rueckgabeSemester.set(i, i);
 
@@ -170,8 +168,8 @@ public class sucheFragment extends Fragment {
 
                     btnSemester3.setBackgroundResource(R.drawable.button_rounded_corners2);
 
-                    for (int i = 0; i < dateneinlesen.size(); i++) {
-                        if (String.valueOf(3).equals(dateneinlesen.get(i).getSemester().toString())) {
+                    for (int i = 0; i < datenEinlesen.size(); i++) {
+                        if (String.valueOf(3).equals(datenEinlesen.get(i).getSemester().toString())) {
                             rueckgabeSemester.set(i, 99999);
                         }
                     }
@@ -188,13 +186,13 @@ public class sucheFragment extends Fragment {
             public void onClick(View v) {
                 if (geklickt) {
                     if (rueckgabeSemester.size() <= 0) {
-                        for (int i = 0; i < (dateneinlesen.size()); i++) {
+                        for (int i = 0; i < (datenEinlesen.size()); i++) {
                             rueckgabeSemester.add(99999);
                         }
                     }
 
-                    for (int i = 0; i < dateneinlesen.size(); i++) {
-                        if (String.valueOf(4).equals(dateneinlesen.get(i).getSemester())) {
+                    for (int i = 0; i < datenEinlesen.size(); i++) {
+                        if (String.valueOf(4).equals(datenEinlesen.get(i).getSemester())) {
                             btnSemester4.setBackgroundResource(R.drawable.button_rounded_corners);
                             rueckgabeSemester.set(i, i);
 
@@ -205,8 +203,8 @@ public class sucheFragment extends Fragment {
 
                     btnSemester4.setBackgroundResource(R.drawable.button_rounded_corners2);
 
-                    for (int i = 0; i < dateneinlesen.size(); i++) {
-                        if (String.valueOf(4).equals(dateneinlesen.get(i).getSemester().toString())) {
+                    for (int i = 0; i < datenEinlesen.size(); i++) {
+                        if (String.valueOf(4).equals(datenEinlesen.get(i).getSemester().toString())) {
                             rueckgabeSemester.set(i, 99999);
                         }
                     }
@@ -223,12 +221,12 @@ public class sucheFragment extends Fragment {
             public void onClick(View v) {
                 if (geklickt) {
                     if (rueckgabeSemester.size() <= 0) {
-                        for (int i = 0; i < (dateneinlesen.size()); i++) {
+                        for (int i = 0; i < (datenEinlesen.size()); i++) {
                             rueckgabeSemester.add(99999);
                         }
                     }
-                    for (int i = 0; i < dateneinlesen.size(); i++) {
-                        if (String.valueOf(5).equals(dateneinlesen.get(i).getSemester().toString())) {
+                    for (int i = 0; i < datenEinlesen.size(); i++) {
+                        if (String.valueOf(5).equals(datenEinlesen.get(i).getSemester().toString())) {
                             btnSemester5.setBackgroundResource(R.drawable.button_rounded_corners);
                             rueckgabeSemester.set(i, i);
                         }
@@ -236,8 +234,8 @@ public class sucheFragment extends Fragment {
                     geklickt = false;
                 } else {
                     btnSemester5.setBackgroundResource(R.drawable.button_rounded_corners2);
-                    for (int i = 0; i < dateneinlesen.size(); i++) {
-                        if (String.valueOf(5).equals(dateneinlesen.get(i).getSemester().toString())) {
+                    for (int i = 0; i < datenEinlesen.size(); i++) {
+                        if (String.valueOf(5).equals(datenEinlesen.get(i).getSemester().toString())) {
                             rueckgabeSemester.set(i, 99999);
                         }
                     }
@@ -253,12 +251,12 @@ public class sucheFragment extends Fragment {
             public void onClick(View v) {
                 if (geklickt) {
                     if (rueckgabeSemester.size() <= 0) {
-                        for (int i = 0; i < (dateneinlesen.size()); i++) {
+                        for (int i = 0; i < (datenEinlesen.size()); i++) {
                             rueckgabeSemester.add(99999);
                         }
                     }
-                    for (int i = 0; i < dateneinlesen.size(); i++) {
-                        if (String.valueOf(6).equals(dateneinlesen.get(i).getSemester())) {
+                    for (int i = 0; i < datenEinlesen.size(); i++) {
+                        if (String.valueOf(6).equals(datenEinlesen.get(i).getSemester())) {
                             btnSemester6.setBackgroundResource(R.drawable.button_rounded_corners);
                             rueckgabeSemester.set(i, i);
                         }
@@ -268,8 +266,8 @@ public class sucheFragment extends Fragment {
 
                     btnSemester6.setBackgroundResource(R.drawable.button_rounded_corners2);
 
-                    for (int i = 0; i < dateneinlesen.size(); i++) {
-                        if (String.valueOf(6).equals(dateneinlesen.get(i).getSemester())) {
+                    for (int i = 0; i < datenEinlesen.size(); i++) {
+                        if (String.valueOf(6).equals(datenEinlesen.get(i).getSemester())) {
                             rueckgabeSemester.set(i, 99999);
                         }
                     }
@@ -283,16 +281,16 @@ public class sucheFragment extends Fragment {
             List<String> spinnerArray = new ArrayList<String>();
             List<String> spinnerArrayProf = new ArrayList<String>();
             //hinzufügen der Module zum Spinneritem
-            for (int i = 0; i < dateneinlesen.size(); i++) {
-                spinnerArray.add(dateneinlesen.get(i).getModul());
+            for (int i = 0; i < datenEinlesen.size(); i++) {
+                spinnerArray.add(datenEinlesen.get(i).getModul());
             }
             //auswahlmöglichkeit Alle Module hinzufügen
             spinnerArray.add(1, "Alle Module");
 
 
             // SpinenArray Prüfer mit Werten füllen
-            for (int i = 0; i < dateneinlesen.size(); i++) {
-                spinnerArrayProf.add(dateneinlesen.get(i).getErstpruefer());
+            for (int i = 0; i < datenEinlesen.size(); i++) {
+                spinnerArrayProf.add(datenEinlesen.get(i).getErstpruefer());
 
             }
 
@@ -350,7 +348,7 @@ public class sucheFragment extends Fragment {
             studiengang.add("Alle");
             //initialisierung der anfagswerte
             int i;
-            for (i = 0; i < dateneinlesen.size(); i++) {
+            for (i = 0; i < datenEinlesen.size(); i++) {
                 rueckgabe.add(i);
                 rueckgabeStudiengang.add(i);
                 rueckgabeDatum.add(i);
@@ -361,11 +359,11 @@ public class sucheFragment extends Fragment {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     int a;
                     rueckgabe.clear();
-                    for (a = 0; a < dateneinlesen.size(); a++) {
+                    for (a = 0; a < datenEinlesen.size(); a++) {
                         if (acProf.getText().toString().equals("Alle")) {
                             rueckgabe.add(a);
 
-                        } else if (acProf.getText().toString().equals(dateneinlesen.get(a).getErstpruefer())) {
+                        } else if (acProf.getText().toString().equals(datenEinlesen.get(a).getErstpruefer())) {
                             rueckgabe.add(a);
                             TextView textt = (TextView) v.findViewById(R.id.txtmessage);
 
@@ -385,11 +383,11 @@ public class sucheFragment extends Fragment {
                     studiengang.add(parent.getItemAtPosition(position).toString()); //this is your selected item
                     int i;
                     String a;
-                    for (i = 0; i < (dateneinlesen.size()); i++) {
+                    for (i = 0; i < (datenEinlesen.size()); i++) {
                         if (studiengang.get(studiengang.size() - 1).toString().equals("Alle Module")) {
                             rueckgabeStudiengang.add(i);
                         } else {
-                            if (studiengang.get(studiengang.size() - 1).toString().equals(dateneinlesen.get(i).getModul().toString())) {
+                            if (studiengang.get(studiengang.size() - 1).toString().equals(datenEinlesen.get(i).getModul().toString())) {
                                 rueckgabeStudiengang.add(i);
                                 // database.userDao().Checkverbindung(Tabellenrueckgabe());
 
@@ -412,7 +410,7 @@ public class sucheFragment extends Fragment {
                     if (acProf.getText().toString().equals("Alle")) {
                         int a;
                         rueckgabe.clear();
-                        for (a = 0; a < (dateneinlesen.size()); a++) {
+                        for (a = 0; a < (datenEinlesen.size()); a++) {
                             rueckgabe.add(a);
                         }
                     }
@@ -434,7 +432,7 @@ public class sucheFragment extends Fragment {
 
         }catch (Exception e)
         {
-
+            Log.d("Fehler sucheFragment","Fehler beim ermitteln der Module");
         }
 
 
@@ -451,19 +449,22 @@ public class sucheFragment extends Fragment {
             boolean checkSemester = true;
             for(int z = 0; z< rueckgabeSemester.size(); z++)
             {
+                //überprüfung ob Semester ausgewählt wurden, sonst alle Semester anzeigen
                 if(rueckgabeSemester.get(z).equals(rueckgabeSemester.get(z+1)))
                 {
 
                 }
                 else{
+                    //nicht Alle Semester anzeigen, weil ein Semester oder mehrere Semester ausgewählt wurden
                     checkSemester = false;
                     break;
                 }
 
             }
+
             if (checkSemester)
             {
-                for (int z = 0; z < dateneinlesen.size(); z++) {
+                for (int z = 0; z < datenEinlesen.size(); z++) {
                         rueckgabeSemester.add(z);
                 }
             }

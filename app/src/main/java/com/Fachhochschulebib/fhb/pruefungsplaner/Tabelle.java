@@ -7,7 +7,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 // autor:
 // inhalt:  Verwaltung aufrufen der fragmente, hier ist der navigation bar hinterlegt
-// zugriffsdatum: 11.12.19
+// zugriffsdatum: 20.2.20
 //
 //
 //
@@ -17,17 +17,13 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.Placeholder;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -38,10 +34,8 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -59,18 +53,10 @@ public class Tabelle extends AppCompatActivity  {
     private CalendarView calendar;
     private Button btnsuche;
     private DrawerLayout dl;
-    private ActionBarDrawerToggle t;
     private NavigationView nv;
     private TextView txtanzeigemenu;
-
-    private TextView btnopen;
-    SwipeController swipeController = null;
     Loginhandler login = new Loginhandler();
     //aufruf der starteinstelllungen
-
-
-
-
 
 
     @Override
@@ -79,58 +65,15 @@ public class Tabelle extends AppCompatActivity  {
         setContentView(R.layout.hauptfenster);
         txtanzeigemenu = (TextView) findViewById(R.id.txtAnzeige);
 
-
-        btnopen = (TextView) findViewById(R.id.btnopen);
         dl = (DrawerLayout)findViewById(R.id.drawer_layout);
 
         nv = (NavigationView)findViewById(R.id.nav_view);
-        View navHeader = nv.getHeaderView(0);
-        final Button Btnlogin = (Button) navHeader.findViewById(R.id.btnlogin);
-        final EditText user = (EditText) navHeader.findViewById(R.id.eTuser);
-        final EditText passwort = (EditText) navHeader.findViewById(R.id.eTpasswort);
-
-
-
-        //Abfrage login daten
-        btnopen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                dl.setVisibility(View.VISIBLE);
-                dl.openDrawer(Gravity.START);
-
-                Btnlogin.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (!login.checkUsername(user.getText().toString(),getBaseContext())) {
-                            try {
-                                if (!login.checkPasswort(passwort.getText().toString())) {
-
-                                    Toast.makeText(getApplicationContext(),  login.total , Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Passwort stimmt nicht", Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Username stimmt nicht", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-
-                });
-            }
-        });
-
-
         if (!nv.isFocused())
         {
-
-
             dl.setVisibility(View.GONE);
         }
-        dl.addDrawerListener(new DrawerLayout.DrawerListener() {
 
+        dl.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 //Called when a drawer's position changes.
@@ -139,7 +82,6 @@ public class Tabelle extends AppCompatActivity  {
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                //Button Btnlogin = (Button) findViewById(R.id.login);
                 //Called when a drawer has settled in a completely open state.
                 //The drawer is interactive at this point.
                 // If you have 2 drawers (left and right) you can distinguish
@@ -191,12 +133,15 @@ public class Tabelle extends AppCompatActivity  {
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
                         dl.closeDrawer(Gravity.START);
-                        if (userdaten.size() < 2) {
 
+
+                        //Suche Layout wird nicht aufgerufen wenn keine daten vorhanden sind
+                        if (userdaten.size() < 2) {
                         }else{
                             ft.replace(R.id.frame_placeholder, new sucheFragment());
                             ft.commit();
                         }
+
                         return true;
                     case R.id.navigation_diary:
                         txtanzeigemenu.setText("Prüfungen");
@@ -224,6 +169,7 @@ public class Tabelle extends AppCompatActivity  {
                 }
 
             }
+
         });
 
 

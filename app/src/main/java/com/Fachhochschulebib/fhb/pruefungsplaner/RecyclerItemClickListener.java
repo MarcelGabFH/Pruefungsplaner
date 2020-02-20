@@ -24,23 +24,25 @@ import android.view.View;
 
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
 
+    //überprüfung welches item geklickt wurde
     private OnItemClickListener mListener;
     public interface OnItemClickListener {
         public void onItemClick(View view, int position);
     }
     GestureDetector mGestureDetector;
+    //Überprüfung ob single Klick
     public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
         mListener = listener;
         mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
-
                 return true;
             }
         });
     }
 
     @Override
+    //position bestimmen von dem geklickten item
     public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
         View childView = view.findChildViewUnder(e.getX(), e.getY());
         if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
