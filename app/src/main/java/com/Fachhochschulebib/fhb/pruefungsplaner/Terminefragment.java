@@ -125,6 +125,7 @@ public class Terminefragment extends Fragment {
         //hinzufügen von recycleview
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
 
+
         recyclerView.setVisibility(View.VISIBLE);
 
 

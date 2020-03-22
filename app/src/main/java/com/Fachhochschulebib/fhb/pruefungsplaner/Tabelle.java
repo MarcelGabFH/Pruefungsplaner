@@ -18,6 +18,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -55,7 +56,6 @@ public class Tabelle extends AppCompatActivity  {
     private DrawerLayout dl;
     private NavigationView nv;
     private TextView txtanzeigemenu;
-    Loginhandler login = new Loginhandler();
     //aufruf der starteinstelllungen
 
 
@@ -66,6 +66,20 @@ public class Tabelle extends AppCompatActivity  {
         txtanzeigemenu = (TextView) findViewById(R.id.txtAnzeige);
 
         dl = (DrawerLayout)findViewById(R.id.drawer_layout);
+
+
+        TextView btnOpen = (TextView) findViewById(R.id.btnopen);
+
+        btnOpen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("button pressed");
+                dl.openDrawer(Gravity.START);
+                dl.setVisibility(View.VISIBLE);
+
+            }
+        });
+
 
         nv = (NavigationView)findViewById(R.id.nav_view);
         if (!nv.isFocused())
@@ -82,6 +96,7 @@ public class Tabelle extends AppCompatActivity  {
 
             @Override
             public void onDrawerOpened(View drawerView) {
+                dl.setVisibility(View.VISIBLE);
                 //Called when a drawer has settled in a completely open state.
                 //The drawer is interactive at this point.
                 // If you have 2 drawers (left and right) you can distinguish
@@ -102,7 +117,7 @@ public class Tabelle extends AppCompatActivity  {
         });
 
 
-        //Bottom Navigation Menü mit den Menüpunkten
+        //Navigation Menü mit den Menüpunkten
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

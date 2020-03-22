@@ -23,7 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.Fachhochschulebib.fhb.pruefungsplaner.Spinners" />
         <activity
             android:name="com.Fachhochschulebib.fhb.pruefungsplaner.Tabelle"
             android:label="@string/title_activity_recycleview_tabelle"

@@ -65,7 +65,6 @@ public class sucheFragment extends Fragment {
         //setContentView(R.layout.hauptfenster);
 
         //Initialiseren der UI Komponente
-        Spinners spinner = new Spinners();
         final Button btnSemester1 = (Button) v.findViewById(R.id.btns1);
         final Button btnSemester2 = (Button) v.findViewById(R.id.btns2);
         final Button btnSemester3 = (Button) v.findViewById(R.id.btns3);

@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         //anzahl der elemente
         //adapter aufruf
         SharedPreferences pruefperiode = getApplicationContext().getSharedPreferences("pruefperiode", 0);
-        String strJson = pruefperiode.getString("pruefperiode", "0");
+        String strJson = pruefperiode.getString("pruefperiode", "");
         try {
             Checkverbindung("test");
             //Creating editor to store uebergebeneModule to shared preferencess
@@ -529,7 +529,7 @@ public class MainActivity extends AppCompatActivity {
 
                     //Prüfperiode für die offline Verwendung speichern
                     mEditor = mSharedPreferencesperiode.edit();
-                    String strJson = mSharedPreferencesperiode.getString("pruefperiode", " ");
+                    String strJson = mSharedPreferencesperiode.getString("pruefperiode", "");
                     if (strJson != null) {
                         try {
                             if (strJson.equals(pruefperiodedatum))
